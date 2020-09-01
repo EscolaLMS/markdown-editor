@@ -35,6 +35,7 @@ import CodeFence from "./nodes/CodeFence";
 import CheckboxList from "./nodes/CheckboxList";
 import CheckboxItem from "./nodes/CheckboxItem";
 import Embed from "./nodes/Embed";
+import HardBreak from "./nodes/HardBreak";
 import Heading from "./nodes/Heading";
 import HorizontalRule from "./nodes/HorizontalRule";
 import Image from "./nodes/Image";
@@ -54,6 +55,7 @@ import Highlight from "./marks/Highlight";
 import Italic from "./marks/Italic";
 import Link from "./marks/Link";
 import Strikethrough from "./marks/Strikethrough";
+import TemplatePlaceholder from "./marks/Placeholder";
 
 // plugins
 import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
@@ -84,6 +86,7 @@ export type Props = {
   readOnlyWriteCheckboxes?: boolean;
   dark?: boolean;
   theme?: typeof theme;
+  template?: boolean;
   headingsOffset?: number;
   scrollTo?: string;
   handleDOMEvents?: {
@@ -98,6 +101,7 @@ export type Props = {
   onCreateLink?: (title: string) => Promise<string>;
   onSearchLink?: (term: Object) => Promise<SearchResult[]>;
   searchResultList?: typeof React.Component;
+  searchResultsOpen?: boolean;
   onClickLink: (href: string) => void;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string) => void;
@@ -141,12 +145,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
+    searchResultsOpen: false
   };
 
   state = {
     blockMenuOpen: false,
     linkMenuOpen: false,
-    searchTriggerOpen: true,
+    searchTriggerOpen: !!this.props.searchResultsOpen,
     searchSource: "typing",
     triggerSearch: "",
     blockMenuSearch: "",
@@ -163,6 +168,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   parser: MarkdownParser;
   plugins: Plugin[];
   keymaps: Plugin[];
+  resizeObserver: any;
   inputRules: InputRule[];
   nodeViews: {
     [name: string]: (node, view, getPos, decorations) => ComponentView;
@@ -185,6 +191,20 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     if (this.props.autoFocus) {
       this.focusAtEnd();
     }
+
+    // resizeObserver might not be enabled by default for ios safari (suggest users to enable using `Experimental webkit features`)
+    if (iOS()) {
+      try {
+        this.resizeObserver = new ResizeObserver((entries) => {
+            this.setState({ extraUpdate: 1 });
+          });
+      } catch {
+        const tip = "For the smoothest experience, enable 'ResizeObserver' in Settings > Safari > Advanced > Experimental Features";
+        this.props.onShowToast && this.props.onShowToast(tip);
+        console.warn(tip);
+      }
+    }
+
   }
 
   componentDidUpdate(prevProps: Props, prevState) {
@@ -239,6 +259,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       [
         new Doc(),
         new Text(),
+        new HardBreak(),
         new Paragraph(),
         new Blockquote(),
         new BulletList(),
@@ -279,6 +300,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Code(),
         new Highlight(),
         new Italic(),
+        new TemplatePlaceholder(),
         new Link({
           onKeyboardShortcut: () => {}, // this.handleOpenLinkMenu
           onClickLink: this.props.onClickLink,
@@ -392,7 +414,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       plugins: [
         ...this.plugins,
         ...this.keymaps,
-        dropCursor(),
+        dropCursor({ color: this.theme().cursor }),
         gapCursor(),
         inputRules({
           rules: this.inputRules,
@@ -697,6 +719,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const startPos = this.view.coordsAtPos(selection.$to.pos);
     const ref = this.menuRef.current;
     const offsetHeight = ref ? ref.offsetHeight : 0;
+    ref && this.resizeObserver && this.resizeObserver.observe(ref);
     const margin = 24;
     let pos;
 
@@ -725,9 +748,12 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     return pos;
   }
 
+  theme = () => {
+    return this.props.theme || (this.props.dark ? darkTheme : lightTheme);
+  };
+
   render = () => {
     const {
-      dark,
       readOnly,
       readOnlyWriteCheckboxes,
       style,
@@ -736,10 +762,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       onKeyDown,
       searchResultList: SearchResultList
     } = this.props;
-
     const position = this.calculatePosition(this.state.searchTriggerOpen);
     
-    const theme = this.props.theme || (dark ? darkTheme : lightTheme);
     return (
       <Flex
         onKeyDown={onKeyDown}
@@ -749,7 +773,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         justify="center"
         column
       >
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={this.theme()}>
           <React.Fragment>
             <StyledEditor
               readOnly={readOnly}
@@ -763,6 +787,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   commands={this.commands}
                   onSearchLink={searchVars => this.setState(searchVars)}
                   onClickLink={this.props.onClickLink}
+                  isTemplate={this.props.template === true}
                   tooltip={tooltip}
                 />
                 <BlockMenu
@@ -814,7 +839,6 @@ const Wrapper = styled.div<{
   top?: number;
   bottom?: number;
   left?: number;
-  // FIXME maxHeight wrong on iphone, either way too small or too big
   maxHeight?: number;
   isAbove: boolean;
 }>`
@@ -1109,6 +1133,19 @@ const StyledEditor = styled("div")<{
     font-weight: 600;
   }
 
+  .template-placeholder {
+    color: ${props => props.theme.placeholder};
+    border-bottom: 1px dotted ${props => props.theme.placeholder};
+    border-radius: 2px;
+    cursor: text;
+
+    &:hover {
+      border-bottom: 1px dotted
+        ${props =>
+          props.readOnly ? props.theme.placeholder : props.theme.textSecondary};
+    }
+  }
+
   p {
     position: relative;
     margin: 0;
@@ -1195,6 +1232,9 @@ const StyledEditor = styled("div")<{
 
     select,
     button {
+      background: ${props => props.theme.blockToolbarBackground};
+      color: ${props => props.theme.blockToolbarItem};
+      border-width: 1px;
       font-size: 13px;
       display: none;
       position: absolute;
@@ -1203,6 +1243,10 @@ const StyledEditor = styled("div")<{
       z-index: 1;
       top: 4px;
       right: 4px;
+    }
+
+    button {
+      padding: 2px 4px;
     }
 
     &:hover {
