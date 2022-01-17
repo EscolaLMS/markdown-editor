@@ -443,7 +443,7 @@ class BlockMenu extends React.Component<Props, State> {
       uploadImage,
       uploadAudio,
     } = this.props;
-    const items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
+    let items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
     const embedItems: EmbedDescriptor[] = [];
 
     for (const embed of embeds) {
@@ -456,15 +456,10 @@ class BlockMenu extends React.Component<Props, State> {
     }
 
     if (embedItems.length) {
-      const firstSeparator = items.findIndex(it => it.name === "separator");
-      items.splice(
-        firstSeparator,
-        0,
-        {
-          name: "separator",
-        },
-        ...embedItems
-      );
+      items.push({
+        name: "separator",
+      });
+      items = items.concat(embedItems);
     }
 
     const filtered = items.filter(item => {

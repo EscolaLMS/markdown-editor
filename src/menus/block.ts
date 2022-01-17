@@ -37,15 +37,9 @@ export default function blockMenuItems(
     },
     {
       name: "audiofile",
-      title: "Upload audio/video",
+      title: "Audio or video file",
       icon: ArchiveIcon,
       keywords: "audio sound mp3 video movie film mp4",
-    },
-    {
-      name: "link",
-      title: dictionary.link,
-      icon: LinkIcon,
-      keywords: "link url uri href",
     },
     {
       name: "separator",
@@ -97,6 +91,12 @@ export default function blockMenuItems(
     },
     {
       name: "separator",
+    },
+    {
+      name: "link",
+      title: dictionary.link,
+      icon: LinkIcon,
+      keywords: "link url uri href",
     },
     {
       name: "heading",
