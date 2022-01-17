@@ -16,11 +16,7 @@ export default class MathDisplay extends Node {
       content: "text*",
       atom: true,
       code: true,
-      toDOM: () => [
-        "math-display",
-        { class: "math-node", spellcheck: "false" },
-        0,
-      ],
+      toDOM: () => ["math-display", { class: "math-node" }, 0],
       parseDOM: [
         {
           tag: "math-display",
@@ -37,6 +33,7 @@ export default class MathDisplay extends Node {
     return [makeBlockMathInputRule(REGEX_BLOCK_MATH_DOLLARS, type)];
   }
 
+
   toMarkdown(state, node) {
     state.write("$$\n");
     state.text(node.textContent, false);
@@ -48,6 +45,8 @@ export default class MathDisplay extends Node {
   parseMarkdown() {
     return {
       node: "math_display",
+      block: "math_display",
+      noCloseToken: "math_display"
     };
   }
 }

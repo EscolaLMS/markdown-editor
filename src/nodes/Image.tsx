@@ -314,7 +314,6 @@ export default class Image extends Node {
         return true;
       },
       alignCenter: () => (state, dispatch) => {
-        console.log(`state.selection.node.attrs`, state.selection.node.attrs);
         const attrs = {
           ...state.selection.node.attrs,
           layoutClass:

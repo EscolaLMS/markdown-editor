@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 import {
   chainCommands,
   deleteSelection,
@@ -26,11 +28,7 @@ export default class Math extends Node {
       content: "text*",
       inline: true,
       atom: true,
-      toDOM: () => [
-        "math-inline",
-        { class: "math-node", spellcheck: "false" },
-        0,
-      ],
+      toDOM: () => ["math-inline", { class: "math-node" }, 0],
       parseDOM: [
         {
           tag: "math-inline",
@@ -77,6 +75,8 @@ export default class Math extends Node {
   parseMarkdown() {
     return {
       node: "math_inline",
+      block: "math_inline",
+      noCloseToken: "math_inline",
     };
   }
 }
