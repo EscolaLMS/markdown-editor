@@ -97,6 +97,7 @@ export default function blockMenuItems(
       title: dictionary.link,
       icon: LinkIcon,
       keywords: "link url uri href",
+      shortcut: "[[",
     },
     {
       name: "heading",
