@@ -70,6 +70,7 @@ type Props = {
   Avatar: typeof React.Component | React.FC<any>;
   onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
   onMoveLink?: (title: string) => Promise<string>;
+  getSelection?: () => Array<string>;
 };
 
 function isActive(props) {

@@ -92,7 +92,7 @@ export default function formattingMenuItems(
     {
       name: "add_flashcard",
       tooltip: dictionary.quote,
-      text: "+ flashcard",
+      text: "+ Flashcard",
       visible: true
     },
   ];

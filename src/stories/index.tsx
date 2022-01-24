@@ -79,6 +79,9 @@ const embeds = [
   },
 ];
 
+const onCreateFlashcard = (txt, surroundingTxt) =>
+  console.log(`txt`, txt, surroundingTxt);
+
 export default function Example(props) {
   const { body } = document;
   if (body)
@@ -89,6 +92,7 @@ export default function Example(props) {
   return (
     <div style={{ padding: "1em 2em" }}>
       <Editor
+        onCreateFlashcard={onCreateFlashcard}
         onCreateLink={title => {
           // Delay to simulate time taken for remote API request to complete
           return new Promise((resolve, reject) => {

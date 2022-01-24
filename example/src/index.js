@@ -210,7 +210,6 @@ class Example extends React.Component {
           editorMinHeight="400px"
           readOnly={this.state.readOnly}
           newLinePlaceholder={"Hello"}
-          // limitBlockMenuItems={["Big heading", "Image", "Link", "YouTube"]}
           readOnlyWriteCheckboxes
           value={this.state.value}
           enableTemplatePlaceholder={true}

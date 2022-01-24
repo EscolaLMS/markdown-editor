@@ -78,21 +78,21 @@ export { default as Extension } from "./lib/Extension";
 
 export const theme = lightTheme;
 
-const getParent = (selection, state) => {
-  const selectionStart = selection.$from;
-  let depth = selectionStart.depth;
-  let parent;
-  do {
-    parent = selectionStart.node(depth);
-    if (parent) {
-      if (parent.type === state.schema.nodes.theNodeTypeImLookingFor) {
-        break;
-      }
-      depth--;
-    }
-  } while (depth > 0 && parent);
-  return parent;
-};
+// const getParent = (selection, state) => {
+//   const selectionStart = selection.$from;
+//   let depth = selectionStart.depth;
+//   let parent;
+//   do {
+//     parent = selectionStart.node(depth);
+//     if (parent) {
+//       if (parent.type === state.schema.nodes.theNodeTypeImLookingFor) {
+//         break;
+//       }
+//       depth--;
+//     }
+//   } while (depth > 0 && parent);
+//   return parent;
+// };
 
 export type Props = {
   id?: string;
@@ -138,7 +138,6 @@ export type Props = {
   style?: Record<string, string>;
   editorMinHeight?: string;
   onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
-  limitBlockMenuItems?: Array<string>;
 };
 
 type State = {
@@ -610,12 +609,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   getSelection = () => {
+    console.log(`selection`);
     const selection = this.view?.state?.selection;
     const selectionContent = selection?.content();
     const selectedText = (selectionContent && getText(selectionContent)) || "";
-    const parent = getParent(selection, this.view.state);
-    const surroundingText = parent ? getText(parent) : selectedText;
-    return [selectedText, surroundingText];
+    // const parent = getParent(selection, this.view.state);
+    // const surroundingText = parent ? getText(parent) : selectedText;
+    return [selectedText, this.value()];
   };
 
   theme = () => {
@@ -700,6 +700,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   Avatar={this.props.Avatar}
                   onTurnIntoCards={this.props.onTurnIntoCards}
                   tooltip={tooltip}
+                  getSelection={this.getSelection}
                 />
                 <LinkToolbar
                   view={this.view}
@@ -735,7 +736,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onImageUploadStop={this.props.onImageUploadStop}
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
-                  limitBlockMenuItems={this.props.limitBlockMenuItems}
                 />
               </React.Fragment>
             )}
