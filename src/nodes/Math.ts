@@ -68,7 +68,9 @@ export default class Math extends Node {
 
   toMarkdown(state, node) {
     state.write("$");
-    state.renderInline(node);
+    // do not escape backslashes like for \frac
+    // state.renderInline(node);
+    state.text(node.textContent, false);
     state.write("$");
   }
 
