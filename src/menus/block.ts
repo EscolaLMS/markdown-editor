@@ -16,6 +16,7 @@ import {
   StarredIcon,
   WarningIcon,
   InfoIcon,
+  DocumentIcon,
   LinkIcon,
 } from "outline-icons";
 import { MenuItem } from "../types";
@@ -40,6 +41,12 @@ export default function blockMenuItems(
       title: "Audio or video file",
       icon: ArchiveIcon,
       keywords: "audio sound mp3 video movie film mp4",
+    },
+    {
+      name: "document",
+      title: "Document",
+      icon: DocumentIcon,
+      keywords: "pdf word ppt presentation doc docx excel file",
     },
     {
       name: "separator",

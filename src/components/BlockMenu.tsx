@@ -23,6 +23,7 @@ type Props = {
   search: string;
   uploadImage?: (file: File) => Promise<string>;
   uploadAudio?: (file: File) => Promise<string>;
+  uploadFile?: (file: File) => Promise<string>;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   onShowToast?: (message: string, id: string) => void;
@@ -44,6 +45,7 @@ class BlockMenu extends React.Component<Props, State> {
   menuRef = React.createRef<HTMLDivElement>();
   inputRef = React.createRef<HTMLInputElement>();
   inputRefAudio = React.createRef<HTMLInputElement>();
+  inputRefFile = React.createRef<HTMLInputElement>();
 
   state: State = {
     left: -1000,
@@ -158,6 +160,8 @@ class BlockMenu extends React.Component<Props, State> {
         return this.triggerImagePick();
       case "audiofile":
         return this.triggerAudioPick();
+      case "document":
+        return this.triggerFilePick();
       case "embed":
         return this.triggerLinkInput(item);
       case "link": {
@@ -245,6 +249,12 @@ class BlockMenu extends React.Component<Props, State> {
     }
   };
 
+  triggerFilePick = () => {
+    if (this.inputRefFile.current) {
+      this.inputRefFile.current.click();
+    }
+  };
+
   triggerLinkInput = item => {
     this.setState({ insertItem: item });
   };
@@ -284,6 +294,46 @@ class BlockMenu extends React.Component<Props, State> {
 
     if (this.inputRefAudio.current) {
       this.inputRefAudio.current.value = "";
+    }
+
+    this.props.onClose();
+  };
+
+  handleFilePicked = event => {
+    const files = getDataTransferFiles(event);
+
+    const {
+      view,
+      uploadFile,
+      onImageUploadStart,
+      onImageUploadStop,
+      onShowToast,
+      embeds,
+    } = this.props;
+    const { state, dispatch } = view;
+    const parent = findParentNode(node => !!node)(state.selection);
+    if (parent) {
+      dispatch(
+        state.tr.insertText(
+          "",
+          parent.pos,
+          parent.pos + parent.node.textContent.length + 1
+        )
+      );
+
+      insertFiles(view, event, parent.pos, files, {
+        uploadImage: uploadFile,
+        onImageUploadStart,
+        onImageUploadStop,
+        onShowToast,
+        dictionary: this.props.dictionary,
+        isImage: false,
+        embeds,
+      });
+    }
+
+    if (this.inputRefFile.current) {
+      this.inputRefFile.current.value = "";
     }
 
     this.props.onClose();
@@ -441,6 +491,7 @@ class BlockMenu extends React.Component<Props, State> {
       search = "",
       uploadImage,
       uploadAudio,
+      uploadFile,
     } = this.props;
     let items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
     const embedItems: EmbedDescriptor[] = [];
@@ -467,6 +518,7 @@ class BlockMenu extends React.Component<Props, State> {
       // If no image upload callback has been passed, filter the image block out
       if (!uploadImage && item.name === "image") return false;
       if (!uploadAudio && item.name === "audiofile") return false;
+      if (!uploadFile && item.name === "file") return false;
 
       const n = search.toLowerCase();
       return (
@@ -497,7 +549,13 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   render() {
-    const { dictionary, isActive, uploadImage, uploadAudio } = this.props;
+    const {
+      dictionary,
+      isActive,
+      uploadImage,
+      uploadAudio,
+      uploadFile,
+    } = this.props;
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
 
@@ -575,6 +633,16 @@ class BlockMenu extends React.Component<Props, State> {
                 ref={this.inputRefAudio}
                 onChange={this.handleAudioPicked}
                 accept="audio/*"
+              />
+            </VisuallyHidden>
+          )}
+          {uploadFile && (
+            <VisuallyHidden>
+              <input
+                type="file"
+                ref={this.inputRefFile}
+                onChange={this.handleFilePicked}
+                accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf"
               />
             </VisuallyHidden>
           )}

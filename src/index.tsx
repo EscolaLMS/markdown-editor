@@ -114,6 +114,7 @@ export type Props = {
   };
   uploadImage?: (file: File) => Promise<string>;
   uploadAudio?: (file: File) => Promise<string>;
+  uploadFile?: (file: File) => Promise<string>;
   onSave?: ({ done: boolean }) => void;
   onCancel?: () => void;
   onChange: (value: () => string) => void;
@@ -731,6 +732,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onClose={this.handleCloseBlockMenu}
                   uploadImage={this.props.uploadImage}
                   uploadAudio={this.props.uploadAudio}
+                  uploadFile={this.props.uploadFile}
                   onLinkToolbarOpen={this.handleOpenLinkMenu}
                   onImageUploadStart={this.props.onImageUploadStart}
                   onImageUploadStop={this.props.onImageUploadStop}
