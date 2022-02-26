@@ -282,12 +282,13 @@ class BlockMenu extends React.Component<Props, State> {
       );
 
       insertFiles(view, event, parent.pos, files, {
-        uploadImage: uploadAudio,
+        uploadAudio,
         onImageUploadStart,
         onImageUploadStop,
         onShowToast,
         dictionary: this.props.dictionary,
         isImage: false,
+        isAudio: true,
         embeds,
       });
     }
@@ -322,12 +323,13 @@ class BlockMenu extends React.Component<Props, State> {
       );
 
       insertFiles(view, event, parent.pos, files, {
-        uploadImage: uploadFile,
+        uploadFile,
         onImageUploadStart,
         onImageUploadStop,
         onShowToast,
         dictionary: this.props.dictionary,
         isImage: false,
+        isAudio: false,
         embeds,
       });
     }
@@ -367,6 +369,8 @@ class BlockMenu extends React.Component<Props, State> {
         onImageUploadStart,
         onImageUploadStop,
         onShowToast,
+        isImage: true,
+        isAudio: false,
         dictionary: this.props.dictionary,
         embeds,
       });

@@ -10,17 +10,18 @@ const insertFiles = function(view, event, pos, files, options) {
   const {
     dictionary,
     uploadImage,
+    uploadAudio,
+    uploadFile,
     onImageUploadStart,
     onImageUploadStop,
     onShowToast,
     isImage = true,
+    isAudio = false,
     embeds,
   } = options;
 
-  if (!uploadImage) {
-    console.warn(
-      "uploadImage callback must be defined to handle image uploads."
-    );
+  if (!uploadImage && !uploadAudio && !uploadFile) {
+    console.warn("upload callback must be defined to handle image uploads.");
     return;
   }
 
@@ -52,7 +53,13 @@ const insertFiles = function(view, event, pos, files, options) {
     // start uploading the image file to the server. Using "then" syntax
     // to allow all placeholders to be entered at once with the uploads
     // happening in the background in parallel.
-    uploadImage(file)
+
+    const uploadCallback = isImage
+      ? uploadImage
+      : isAudio
+      ? uploadAudio
+      : uploadFile;
+    uploadCallback(file)
       .then(src => {
         const pos = findPlaceholder(view.state, id);
 
@@ -77,6 +84,7 @@ const insertFiles = function(view, event, pos, files, options) {
               }
             }
           }
+          console.log(`component`, component, src, isImage, isAudio, embeds);
           transaction = view.state.tr
             .replaceWith(
               pos,

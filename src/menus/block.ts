@@ -44,7 +44,7 @@ export default function blockMenuItems(
     },
     {
       name: "document",
-      title: "Document",
+      title: "Document file",
       icon: DocumentIcon,
       keywords: "pdf word ppt presentation doc docx excel file",
     },

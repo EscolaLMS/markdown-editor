@@ -1,6 +1,6 @@
 import * as React from "react";
-import { dark, light } from "../theme";
 import Editor from "..";
+import { dark, light } from "../theme";
 
 const docSearchResults = [
   {
@@ -77,6 +77,45 @@ const embeds = [
     },
     component: YoutubeEmbed,
   },
+  {
+    title: "Audio link",
+    keywords: "audio sound mp3 video movie film mp4",
+    // eslint-disable-next-line react/display-name
+    icon: () => (
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/7/75/YouTube_social_white_squircle_%282017%29.svg"
+        width={24}
+        height={24}
+      />
+    ),
+    matcher: url => {
+      // FIXME support audio commonly used in language learning, like google translate, baidu in general
+      const isAudio = url.match(
+        /(?:https?:\/\/)?.*.(?:wav|mp3|ogg|m4a|&spd=2|mp3)(\?alt.*|)$/i
+      );
+      return isAudio;
+    },
+    component: () => <div>audio</div>,
+  },
+  {
+    title: "Document link",
+    keywords: "pdf word ppt presentation doc docx excel file",
+    // eslint-disable-next-line react/display-name
+    icon: () => (
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/7/75/YouTube_social_white_squircle_%282017%29.svg"
+        width={24}
+        height={24}
+      />
+    ),
+    matcher: url => {
+      const isDocument = url.match(
+        /(?:https?:\/\/)?.*.(?:xlsx|xls|doc|docx|ppt|pptx|txt|pdf)(\?alt.*|)$/i
+      );
+      return isDocument;
+    },
+    component: () => <div>doc</div>,
+  },
 ];
 
 const onCreateFlashcard = (txt, surroundingTxt) =>
@@ -135,7 +174,13 @@ export default function Example(props) {
 
           // Delay to simulate time taken to upload
           return new Promise(resolve => {
-            setTimeout(() => resolve("https://picsum.photos/600/600"), 1500);
+            setTimeout(
+              () =>
+                resolve(
+                  "https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3"
+                ),
+              1500
+            );
           });
         }}
         uploadFile={file => {

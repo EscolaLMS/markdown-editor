@@ -26,7 +26,7 @@ const uploadPlugin = options =>
         paste(view, event: ClipboardEvent): boolean {
           if (
             (view.props.editable && !view.props.editable(view.state)) ||
-            !options.uploadImage
+            !(options.uploadImage || options.uploadAudio || options.uploadFile)
           ) {
             return false;
           }
@@ -46,22 +46,21 @@ const uploadPlugin = options =>
             tr.deleteSelection();
           }
           const pos = tr.selection.from;
-
+          options.isImage = files[0].type.startsWith("image");
+          options.isAudio = files[0].type.startsWith("audio");
           insertFiles(view, event, pos, files, options);
           return true;
         },
         drop(view, event: DragEvent): boolean {
           if (
             (view.props.editable && !view.props.editable(view.state)) ||
-            !options.uploadImage
+            !(options.uploadImage || options.uploadAudio || options.uploadFile)
           ) {
             return false;
           }
 
           // filter to only include image files
-          const files = getDataTransferFiles(event).filter(file =>
-            /image/i.test(file.type)
-          );
+          const files = getDataTransferFiles(event).filter(file => file);
           if (files.length === 0) {
             return false;
           }
@@ -73,6 +72,8 @@ const uploadPlugin = options =>
           });
 
           if (result) {
+            options.isImage = files[0].type.startsWith("image");
+            options.isAudio = files[0].type.startsWith("audio");
             insertFiles(view, event, result.pos, files, options);
             return true;
           }
@@ -361,6 +362,7 @@ export default class Image extends Node {
   }
 
   get plugins() {
+    console.log("this.options", this.options);
     return [uploadPlaceholderPlugin, uploadPlugin(this.options)];
   }
 }

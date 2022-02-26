@@ -294,6 +294,9 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Image({
           dictionary,
           uploadImage: this.props.uploadImage,
+          uploadAudio: this.props.uploadAudio,
+          uploadFile: this.props.uploadFile,
+          embeds: this.props.embeds,
           onImageUploadStart: this.props.onImageUploadStart,
           onImageUploadStop: this.props.onImageUploadStop,
           onShowToast: this.props.onShowToast,
