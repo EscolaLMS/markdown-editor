@@ -225,7 +225,11 @@ export default class Image extends Node {
       <div
         contentEditable={false}
         className={className}
-        style={isSvg ? { position: "absolute", width: "100%" } : undefined}
+        style={
+          isSvg
+            ? { position: "absolute", width: "100%", top: "1.4em", zIndex: 1 }
+            : undefined
+        }
       >
         <ImageWrapper
           className={isSelected ? "ProseMirror-selectednode" : ""}
