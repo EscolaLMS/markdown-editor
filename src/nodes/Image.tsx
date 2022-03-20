@@ -1,12 +1,12 @@
-import * as React from "react";
-import { Plugin, NodeSelection } from "prosemirror-state";
 import { InputRule } from "prosemirror-inputrules";
+import { NodeSelection, Plugin } from "prosemirror-state";
 import { setTextSelection } from "prosemirror-utils";
-import styled from "styled-components";
+import * as React from "react";
 import ImageZoom from "react-medium-image-zoom";
+import styled from "styled-components";
+import insertFiles from "../commands/insertFiles";
 import getDataTransferFiles from "../lib/getDataTransferFiles";
 import uploadPlaceholderPlugin from "../lib/uploadPlaceholder";
-import insertFiles from "../commands/insertFiles";
 import Node from "./Node";
 
 /**
@@ -219,8 +219,14 @@ export default class Image extends Node {
     const className = layoutClass ? `image image-${layoutClass}` : "image";
     const readOnly = this.editor.props.readOnly;
 
+    const isSvg = src.toLowerCase().endsWith(".svg");
+
     return (
-      <div contentEditable={false} className={className}>
+      <div
+        contentEditable={false}
+        className={className}
+        style={isSvg ? { position: "absolute", width: "100%" } : undefined}
+      >
         <ImageWrapper
           className={isSelected ? "ProseMirror-selectednode" : ""}
           onClick={this.handleSelect(props)}
@@ -362,7 +368,6 @@ export default class Image extends Node {
   }
 
   get plugins() {
-    console.log("this.options", this.options);
     return [uploadPlaceholderPlugin, uploadPlugin(this.options)];
   }
 }
