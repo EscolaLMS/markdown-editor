@@ -13,6 +13,7 @@ import {
   TodoListIcon,
   ImageIcon,
   ArchiveIcon,
+  HighlightIcon,
   StarredIcon,
   WarningIcon,
   InfoIcon,
@@ -47,6 +48,18 @@ export default function blockMenuItems(
       title: "Document file",
       icon: DocumentIcon,
       keywords: "pdf word ppt presentation doc docx excel file",
+    },
+    {
+      name: "sketch",
+      title: "Sketch",
+      icon: HighlightIcon,
+      keywords: "sketch drawing scratchpad",
+    },
+    {
+      name: "image_occlusion",
+      title: "Image occlusion",
+      icon: HighlightIcon,
+      keywords: "image occlusion",
     },
     {
       name: "separator",

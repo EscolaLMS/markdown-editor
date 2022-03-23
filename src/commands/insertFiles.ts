@@ -12,15 +12,17 @@ const insertFiles = function(view, event, pos, files, options) {
     uploadImage,
     uploadAudio,
     uploadFile,
+    uploadSketch,
     onImageUploadStart,
     onImageUploadStop,
     onShowToast,
     isImage = true,
     isAudio = false,
+    isImageOcclusion = false,
     embeds,
   } = options;
 
-  if (!uploadImage && !uploadAudio && !uploadFile) {
+  if (!uploadImage && !uploadAudio && !uploadFile && !uploadSketch) {
     console.warn("upload callback must be defined to handle image uploads.");
     return;
   }
@@ -58,6 +60,8 @@ const insertFiles = function(view, event, pos, files, options) {
       ? uploadImage
       : isAudio
       ? uploadAudio
+      : isImageOcclusion
+      ? uploadSketch
       : uploadFile;
     uploadCallback(file)
       .then(src => {

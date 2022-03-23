@@ -24,6 +24,7 @@ type Props = {
   uploadImage?: (file: File) => Promise<string>;
   uploadAudio?: (file: File) => Promise<string>;
   uploadFile?: (file: File) => Promise<string>;
+  uploadSketch?: (file?: File) => Promise<string>;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   onShowToast?: (message: string, id: string) => void;
@@ -46,6 +47,7 @@ class BlockMenu extends React.Component<Props, State> {
   inputRef = React.createRef<HTMLInputElement>();
   inputRefAudio = React.createRef<HTMLInputElement>();
   inputRefFile = React.createRef<HTMLInputElement>();
+  inputRefSketch = React.createRef<HTMLInputElement>();
 
   state: State = {
     left: -1000,
@@ -162,6 +164,36 @@ class BlockMenu extends React.Component<Props, State> {
         return this.triggerAudioPick();
       case "document":
         return this.triggerFilePick();
+      case "image_occlusion":
+        return this.triggerSketchPick();
+      case "sketch":
+        return (
+          this.props.uploadSketch &&
+          this.props.uploadSketch().then(src => {
+            let component;
+            if (this.props.embeds) {
+              for (const embed of this.props.embeds) {
+                const matches = embed.matcher(src);
+                if (matches) {
+                  component = embed.component;
+                }
+              }
+            }
+            const { view } = this.props;
+            const { state } = view;
+            const { schema } = view.state;
+            const parent = findParentNode(node => !!node)(state.selection);
+            if (parent) {
+              const transaction = view.state.tr.replaceWith(
+                parent.pos,
+                parent.pos,
+                schema.nodes.embed.create({ href: src, component, matches: {} })
+              );
+              view.dispatch(transaction);
+            }
+            this.props.onClose();
+          })
+        );
       case "embed":
         return this.triggerLinkInput(item);
       case "link": {
@@ -255,6 +287,12 @@ class BlockMenu extends React.Component<Props, State> {
     }
   };
 
+  triggerSketchPick = () => {
+    if (this.inputRefSketch.current) {
+      this.inputRefSketch.current.click();
+    }
+  };
+
   triggerLinkInput = item => {
     this.setState({ insertItem: item });
   };
@@ -336,6 +374,49 @@ class BlockMenu extends React.Component<Props, State> {
 
     if (this.inputRefFile.current) {
       this.inputRefFile.current.value = "";
+    }
+
+    this.props.onClose();
+  };
+
+  handleSketchPicked = event => {
+    const files = getDataTransferFiles(event);
+
+    const {
+      view,
+      uploadSketch,
+      onImageUploadStart,
+      onImageUploadStop,
+      onShowToast,
+      embeds,
+    } = this.props;
+    const { state, dispatch } = view;
+    const parent = findParentNode(node => !!node)(state.selection);
+
+    if (parent) {
+      dispatch(
+        state.tr.insertText(
+          "",
+          parent.pos,
+          parent.pos + parent.node.textContent.length + 1
+        )
+      );
+
+      insertFiles(view, event, parent.pos, files, {
+        uploadSketch,
+        onImageUploadStart,
+        onImageUploadStop,
+        onShowToast,
+        isImage: false,
+        isAudio: false,
+        isImageOcclusion: true,
+        dictionary: this.props.dictionary,
+        embeds,
+      });
+    }
+
+    if (this.inputRef.current) {
+      this.inputRef.current.value = "";
     }
 
     this.props.onClose();
@@ -496,6 +577,7 @@ class BlockMenu extends React.Component<Props, State> {
       uploadImage,
       uploadAudio,
       uploadFile,
+      uploadSketch,
     } = this.props;
     let items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
     const embedItems: EmbedDescriptor[] = [];
@@ -523,6 +605,7 @@ class BlockMenu extends React.Component<Props, State> {
       if (!uploadImage && item.name === "image") return false;
       if (!uploadAudio && item.name === "audiofile") return false;
       if (!uploadFile && item.name === "file") return false;
+      if (!uploadSketch && item.name === "image_occlusion") return false;
 
       const n = search.toLowerCase();
       return (
@@ -559,6 +642,7 @@ class BlockMenu extends React.Component<Props, State> {
       uploadImage,
       uploadAudio,
       uploadFile,
+      uploadSketch,
     } = this.props;
     const items = this.filtered;
     const { insertItem, ...positioning } = this.state;
@@ -647,6 +731,16 @@ class BlockMenu extends React.Component<Props, State> {
                 ref={this.inputRefFile}
                 onChange={this.handleFilePicked}
                 accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+              />
+            </VisuallyHidden>
+          )}
+          {uploadSketch && (
+            <VisuallyHidden>
+              <input
+                type="file"
+                ref={this.inputRefSketch}
+                onChange={this.handleSketchPicked}
+                accept="image/*"
               />
             </VisuallyHidden>
           )}

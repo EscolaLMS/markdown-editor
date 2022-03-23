@@ -194,6 +194,20 @@ export default function Example(props) {
             );
           });
         }}
+        uploadSketch={file => {
+          console.log("File upload triggered: ", file);
+
+          // Delay to simulate time taken to upload
+          return new Promise(resolve => {
+            setTimeout(
+              () =>
+                resolve(
+                  "https://firebasestorage.googleapis.com/v0/b/alley-d0944.appspot.com/o/1gW8wsTYrsNFenWF1ERkCm5Isaz1%2Ftest.rsc"
+                ),
+              1500
+            );
+          });
+        }}
         embeds={embeds}
         {...props}
       />
