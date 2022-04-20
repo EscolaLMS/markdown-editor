@@ -137,6 +137,7 @@ export type Props = {
   style?: Record<string, string>;
   editorMinHeight?: string;
   onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
+  excludeBlockMenuItems?: Array<string>;
 };
 
 type State = {
@@ -171,6 +172,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     tooltip: Tooltip,
     newLinePlaceholder: "",
     onCreateFlashcard: null,
+    excludeBlockMenuItems: ["Image occlusion"],
   };
 
   state = {
@@ -735,6 +737,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onImageUploadStop={this.props.onImageUploadStop}
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
+                  excludeBlockMenuItems={this.props.excludeBlockMenuItems}
                 />
               </React.Fragment>
             )}
@@ -1464,24 +1467,22 @@ const StyledEditor = styled("div")<{
 
   .block-menu-trigger {
     display: ${props => (props.readOnly ? "none" : "block")};
-    height: 1em;
+    height: 26px;
     color: ${props => props.theme.textSecondary};
     background: none;
-    border-radius: 100%;
-    font-size: 30px;
+    border-radius: 10%;
+    font-size: 26px;
     position: absolute;
-    transform: scale(0.9);
     transition: color 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
       transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     outline: none;
     border: 0;
     line-height: 1;
-    margin-top: -3px;
     left: ${iOS() ? `-48px` : `-24px`};
     &:hover,
     &:focus {
       cursor: pointer;
-      transform: scale(1);
+      background: #f3f3f3;
       color: ${props => props.theme.text};
     }
   }

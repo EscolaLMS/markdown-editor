@@ -29,6 +29,7 @@ type Props = {
   onLinkToolbarOpen: () => void;
   onClose: () => void;
   embeds: EmbedDescriptor[];
+  excludeBlockMenuItems?: Array<string>;
 };
 
 type State = {
@@ -468,34 +469,20 @@ class BlockMenu extends React.Component<Props, State> {
   }
 
   get filtered() {
-    const {
-      dictionary,
-      embeds,
-      search = "",
-      uploadImage,
-      uploadSketch,
-    } = this.props;
-    let items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
-    const embedItems: EmbedDescriptor[] = [];
-
-    for (const embed of embeds) {
-      if (embed.title && embed.icon) {
-        embedItems.push({
-          ...embed,
-          name: "embed",
-        });
-      }
-    }
-
-    if (embedItems.length) {
-      items.push({
-        name: "separator",
-      });
-      items = items.concat(embedItems);
-    }
+    const { dictionary, search = "", uploadImage, uploadSketch } = this.props;
+    const items: (EmbedDescriptor | MenuItem)[] = getMenuItems(dictionary);
 
     const filtered = items.filter(item => {
       if (item.name === "separator") return true;
+
+      const { excludeBlockMenuItems } = this.props;
+      if (
+        excludeBlockMenuItems &&
+        item.title &&
+        excludeBlockMenuItems.includes(item.title)
+      ) {
+        return false;
+      }
 
       // If no image upload callback has been passed, filter the image block out
       if (!uploadImage && item.name === "image") return false;
