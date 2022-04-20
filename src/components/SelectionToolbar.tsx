@@ -60,7 +60,6 @@ type Props = {
   onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   onClickLink: (href: string, event: MouseEvent) => void;
   onCreateLink?: (title: string) => Promise<string>;
-  onTurnIntoCards?: (href: string) => Promise<string>;
   onShowToast?: (msg: string, code: string) => void;
   view: EditorView;
   linkIsActive?: boolean;
@@ -93,13 +92,7 @@ function isActive(props) {
 
 export default class SelectionToolbar extends React.Component<Props> {
   handleOnCreateLink = async (title: string, turnInto = false) => {
-    const {
-      dictionary,
-      onCreateLink,
-      onTurnIntoCards,
-      view,
-      onShowToast,
-    } = this.props;
+    const { dictionary, onCreateLink, view, onShowToast } = this.props;
     if (this.props.onClose) {
       this.props.onClose();
       this.props.view.focus();
@@ -138,8 +131,7 @@ export default class SelectionToolbar extends React.Component<Props> {
     }
 
     createAndInsertLink(view, title, href, {
-      onCreateLink:
-        turnInto && onTurnIntoCards ? onTurnIntoCards : onCreateLink,
+      onCreateLink,
       onShowToast,
       dictionary,
     });

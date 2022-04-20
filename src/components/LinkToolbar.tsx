@@ -12,7 +12,6 @@ type Props = {
   tooltip: typeof React.Component | React.FC<any>;
   dictionary: typeof baseDictionary;
   onCreateLink?: (title: string) => Promise<string>;
-  onTurnIntoCards?: (href: string) => Promise<string>;
   onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   onClickLink: (href: string, event: MouseEvent) => void;
   onShowToast?: (msg: string, code: string) => void;
@@ -61,14 +60,7 @@ export default class LinkToolbar extends React.Component<Props> {
   };
 
   handleOnCreateLink = async (title: string, turnInto = false) => {
-    const {
-      dictionary,
-      onCreateLink,
-      onTurnIntoCards,
-      view,
-      onClose,
-      onShowToast,
-    } = this.props;
+    const { dictionary, onCreateLink, view, onClose, onShowToast } = this.props;
 
     onClose();
     this.props.view.focus();
@@ -101,8 +93,7 @@ export default class LinkToolbar extends React.Component<Props> {
     );
 
     createAndInsertLink(view, title, href, {
-      onCreateLink:
-        turnInto && onTurnIntoCards ? onTurnIntoCards : onCreateLink,
+      onCreateLink,
       onShowToast,
       dictionary,
     });
@@ -144,7 +135,7 @@ export default class LinkToolbar extends React.Component<Props> {
   };
 
   render() {
-    const { onCreateLink, onTurnIntoCards, onClose, ...rest } = this.props;
+    const { onCreateLink, onClose, ...rest } = this.props;
     const selection = this.props.view.state.selection;
 
     return (

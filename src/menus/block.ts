@@ -33,21 +33,9 @@ export default function blockMenuItems(
   return [
     {
       name: "image",
-      title: dictionary.image,
+      title: "Upload image, audio, video, doc",
       icon: ImageIcon,
       keywords: "picture photo",
-    },
-    {
-      name: "audiofile",
-      title: "Audio or video file",
-      icon: ArchiveIcon,
-      keywords: "audio sound mp3 video movie film mp4",
-    },
-    {
-      name: "document",
-      title: "Document file",
-      icon: DocumentIcon,
-      keywords: "pdf word ppt presentation doc docx excel file",
     },
     {
       name: "sketch",
@@ -60,6 +48,13 @@ export default function blockMenuItems(
       title: "Image occlusion",
       icon: HighlightIcon,
       keywords: "image occlusion",
+    },
+    {
+      name: "link",
+      title: "Link to page",
+      icon: LinkIcon,
+      keywords: "link url uri href",
+      shortcut: "[[",
     },
     {
       name: "separator",
@@ -113,13 +108,6 @@ export default function blockMenuItems(
       name: "separator",
     },
     {
-      name: "link",
-      title: dictionary.link,
-      icon: LinkIcon,
-      keywords: "link url uri href",
-      shortcut: "[[",
-    },
-    {
       name: "heading",
       title: dictionary.h1,
       keywords: "h1 heading1 title",
@@ -142,12 +130,6 @@ export default function blockMenuItems(
       icon: Heading3Icon,
       shortcut: "###",
       attrs: { level: 3 },
-    },
-    {
-      name: "hr",
-      title: dictionary.hr,
-      icon: HorizontalRuleIcon,
-      keywords: "horizontal rule break line",
     },
   ];
 }

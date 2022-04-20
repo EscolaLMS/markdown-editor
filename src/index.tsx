@@ -113,8 +113,6 @@ export type Props = {
     [name: string]: (view: EditorView, event: Event) => boolean;
   };
   uploadImage?: (file: File) => Promise<string>;
-  uploadAudio?: (file: File) => Promise<string>;
-  uploadFile?: (file: File) => Promise<string>;
   uploadSketch?: (file?: File) => Promise<string>;
   onSave?: ({ done: boolean }) => void;
   onCancel?: () => void;
@@ -123,7 +121,6 @@ export type Props = {
   onImageUploadStop?: () => void;
   onCreateLink?: (title: string) => Promise<string>;
   onMoveLink?: (title: string) => Promise<string>;
-  onTurnIntoCards?: (href: string) => Promise<string>;
   onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   onClickLink: (href: string, event: MouseEvent) => void;
   enableTemplatePlaceholder?: boolean;
@@ -295,8 +292,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
         new Image({
           dictionary,
           uploadImage: this.props.uploadImage,
-          uploadAudio: this.props.uploadAudio,
-          uploadFile: this.props.uploadFile,
           uploadSketch: this.props.uploadSketch,
           embeds: this.props.embeds,
           onImageUploadStart: this.props.onImageUploadStart,
@@ -704,7 +699,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onMoveLink={this.props.onMoveLink}
                   onCreateFlashcard={this.props.onCreateFlashcard}
                   Avatar={this.props.Avatar}
-                  onTurnIntoCards={this.props.onTurnIntoCards}
                   tooltip={tooltip}
                   getSelection={this.getSelection}
                 />
@@ -716,7 +710,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onMoveLink={this.props.onMoveLink}
                   onCreateFlashcard={this.props.onCreateFlashcard}
                   Avatar={this.props.Avatar}
-                  onTurnIntoCards={this.props.onTurnIntoCards}
                   onSearchLink={this.props.onSearchLink}
                   onClickLink={this.props.onClickLink}
                   onShowToast={this.props.onShowToast}
@@ -736,8 +729,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   search={this.state.blockMenuSearch}
                   onClose={this.handleCloseBlockMenu}
                   uploadImage={this.props.uploadImage}
-                  uploadAudio={this.props.uploadAudio}
-                  uploadFile={this.props.uploadFile}
                   uploadSketch={this.props.uploadSketch}
                   onLinkToolbarOpen={this.handleOpenLinkMenu}
                   onImageUploadStart={this.props.onImageUploadStart}

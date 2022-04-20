@@ -86,7 +86,6 @@ type Props = {
   dictionary: typeof baseDictionary;
   onRemoveLink?: () => void;
   onCreateLink?: (title: string, turnIntoCards?: boolean) => Promise<void>;
-  onTurnIntoCards?: (href: string) => Promise<string>;
   onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
   Avatar: typeof React.Component | React.FC<any>;
   onSelectLink: (options: {
@@ -344,22 +343,17 @@ class LinkEditor extends React.Component<Props, State> {
   }
 
   render() {
-    const { dictionary, theme, Avatar, onTurnIntoCards } = this.props;
+    const { dictionary, theme, Avatar } = this.props;
     const { value, selectedIndex } = this.state;
     console.log(`value`, value);
     const looksLikeUrl = value.match(/^https?:\/\/|^www./i);
-    const showTurnInto = !!looksLikeUrl && onTurnIntoCards;
     const initialIsCardLink =
       this.initialValue === value && value.startsWith("/");
-    const results =
-      showTurnInto || initialIsCardLink
-        ? []
-        : this.state.results[value.trim()] ||
-          this.state.results[this.state.previousValue] ||
-          [];
-
-    const Tooltip = this.props.tooltip;
-    // create card on top, should be default action. order of search results
+    const results = initialIsCardLink
+      ? []
+      : this.state.results[value.trim()] ||
+        this.state.results[this.state.previousValue] ||
+        [];
 
     const suggestedLinkTitle = this.suggestedLinkTitle;
 
@@ -370,8 +364,7 @@ class LinkEditor extends React.Component<Props, State> {
       !looksLikeUrl;
 
     const showResults =
-      !!suggestedLinkTitle &&
-      (showCreateLink || showTurnInto || results.length > 0);
+      !!suggestedLinkTitle && (showCreateLink || results.length > 0);
 
     return (
       <Wrapper>
@@ -418,24 +411,6 @@ class LinkEditor extends React.Component<Props, State> {
                 selected={index === selectedIndex}
               />
             ))}
-
-            {showTurnInto && (
-              <LinkSearchResult
-                key="turninto"
-                title={suggestedLinkTitle}
-                subtitle={dictionary.turnIntoCards}
-                icon={<ArchiveIcon color={theme.toolbarItem} />}
-                onMouseOver={() => this.handleFocusLink(results.length)}
-                onClick={() => {
-                  this.handleCreateLink(value, true);
-
-                  if (this.initialSelectionLength) {
-                    this.moveSelectionToEnd();
-                  }
-                }}
-                selected={results.length === selectedIndex}
-              />
-            )}
           </SearchResults>
         )}
       </Wrapper>

@@ -169,31 +169,6 @@ export default function Example(props) {
             setTimeout(() => resolve("https://picsum.photos/600/600"), 1500);
           });
         }}
-        uploadAudio={file => {
-          console.log("Audio upload triggered: ", file);
-
-          // Delay to simulate time taken to upload
-          return new Promise(resolve => {
-            setTimeout(
-              () =>
-                resolve(
-                  "https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3"
-                ),
-              1500
-            );
-          });
-        }}
-        uploadFile={file => {
-          console.log("File upload triggered: ", file);
-
-          // Delay to simulate time taken to upload
-          return new Promise(resolve => {
-            setTimeout(
-              () => resolve("http://www.africau.edu/images/default/sample.pdf"),
-              1500
-            );
-          });
-        }}
         uploadSketch={file => {
           console.log("File upload triggered: ", file);
 
