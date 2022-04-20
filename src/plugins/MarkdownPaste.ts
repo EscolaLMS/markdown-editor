@@ -4,6 +4,8 @@ import Extension from "../lib/Extension";
 import isUrl from "../lib/isUrl";
 import isInCode from "../queries/isInCode";
 
+const LINK_INPUT_REGEX = /\[(.+)]\((\S+)\)/;
+
 export default class MarkdownPaste extends Extension {
   get name() {
     return "markdown-paste";
@@ -24,6 +26,22 @@ export default class MarkdownPaste extends Extension {
             const { state, dispatch } = view;
 
             this.options.onPaste(text);
+
+            // [hi](/dominiczijlstra/gfcek2fp7un0nzc079n78n59)
+            const mdLink = text.match(LINK_INPUT_REGEX);
+            if (mdLink) {
+              const [, txt, lnk] = mdLink;
+              console.log(`md link`, txt, lnk);
+              const transaction = view.state.tr
+                .insertText(txt, state.selection.from, state.selection.to)
+                .addMark(
+                  state.selection.from,
+                  state.selection.to + txt.length,
+                  state.schema.marks.link.create({ href: lnk })
+                );
+              view.dispatch(transaction);
+              return true;
+            }
 
             // first check if the clipboard contents can be parsed as a url
             if (isUrl(text)) {
