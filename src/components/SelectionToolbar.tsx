@@ -57,18 +57,14 @@ type Props = {
   tooltip: typeof React.Component | React.FC<any>;
   isTemplate: boolean;
   commands: Record<string, any>;
-  onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
-  onClickLink: (href: string, event: MouseEvent) => void;
-  onCreateLink?: (title: string) => Promise<string>;
   onShowToast?: (msg: string, code: string) => void;
   view: EditorView;
   linkIsActive?: boolean;
   onClose?: () => void;
   searchTriggerOpen?: boolean;
   resetSearchTrigger?: () => void;
-  Avatar: typeof React.Component | React.FC<any>;
   onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
-  onMoveLink?: (title: string) => Promise<string>;
+  LinkFinder?: typeof React.Component | React.FC<any>;
   getSelection?: () => Array<string>;
 };
 
@@ -91,52 +87,6 @@ function isActive(props) {
 }
 
 export default class SelectionToolbar extends React.Component<Props> {
-  handleOnCreateLink = async (title: string, turnInto = false) => {
-    const { dictionary, onCreateLink, view, onShowToast } = this.props;
-    if (this.props.onClose) {
-      this.props.onClose();
-      this.props.view.focus();
-    }
-
-    if (!onCreateLink) {
-      return;
-    }
-
-    const { dispatch, state } = view;
-    let { from, to } = state.selection;
-
-    const href = `creating#${title}…`;
-    const markType = state.schema.marks.link;
-
-    if (from === to) {
-      if (this.props.searchTriggerOpen) {
-        this.props.resetSearchTrigger && this.props.resetSearchTrigger();
-        dispatch(view.state.tr.delete(from - 2, from));
-        from = from - 2;
-        to = to - 2;
-      }
-      // Insert a placeholder link
-      dispatch(
-        view.state.tr
-          .insertText(title, from, to)
-          .addMark(from, to + title.length, markType.create({ href }))
-      );
-    } else {
-      // Insert a placeholder link
-      dispatch(
-        view.state.tr
-          .removeMark(from, to, markType)
-          .addMark(from, to, markType.create({ href }))
-      );
-    }
-
-    createAndInsertLink(view, title, href, {
-      onCreateLink,
-      onShowToast,
-      dictionary,
-    });
-  };
-
   handleOnSelectLink = ({
     href,
     from,
@@ -150,6 +100,11 @@ export default class SelectionToolbar extends React.Component<Props> {
   }): void => {
     const { view } = this.props;
     const { state, dispatch } = view;
+    console.log(`title`, title, href, from, to);
+    if (!from && !to) {
+      from = state.selection.from;
+      to = state.selection.to;
+    }
     if (this.props.onClose) {
       this.props.onClose();
       this.props.view.focus();
@@ -157,12 +112,6 @@ export default class SelectionToolbar extends React.Component<Props> {
     const markType = state.schema.marks.link;
 
     if (from === to) {
-      if (this.props.searchTriggerOpen) {
-        this.props.resetSearchTrigger && this.props.resetSearchTrigger();
-        dispatch(view.state.tr.delete(from - 2, from));
-        from = from - 2;
-        to = to - 2;
-      }
       dispatch(
         view.state.tr
           .insertText(title, from, to)
@@ -181,8 +130,27 @@ export default class SelectionToolbar extends React.Component<Props> {
     }
   };
 
+  get suggestedLinkTitle(): string {
+    const { state } = this.props.view;
+    const selectionText = state.doc.cut(
+      state.selection.from,
+      state.selection.to
+    ).textContent;
+
+    return selectionText.trim() || "";
+  }
+
+  get href(): string {
+    const { view } = this.props;
+    const { state } = view;
+    const { selection }: { selection: any } = state;
+    const range = getMarkRange(selection.$from, state.schema.marks.link);
+    const mark = range && range.mark;
+    return mark ? mark.attrs.href : "";
+  }
+
   render() {
-    const { dictionary, onCreateLink, isTemplate, ...rest } = this.props;
+    const { dictionary, isTemplate, ...rest } = this.props;
     const { view } = rest;
     const { state } = view;
     const { selection }: { selection: any } = state;
@@ -224,25 +192,31 @@ export default class SelectionToolbar extends React.Component<Props> {
     if (!items.length) {
       return null;
     }
-
+    const { LinkFinder } = this.props;
     const MenuEl = <Menu items={items} {...rest} />;
-    const LinkEditorEl = (
-      <LinkEditor
-        onCreateFlashcard={this.props.onCreateFlashcard}
-        dictionary={dictionary}
-        mark={(range && range.mark) || undefined}
-        from={(range && range.from) || selection.from}
-        to={(range && range.to) || selection.to}
-        onCreateLink={onCreateLink ? this.handleOnCreateLink : undefined}
-        onMoveLink={this.props.onMoveLink}
-        onSelectLink={this.handleOnSelectLink}
-        selectedText={selectedText}
-        onRemoveLink={this.props.onClose}
-        {...rest}
-      />
-    );
+    const LinkEditorEl =
+      !this.href && LinkFinder ? (
+        <LinkFinder
+          callback={this.handleOnSelectLink}
+          newSearchTerm={this.suggestedLinkTitle}
+        />
+      ) : (
+        <LinkEditor
+          onCreateFlashcard={this.props.onCreateFlashcard}
+          dictionary={dictionary}
+          mark={(range && range.mark) || undefined}
+          from={(range && range.from) || selection.from}
+          to={(range && range.to) || selection.to}
+          onSelectLink={this.handleOnSelectLink}
+          selectedText={selectedText}
+          onRemoveLink={this.props.onClose}
+          {...rest}
+        />
+      );
 
-    return (
+    return link && range && !this.href ? (
+      LinkEditorEl
+    ) : (
       <Portal>
         <FloatingToolbar view={view} active={isActive(this.props)}>
           {link && range ? LinkEditorEl : MenuEl}

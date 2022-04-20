@@ -119,13 +119,10 @@ export type Props = {
   onChange: (value: () => string) => void;
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
-  onCreateLink?: (title: string) => Promise<string>;
-  onMoveLink?: (title: string) => Promise<string>;
-  onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
+  LinkFinder?: typeof React.Component | React.FC<any>;
   onClickLink: (href: string, event: MouseEvent) => void;
   enableTemplatePlaceholder?: boolean;
   getPlaceHolderLink: (title: string) => string;
-  Avatar: typeof React.Component | React.FC<any>;
   newLinePlaceholder?: string;
   onHoverLink?: (event: MouseEvent) => boolean;
   onClickHashtag?: (tag: string, event: MouseEvent) => void;
@@ -541,6 +538,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 
   handleCloseLinkMenu = () => {
+    console.log(`close`);
     this.setState({ linkMenuOpen: false });
   };
 
@@ -694,29 +692,21 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   view={this.view}
                   dictionary={dictionary}
                   commands={this.commands}
-                  onSearchLink={this.props.onSearchLink}
                   isTemplate={this.props.template === true}
-                  onClickLink={this.props.onClickLink}
-                  onCreateLink={this.props.onCreateLink}
-                  onMoveLink={this.props.onMoveLink}
                   onCreateFlashcard={this.props.onCreateFlashcard}
-                  Avatar={this.props.Avatar}
                   tooltip={tooltip}
+                  LinkFinder={this.props.LinkFinder}
                   getSelection={this.getSelection}
                 />
                 <LinkToolbar
                   view={this.view}
                   dictionary={dictionary}
                   isActive={this.state.linkMenuOpen}
-                  onCreateLink={this.props.onCreateLink}
-                  onMoveLink={this.props.onMoveLink}
                   onCreateFlashcard={this.props.onCreateFlashcard}
-                  Avatar={this.props.Avatar}
-                  onSearchLink={this.props.onSearchLink}
-                  onClickLink={this.props.onClickLink}
                   onShowToast={this.props.onShowToast}
                   onClose={this.handleCloseLinkMenu}
                   tooltip={tooltip}
+                  LinkFinder={this.props.LinkFinder}
                   searchTriggerOpen={this.state.searchTriggerOpen}
                   resetSearchTrigger={() =>
                     this.setState({ searchTriggerOpen: false })

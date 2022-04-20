@@ -121,6 +121,24 @@ const embeds = [
 const onCreateFlashcard = (txt, surroundingTxt) =>
   console.log(`txt`, txt, surroundingTxt);
 
+const LinkFinder = ({ callback }) => {
+  console.log(`linkfinder`);
+
+  return (
+    <div
+      onClick={() =>
+        callback({
+          href: "/dominiczijlstra/gfcek2fp7un0nzc079n78n59",
+          title: "hi",
+        })
+      }
+      style={{ position: "absolute", top: 0, left: 0 }}
+    >
+      HELLO
+    </div>
+  );
+};
+
 export default function Example(props) {
   const { body } = document;
   if (body)
@@ -132,35 +150,7 @@ export default function Example(props) {
     <div style={{ padding: "1em 2em" }}>
       <Editor
         onCreateFlashcard={onCreateFlashcard}
-        onCreateLink={title => {
-          // Delay to simulate time taken for remote API request to complete
-          return new Promise((resolve, reject) => {
-            setTimeout(() => {
-              if (title !== "error") {
-                return resolve(
-                  `/doc/${encodeURIComponent(title.toLowerCase())}`
-                );
-              } else {
-                reject("500 error");
-              }
-            }, 1500);
-          });
-        }}
         onChange={val => console.log(`change`, val())}
-        onSearchLink={async term => {
-          console.log("Searched link: ", term);
-
-          // Delay to simulate time taken for remote API request to complete
-          return new Promise(resolve => {
-            setTimeout(() => {
-              resolve(
-                docSearchResults.filter(result =>
-                  result.title.toLowerCase().includes(term.toLowerCase())
-                )
-              );
-            }, Math.random() * 500);
-          });
-        }}
         uploadImage={file => {
           console.log("File upload triggered: ", file);
 
@@ -169,6 +159,7 @@ export default function Example(props) {
             setTimeout(() => resolve("https://picsum.photos/600/600"), 1500);
           });
         }}
+        LinkFinder={LinkFinder}
         uploadSketch={file => {
           console.log("File upload triggered: ", file);
 

@@ -204,9 +204,6 @@ class Example extends React.Component {
         <Editor
           id="example"
           onCreateFlashcard={onCreateFlashcard}
-          // onMoveLink={lnk =>
-          //   console.log(onCreateFlashcard.includes(lnk) ? "move out" : "move in")
-          // }
           editorMinHeight="400px"
           readOnly={this.state.readOnly}
           newLinePlaceholder={"Hello"}
@@ -246,6 +243,7 @@ class Example extends React.Component {
               }, 1500);
             });
           }}
+          LinkFinder={() => <div>HELLO</div>}
           onShowToast={message => window.alert(message)}
           onSearchLink={async (term, setter) => {
             console.log("Searched link: ", term);
@@ -282,7 +280,6 @@ class Example extends React.Component {
               );
             });
           }}
-          Avatar={user => <span>{`Created by ${user.userName}`}</span>}
           embeds={[
             {
               title: "YouTube",

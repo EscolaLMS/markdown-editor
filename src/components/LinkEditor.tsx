@@ -2,74 +2,12 @@ import * as React from "react";
 import { setTextSelection } from "prosemirror-utils";
 import { EditorView } from "prosemirror-view";
 import { Mark } from "prosemirror-model";
-import {
-  DocumentIcon,
-  CloseIcon,
-  ArchiveIcon,
-  TrashIcon,
-  OpenIcon,
-  InsertRightIcon,
-  Icon,
-} from "outline-icons";
 import styled, { withTheme } from "styled-components";
 import isUrl from "../lib/isUrl";
 import theme from "../theme";
 import Flex from "./Flex";
 import Input from "./Input";
-import ToolbarButton from "./ToolbarButton";
-import LinkSearchResult from "./LinkSearchResult";
 import baseDictionary from "../dictionary";
-import { iOS, android } from "./SelectionToolbar";
-
-const MoveToIcon = ({ color, moveOut = true }) => {
-  return (
-    <svg
-      viewBox="0 0 30 30"
-      style={{
-        width: "17px",
-        height: "17px",
-        display: "block",
-        fill: color,
-        backfaceVisibility: "hidden",
-        transformOrigin: "center",
-        transform: moveOut ? "" : "rotate(90deg)",
-      }}
-      className="moveTo"
-    >
-      <polygon points="7 26 7 9 25.188 9 21.594 12.594 23 14 29 8 23 2 21.594 3.406 25.188 7 5 7 5 26"></polygon>
-    </svg>
-  );
-};
-
-export function AddCardIcon(props: any) {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g transform="scale(0.6, 0.6)">
-        <rect width="40" height="40" rx="20" fill="#0094FF" />
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M21 12H19V21V28H21V23L19 21H21V12Z"
-          fill="white"
-        />
-        <rect
-          x="12"
-          y="21"
-          width="2"
-          height="16"
-          transform="rotate(-90 12 21)"
-          fill="white"
-        />
-      </g>
-    </svg>
-  );
-}
 
 export type SearchResult = {
   title: string;
@@ -85,22 +23,17 @@ type Props = {
   tooltip: typeof React.Component | React.FC<any>;
   dictionary: typeof baseDictionary;
   onRemoveLink?: () => void;
-  onCreateLink?: (title: string, turnIntoCards?: boolean) => Promise<void>;
-  onSearchLink?: (term: string, setter: (resultObj: object) => void) => void;
-  Avatar: typeof React.Component | React.FC<any>;
   onSelectLink: (options: {
     href: string;
     title?: string;
     from: number;
     to: number;
   }) => void;
-  onClickLink: (href: string, event: MouseEvent) => void;
   onShowToast?: (message: string, code: string) => void;
   view: EditorView;
   theme: typeof theme;
   selectedText?: string;
   onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
-  onMoveLink?: (title: string) => Promise<string>;
 };
 
 type State = {
@@ -180,25 +113,9 @@ class LinkEditor extends React.Component<Props, State> {
     switch (event.key) {
       case "Enter": {
         event.preventDefault();
-        const { selectedIndex, value } = this.state;
-        const results = this.state.results[value] || [];
+        const { value } = this.state;
 
-        const looksLikeUrl = value.match(/^https?:\/\/|^www./i);
-        if (selectedIndex >= 0) {
-          const result = results[selectedIndex];
-          if (result) {
-            this.save(result.url, result.title);
-          } else if (looksLikeUrl && selectedIndex === results.length) {
-            this.handleCreateLink(value, true);
-          } else if (!looksLikeUrl && selectedIndex === results.length) {
-            this.handleCreateLink(this.suggestedLinkTitle);
-          }
-        } else {
-          // saves the raw input as href
-          looksLikeUrl
-            ? this.save(value, value)
-            : this.handleCreateLink(this.suggestedLinkTitle);
-        }
+        this.save(value, value);
 
         if (this.initialSelectionLength) {
           this.moveSelectionToEnd();
@@ -259,48 +176,6 @@ class LinkEditor extends React.Component<Props, State> {
       value,
       selectedIndex: -1,
     });
-
-    const trimmedValue = value.trim();
-
-    if (trimmedValue && this.props.onSearchLink) {
-      try {
-        const setter = resultObj => {
-          const normalizedResultObj = {
-            searchCardUser: resultObj.searchCardUser || [],
-            searchCardSubscriptions: resultObj.searchCardSubscriptions || [],
-            wiki: resultObj.wiki || [],
-            searchCardPublic: resultObj.searchCardPublic || [],
-            ...resultObj,
-          };
-          const results = (Object.values(normalizedResultObj) as any).flat(1);
-          this.setState(state => ({
-            results: {
-              ...state.results,
-              [trimmedValue]: results,
-            },
-            previousValue: trimmedValue,
-          }));
-        };
-        this.props.onSearchLink(trimmedValue, setter);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
-  handleOpenLink = (event): void => {
-    event.preventDefault();
-    this.props.onClickLink(this.href, event);
-  };
-
-  handleCreateLink = (value: string, turnIntoCards = false) => {
-    this.discardInputValue = true;
-    const { onCreateLink } = this.props;
-
-    value = value.trim();
-    if (value.length === 0) return;
-
-    if (onCreateLink) return onCreateLink(value, turnIntoCards);
   };
 
   handleRemoveLink = (): void => {
@@ -343,76 +218,17 @@ class LinkEditor extends React.Component<Props, State> {
   }
 
   render() {
-    const { dictionary, theme, Avatar } = this.props;
-    const { value, selectedIndex } = this.state;
-    console.log(`value`, value);
-    const looksLikeUrl = value.match(/^https?:\/\/|^www./i);
-    const initialIsCardLink =
-      this.initialValue === value && value.startsWith("/");
-    const results = initialIsCardLink
-      ? []
-      : this.state.results[value.trim()] ||
-        this.state.results[this.state.previousValue] ||
-        [];
-
-    const suggestedLinkTitle = this.suggestedLinkTitle;
-
-    const showCreateLink =
-      !!this.props.onCreateLink &&
-      !(suggestedLinkTitle === this.initialValue) &&
-      suggestedLinkTitle.length > 0 &&
-      !looksLikeUrl;
-
-    const showResults =
-      !!suggestedLinkTitle && (showCreateLink || results.length > 0);
+    const { value } = this.state;
 
     return (
       <Wrapper>
         <Input
           value={value}
-          placeholder={
-            showCreateLink
-              ? dictionary.findOrCreateDoc
-              : dictionary.searchOrPasteLink
-          }
+          placeholder={"Paste a link"}
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
           autoFocus={this.href === ""}
         />
-
-        {showResults && (
-          <SearchResults id="link-search-results">
-            {showCreateLink && (
-              <LinkSearchResult
-                key="create"
-                title={suggestedLinkTitle}
-                subtitle={dictionary.createNewDoc}
-                icon={<AddCardIcon />}
-                onMouseOver={() => this.handleFocusLink(results.length)}
-                onClick={() => {
-                  this.handleCreateLink(suggestedLinkTitle);
-
-                  if (this.initialSelectionLength) {
-                    this.moveSelectionToEnd();
-                  }
-                }}
-                selected={results.length === selectedIndex}
-              />
-            )}
-
-            {results.map((result, index) => (
-              <LinkSearchResult
-                key={result.url}
-                title={result.title}
-                subtitle={result.subtitle}
-                icon={<Avatar user={{ userName: result.userName }} size={24} />}
-                onMouseOver={() => this.handleFocusLink(index)}
-                onClick={this.handleSelectLink(result.url, result.title)}
-                selected={index === selectedIndex}
-              />
-            ))}
-          </SearchResults>
-        )}
       </Wrapper>
     );
   }
@@ -422,22 +238,6 @@ const Wrapper = styled(Flex)`
   margin-left: -8px;
   margin-right: -8px;
   min-width: 336px;
-`;
-
-const SearchResults = styled.ol`
-  background: ${props => props.theme.toolbarBackground};
-  position: absolute;
-  ${props => (iOS() || android() ? "top" : "bottom")}: 100%;
-  width: 100%;
-  height: auto;
-  left: 0;
-  padding: 4px 8px 8px;
-  margin: 0;
-  margin-top: -3px;
-  margin-bottom: 0;
-  border-radius: 0 0 4px 4px;
-  overflow-y: auto;
-  max-height: 25vh;
 `;
 
 export default withTheme(LinkEditor);
