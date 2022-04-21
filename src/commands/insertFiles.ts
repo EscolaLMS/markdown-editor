@@ -51,9 +51,11 @@ const insertFiles = function(view, event, pos, files, options) {
     // to allow all placeholders to be entered at once with the uploads
     // happening in the background in parallel.
 
-    const uploadCallback = uploadSketch ? uploadSketch : uploadImage;
     const isImage = file["type"].startsWith("image/");
     const isAudio = file["type"].startsWith("audio/");
+    const uploadCallback = file.name.endsWith(".rsc")
+      ? uploadSketch
+      : uploadImage;
     uploadCallback(
       file,
       isImage ? "image" : isAudio ? "audio" : null,
