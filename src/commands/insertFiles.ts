@@ -55,7 +55,7 @@ const insertFiles = function(view, event, pos, files, options) {
     const isAudio = file["type"].startsWith("audio/");
     const uploadCallback = file.name.endsWith(".rsc")
       ? uploadSketch
-      : uploadImage;
+      : uploadImage || uploadSketch;
     uploadCallback(
       file,
       isImage ? "image" : isAudio ? "audio" : null,

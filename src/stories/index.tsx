@@ -160,6 +160,7 @@ export default function Example(props) {
           });
         }}
         LinkFinder={LinkFinder}
+        excludeBlockMenuItems={[]}
         uploadSketch={file => {
           console.log("File upload triggered: ", file);
 
