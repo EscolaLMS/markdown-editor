@@ -40,7 +40,7 @@ export const base = {
   linkCopied: "Link copied to clipboard",
   mark: "Highlight",
   math: "Math equation (Latex)",
-  newLineEmpty: "Start writing, or use + button to insert block",
+  newLineEmpty: "Start writing, or use + button to insert ...",
   newLineWithSlash: "Keep typing to filter…",
   noResults: "No results",
   openLink: "Open link",
