@@ -53,7 +53,11 @@ const insertFiles = function(view, event, pos, files, options) {
 
     const isImage = file["type"].startsWith("image/");
     const isAudio = file["type"].startsWith("audio/");
-    const uploadCallback = file.name.endsWith(".rsc")
+    const isSketch =
+      file.name.endsWith(".rsc") ||
+      file.name.includes(".rsc?alt=") ||
+      (!uploadImage && uploadSketch);
+    const uploadCallback = isSketch
       ? uploadSketch
       : uploadImage || uploadSketch;
     uploadCallback(
@@ -71,7 +75,8 @@ const insertFiles = function(view, event, pos, files, options) {
         // otherwise, insert it at the placeholder's position, and remove
         // the placeholder itself
         let transaction;
-        if (isImage) {
+        console.log(`isImage`, isImage, isSketch, file.name);
+        if (isImage && !isSketch) {
           transaction = view.state.tr
             .replaceWith(pos, pos, schema.nodes.image.create({ src }))
             .setMeta(uploadPlaceholderPlugin, { remove: { id } });

@@ -98,6 +98,15 @@ const embeds = [
     component: () => <div>audio</div>,
   },
   {
+    title: "Sketch / Image Occlusion",
+    keywords: "sketch image occlusion scratchpad",
+    matcher: url => {
+      const isSketch = url.match(/(?:https?:\/\/)?.*.(?:rsc)(\?alt.*|)$/i);
+      return isSketch;
+    },
+    component: () => <div>sketch</div>,
+  },
+  {
     title: "Document link",
     keywords: "pdf word ppt presentation doc docx excel file",
     // eslint-disable-next-line react/display-name
@@ -162,14 +171,14 @@ export default function Example(props) {
         LinkFinder={LinkFinder}
         excludeBlockMenuItems={[]}
         uploadSketch={file => {
-          console.log("File upload triggered: ", file);
+          console.log("Sketch upload triggered: ", file);
 
           // Delay to simulate time taken to upload
           return new Promise(resolve => {
             setTimeout(
               () =>
                 resolve(
-                  "https://firebasestorage.googleapis.com/v0/b/alley-d0944.appspot.com/o/1gW8wsTYrsNFenWF1ERkCm5Isaz1%2Ftest.rsc"
+                  "https://firebasestorage.googleapis.com/v0/b/alley-d0944.appspot.com/o/dominiczijlstra%2F1654057020.rsc?alt=media&token=6c75583e-8dd8-4a6b-83af-fe96a4861e1e"
                 ),
               1500
             );
