@@ -13,6 +13,7 @@ export type MenuItem = {
   text?: string;
   shortcut?: string;
   keywords?: string;
+  memberOnly?: boolean;
   tooltip?: string;
   attrs?: Record<string, any>;
   visible?: boolean;

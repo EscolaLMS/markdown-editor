@@ -10,7 +10,10 @@ type Props = {
   theme: typeof theme;
   icon: typeof React.Component | React.FC<any>;
   title: string;
+  name?: string;
   shortcut?: string;
+  MemberFeature?: typeof React.Component | React.FC<any>;
+  memberOnly?: boolean;
 };
 
 function BlockMenuItem({
@@ -19,6 +22,8 @@ function BlockMenuItem({
   onClick,
   title,
   shortcut,
+  MemberFeature,
+  memberOnly,
   icon,
 }: Props) {
   const Icon = icon;
@@ -40,30 +45,16 @@ function BlockMenuItem({
     },
     [selected]
   );
-
   return (
     <MenuItem
       selected={selected}
-      onClick={disabled ? undefined : onClick}
+      onClick={disabled || (memberOnly && MemberFeature) ? undefined : onClick}
       ref={ref}
     >
       <Icon color={selected ? theme.black : undefined} />
       &nbsp;&nbsp;{title}
       <Shortcut>{shortcut}</Shortcut>
-      {title === "muse.ai video" && (
-        <a
-          target="_blank"
-          rel="noreferrer noopener nofollow"
-          href="https://muse.ai/traverse-deal"
-          style={{
-            marginLeft: "80px",
-            textDecoration: "none",
-            color: "#8f8f8f",
-          }}
-        >
-          Get muse.ai
-        </a>
-      )}
+      {memberOnly && MemberFeature}
     </MenuItem>
   );
 }

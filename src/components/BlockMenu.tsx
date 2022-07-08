@@ -30,6 +30,7 @@ type Props = {
   onClose: () => void;
   embeds: EmbedDescriptor[];
   excludeBlockMenuItems?: Array<string>;
+  MemberFeature?: typeof React.Component | React.FC<any>;
 };
 
 type State = {
@@ -567,6 +568,8 @@ class BlockMenu extends React.Component<Props, State> {
                       icon={item.icon}
                       title={item.title}
                       shortcut={item.shortcut}
+                      MemberFeature={this.props.MemberFeature}
+                      memberOnly={item.memberOnly}
                     ></BlockMenuItem>
                   </ListItem>
                 );
@@ -665,7 +668,7 @@ export const Wrapper = styled.div<{
   box-sizing: border-box;
   pointer-events: none;
   white-space: nowrap;
-  width: 300px;
+  width: 320px;
   max-height: 224px;
   overflow: hidden;
   overflow-y: auto;

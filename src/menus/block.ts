@@ -23,31 +23,30 @@ import {
 import { MenuItem } from "../types";
 import baseDictionary from "../dictionary";
 
-const SSR = typeof window === "undefined";
-const isMac = !SSR && window.navigator.platform === "MacIntel";
-const mod = isMac ? "⌘" : "ctrl";
-
 export default function blockMenuItems(
   dictionary: typeof baseDictionary
 ): MenuItem[] {
   return [
     {
       name: "image",
-      title: "Upload image, audio, video, doc",
+      title: "Upload image, audio, video, PDF",
       icon: ImageIcon,
       keywords: "picture photo",
+      memberOnly: true,
     },
     {
       name: "sketch",
       title: "Sketch",
       icon: HighlightIcon,
       keywords: "sketch drawing scratchpad",
+      memberOnly: true,
     },
     {
       name: "image_occlusion",
       title: "Image occlusion",
       icon: HighlightIcon,
       keywords: "image occlusion",
+      memberOnly: true,
     },
     {
       name: "link",

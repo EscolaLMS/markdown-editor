@@ -120,6 +120,7 @@ export type Props = {
   onImageUploadStart?: () => void;
   onImageUploadStop?: () => void;
   LinkFinder?: typeof React.Component | React.FC<any>;
+  MemberFeature?: typeof React.Component | React.FC<any>;
   onClickLink: (href: string, event: MouseEvent) => void;
   enableTemplatePlaceholder?: boolean;
   getPlaceHolderLink: (title: string) => string;
@@ -728,6 +729,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   onShowToast={this.props.onShowToast}
                   embeds={this.props.embeds}
                   excludeBlockMenuItems={this.props.excludeBlockMenuItems}
+                  MemberFeature={this.props.MemberFeature}
                 />
               </React.Fragment>
             )}
