@@ -4,7 +4,7 @@ import Extension from "../lib/Extension";
 import isUrl from "../lib/isUrl";
 import isInCode from "../queries/isInCode";
 
-const LINK_INPUT_REGEX = /\[(.+)]\((\S+)\)/;
+const LINK_INPUT_REGEX = /^\[(.+)]\((\S+)\)$/;
 
 export default class MarkdownPaste extends Extension {
   get name() {
@@ -29,6 +29,7 @@ export default class MarkdownPaste extends Extension {
 
             // [hi](/dominiczijlstra/gfcek2fp7un0nzc079n78n59)
             const mdLink = text.match(LINK_INPUT_REGEX);
+            console.log(`mdLink`, mdLink, text);
             if (mdLink) {
               const [, txt, lnk] = mdLink;
               console.log(`md link`, txt, lnk);
