@@ -250,6 +250,9 @@ export default class Image extends Node {
                 overlay: {
                   backgroundColor: theme.background,
                 },
+                zoomContainer: {
+                  zIndex: 1300,
+                },
               }}
               shouldRespectMaxDimension
             />
