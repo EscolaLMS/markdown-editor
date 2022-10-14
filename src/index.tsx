@@ -696,6 +696,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   isTemplate={this.props.template === true}
                   onCreateFlashcard={this.props.onCreateFlashcard}
                   tooltip={tooltip}
+                  onClose={this.handleCloseLinkMenu}
                   LinkFinder={this.props.LinkFinder}
                   getSelection={this.getSelection}
                 />

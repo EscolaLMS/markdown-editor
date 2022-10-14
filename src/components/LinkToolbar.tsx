@@ -3,7 +3,6 @@ import * as React from "react";
 import { EditorView } from "prosemirror-view";
 import LinkEditor, { SearchResult } from "./LinkEditor";
 import FloatingToolbar from "./FloatingToolbar";
-import createAndInsertLink from "../commands/createAndInsertLink";
 import baseDictionary from "../dictionary";
 
 type Props = {

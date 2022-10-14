@@ -134,7 +134,6 @@ export default class Link extends Mark {
           this.options.onKeyboardShortcut();
           return true;
         }
-
         return toggleMark(type, { href: "" })(state, dispatch);
       },
     };

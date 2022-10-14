@@ -9,14 +9,13 @@ import getTableMenuItems from "../menus/table";
 import getFormattingMenuItems from "../menus/formatting";
 import getImageMenuItems from "../menus/image";
 import FloatingToolbar from "./FloatingToolbar";
-import LinkEditor, { SearchResult } from "./LinkEditor";
+import LinkEditor from "./LinkEditor";
 import Menu from "./Menu";
 import isMarkActive from "../queries/isMarkActive";
 import getMarkRange from "../queries/getMarkRange";
 import isNodeActive from "../queries/isNodeActive";
 import getColumnIndex from "../queries/getColumnIndex";
 import getRowIndex from "../queries/getRowIndex";
-import createAndInsertLink from "../commands/createAndInsertLink";
 import { MenuItem } from "../types";
 import baseDictionary from "../dictionary";
 
@@ -152,7 +151,7 @@ export default class SelectionToolbar extends React.Component<Props> {
   render() {
     const { dictionary, isTemplate, ...rest } = this.props;
     const { view } = rest;
-    const { state } = view;
+    const { state, dispatch } = view;
     const { selection }: { selection: any } = state;
     const isCodeSelection = isNodeActive(state.schema.nodes.code_block)(state);
 
@@ -199,6 +198,24 @@ export default class SelectionToolbar extends React.Component<Props> {
         <LinkFinder
           callback={this.handleOnSelectLink}
           newSearchTerm={this.suggestedLinkTitle}
+          onClose={() => {
+            try {
+              if (range && range.from && range.to && !this.href) {
+                const markType = state.schema.marks.link;
+                dispatch(
+                  state.tr.removeMark(
+                    (range && range.from) || 0,
+                    (range && range.to) || 0,
+                    markType
+                  )
+                );
+              }
+            } catch (e) {
+              console.log(`error closing`, e);
+            }
+
+            this.props.onClose && this.props.onClose();
+          }}
         />
       ) : (
         <LinkEditor
