@@ -587,7 +587,7 @@ class BlockMenu extends React.Component<Props, State> {
                 type="file"
                 ref={this.inputRef}
                 onChange={this.handleImagePicked}
-                accept="image/*,audio/*,.xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf"
+                accept="image/*,audio/*,.xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.pdf,.csv"
               />
             </VisuallyHidden>
           )}

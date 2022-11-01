@@ -50,7 +50,7 @@ export default function blockMenuItems(
     },
     {
       name: "link",
-      title: "Link page",
+      title: "Link node",
       icon: LinkIcon,
       keywords: "link url uri href",
       shortcut: "[[",
