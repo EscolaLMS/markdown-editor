@@ -12,7 +12,7 @@ type Props = {
   title: string;
   name?: string;
   shortcut?: string;
-  MemberFeature?: typeof React.Component | React.FC<any>;
+  upgradeCallback?: () => void;
   memberOnly?: boolean;
 };
 
@@ -22,7 +22,7 @@ function BlockMenuItem({
   onClick,
   title,
   shortcut,
-  MemberFeature,
+  upgradeCallback,
   memberOnly,
   icon,
 }: Props) {
@@ -48,13 +48,18 @@ function BlockMenuItem({
   return (
     <MenuItem
       selected={selected}
-      onClick={disabled || (memberOnly && MemberFeature) ? undefined : onClick}
+      onClick={
+        disabled
+          ? undefined
+          : memberOnly && upgradeCallback
+          ? upgradeCallback
+          : onClick
+      }
       ref={ref}
     >
       <Icon color={selected ? theme.black : undefined} />
       &nbsp;&nbsp;{title}
       <Shortcut>{shortcut}</Shortcut>
-      {memberOnly && MemberFeature}
     </MenuItem>
   );
 }

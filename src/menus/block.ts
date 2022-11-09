@@ -41,13 +41,13 @@ export default function blockMenuItems(
       keywords: "sketch drawing scratchpad",
       memberOnly: true,
     },
-    {
-      name: "image_occlusion",
-      title: "Image occlusion",
-      icon: HighlightIcon,
-      keywords: "image occlusion",
-      memberOnly: true,
-    },
+    // {
+    //   name: "image_occlusion",
+    //   title: "Image occlusion",
+    //   icon: HighlightIcon,
+    //   keywords: "image occlusion",
+    //   memberOnly: true,
+    // },
     {
       name: "link",
       title: "Link node",

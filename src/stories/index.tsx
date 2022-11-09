@@ -170,7 +170,6 @@ export default function Example(props) {
         }}
         LinkFinder={LinkFinder}
         excludeBlockMenuItems={[]}
-        // MemberFeature={<span style={{ marginLeft: "4px" }}>PRO</span>}
         uploadSketch={file => {
           console.log("Sketch upload triggered: ", file);
 

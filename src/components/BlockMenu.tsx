@@ -30,7 +30,7 @@ type Props = {
   onClose: () => void;
   embeds: EmbedDescriptor[];
   excludeBlockMenuItems?: Array<string>;
-  MemberFeature?: typeof React.Component | React.FC<any>;
+  upgradeCallback?: () => void;
 };
 
 type State = {
@@ -568,7 +568,7 @@ class BlockMenu extends React.Component<Props, State> {
                       icon={item.icon}
                       title={item.title}
                       shortcut={item.shortcut}
-                      MemberFeature={this.props.MemberFeature}
+                      upgradeCallback={this.props.upgradeCallback}
                       memberOnly={item.memberOnly}
                     ></BlockMenuItem>
                   </ListItem>
