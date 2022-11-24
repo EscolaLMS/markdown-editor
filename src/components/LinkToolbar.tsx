@@ -15,7 +15,6 @@ type Props = {
   searchTriggerOpen?: boolean;
   resetSearchTrigger?: () => void;
   LinkFinder?: typeof React.Component | React.FC<any>;
-  onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
 };
 
 export function isActive(props) {

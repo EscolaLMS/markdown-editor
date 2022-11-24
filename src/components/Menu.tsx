@@ -9,6 +9,8 @@ import { MenuItem } from "../types";
 type Props = {
   tooltip: typeof React.Component | React.FC<any>;
   onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
+  onMakeAnswer?: (txt?: string, surroundTxt?: string) => void;
+  onToggleFormat?: () => void;
   commands: Record<string, any>;
   view: EditorView;
   theme: typeof theme;
@@ -21,14 +23,98 @@ class Menu extends React.Component<Props> {
     const { view, items, getSelection } = this.props;
     const { state } = view;
     const Tooltip = this.props.tooltip;
-
     return (
       <div>
         {items.map((item, index) => {
           if (item.name === "separator" && item.visible !== false) {
             return <ToolbarSeparator key={index} />;
           }
-          if (item.text && this.props.onCreateFlashcard && getSelection) {
+          if (
+            item.text &&
+            item.name === "back" &&
+            this.props.onMakeAnswer &&
+            getSelection
+          ) {
+            return (
+              <button
+                style={{
+                  transform: "translate(0, -8px)",
+                  border: "none",
+                  backgroundColor: "#e5e7e9",
+                  borderRadius: "0.25rem",
+                  lineHeight: "26px",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  this.props.onToggleFormat && this.props.onToggleFormat();
+                }}
+                key={index}
+              >
+                {item.text}
+              </button>
+            );
+          }
+          if (
+            item.text &&
+            item.name === "format" &&
+            this.props.onMakeAnswer &&
+            getSelection
+          ) {
+            return (
+              <button
+                style={{
+                  transform: "translate(0, -8px)",
+                  border: "none",
+                  marginLeft: "10px",
+                  backgroundColor: "#e5e7e9",
+                  borderRadius: "0.25rem",
+                  lineHeight: "26px",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  this.props.onToggleFormat && this.props.onToggleFormat();
+                }}
+                key={index}
+              >
+                {item.text}
+              </button>
+            );
+          }
+          if (
+            item.text &&
+            item.name === "makeanswer" &&
+            this.props.onMakeAnswer &&
+            getSelection
+          ) {
+            return (
+              <button
+                style={{
+                  transform: "translate(0, -8px)",
+                  border: "none",
+                  backgroundColor: "#e5e7e9",
+                  borderRadius: "0.25rem",
+                  lineHeight: "26px",
+                  cursor: "pointer",
+                  fontWeight: "bolder",
+                }}
+                onClick={() => {
+                  const [selectedText, surroundingText] = getSelection();
+
+                  this.props.onMakeAnswer &&
+                    this.props.onMakeAnswer(selectedText, surroundingText);
+                }}
+                key={index}
+              >
+                {item.text}
+              </button>
+            );
+          }
+          if (
+            item.text &&
+            item.name === "add_flashcard" &&
+            this.props.onCreateFlashcard &&
+            getSelection
+          ) {
             return (
               <button
                 style={{

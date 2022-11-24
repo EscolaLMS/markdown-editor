@@ -204,6 +204,7 @@ class Example extends React.Component {
         <Editor
           id="example"
           onCreateFlashcard={onCreateFlashcard}
+          onMakeAnswer={txt => console.log(`make answer`, txt)}
           editorMinHeight="400px"
           readOnly={this.state.readOnly}
           newLinePlaceholder={"Hello"}

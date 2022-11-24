@@ -135,6 +135,7 @@ export type Props = {
   style?: Record<string, string>;
   editorMinHeight?: string;
   onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
+  onMakeAnswer?: (txt?: string, surroundTxt?: string) => void;
   excludeBlockMenuItems?: Array<string>;
 };
 
@@ -170,6 +171,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     tooltip: Tooltip,
     newLinePlaceholder: "",
     onCreateFlashcard: null,
+    onMakeAnswer: null,
     excludeBlockMenuItems: ["Image occlusion"],
   };
 
@@ -695,6 +697,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   commands={this.commands}
                   isTemplate={this.props.template === true}
                   onCreateFlashcard={this.props.onCreateFlashcard}
+                  onMakeAnswer={this.props.onMakeAnswer}
                   tooltip={tooltip}
                   onClose={this.handleCloseLinkMenu}
                   LinkFinder={this.props.LinkFinder}
@@ -704,7 +707,6 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
                   view={this.view}
                   dictionary={dictionary}
                   isActive={this.state.linkMenuOpen}
-                  onCreateFlashcard={this.props.onCreateFlashcard}
                   onShowToast={this.props.onShowToast}
                   onClose={this.handleCloseLinkMenu}
                   tooltip={tooltip}

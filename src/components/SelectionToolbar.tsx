@@ -63,8 +63,13 @@ type Props = {
   searchTriggerOpen?: boolean;
   resetSearchTrigger?: () => void;
   onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
+  onMakeAnswer?: (txt?: string, surroundTxt?: string) => void;
   LinkFinder?: typeof React.Component | React.FC<any>;
   getSelection?: () => Array<string>;
+};
+
+type State = {
+  formatHidden: boolean;
 };
 
 function isActive(props) {
@@ -85,7 +90,11 @@ function isActive(props) {
   return some(nodes, n => n.content.size);
 }
 
-export default class SelectionToolbar extends React.Component<Props> {
+export default class SelectionToolbar extends React.Component<Props, State> {
+  state = {
+    formatHidden: !!this.props.onMakeAnswer,
+  };
+
   handleOnSelectLink = ({
     href,
     from,
@@ -149,7 +158,7 @@ export default class SelectionToolbar extends React.Component<Props> {
   }
 
   render() {
-    const { dictionary, isTemplate, ...rest } = this.props;
+    const { dictionary, isTemplate, onMakeAnswer, ...rest } = this.props;
     const { view } = rest;
     const { state, dispatch } = view;
     const { selection }: { selection: any } = state;
@@ -184,15 +193,52 @@ export default class SelectionToolbar extends React.Component<Props> {
       items = getTableRowMenuItems(state, rowIndex, dictionary);
     } else if (isImageSelection) {
       items = getImageMenuItems(state, dictionary);
+    } else if (onMakeAnswer && this.state.formatHidden) {
+      items = [
+        {
+          name: "makeanswer",
+          text: "⬇️ Make Answer",
+          // tooltip: "Blank out selected text and move to answer section",
+          // icon: LinkIcon,
+          // active: true,
+          // attrs: { href: "" },
+        },
+        {
+          name: "separator",
+        },
+        {
+          name: "format",
+          text: "Format ...",
+          // tooltip: dictionary.placeholder,
+          // icon: InputIcon,
+          // active: false,
+          // visible: isTemplate,
+        },
+      ];
     } else {
       items = getFormattingMenuItems(state, isTemplate, dictionary);
+      if (onMakeAnswer && !this.state.formatHidden) {
+        items.unshift({
+          name: "back",
+          text: "<",
+        });
+      }
     }
 
     if (!items.length) {
       return null;
     }
     const { LinkFinder } = this.props;
-    const MenuEl = <Menu items={items} {...rest} />;
+    const MenuEl = (
+      <Menu
+        items={items}
+        onToggleFormat={() =>
+          this.setState({ formatHidden: !this.state.formatHidden })
+        }
+        onMakeAnswer={onMakeAnswer}
+        {...rest}
+      />
+    );
     const LinkEditorEl =
       !this.href && LinkFinder ? (
         <LinkFinder
@@ -219,13 +265,11 @@ export default class SelectionToolbar extends React.Component<Props> {
         />
       ) : (
         <LinkEditor
-          onCreateFlashcard={this.props.onCreateFlashcard}
           dictionary={dictionary}
           mark={(range && range.mark) || undefined}
           from={(range && range.from) || selection.from}
           to={(range && range.to) || selection.to}
           onSelectLink={this.handleOnSelectLink}
-          selectedText={selectedText}
           onRemoveLink={this.props.onClose}
           {...rest}
         />

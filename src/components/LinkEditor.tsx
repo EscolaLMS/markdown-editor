@@ -32,8 +32,6 @@ type Props = {
   onShowToast?: (message: string, code: string) => void;
   view: EditorView;
   theme: typeof theme;
-  selectedText?: string;
-  onCreateFlashcard?: (txt?: string, surroundTxt?: string) => void;
 };
 
 type State = {
