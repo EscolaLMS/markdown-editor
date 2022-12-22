@@ -32,7 +32,7 @@ export default function blockMenuItems(
       title: "Upload image, audio, video, PDF",
       icon: ImageIcon,
       keywords: "picture photo",
-      memberOnly: true,
+      memberOnly: false,
     },
     {
       name: "sketch",

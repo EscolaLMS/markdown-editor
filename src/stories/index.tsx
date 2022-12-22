@@ -159,6 +159,8 @@ export default function Example(props) {
     <div style={{ padding: "1em 2em" }}>
       <Editor
         onCreateFlashcard={onCreateFlashcard}
+        enableTemplatePlaceholder={true}
+        templatePlaceholderAsQuestion={true}
         onMakeAnswer={txt => console.log(`make answer2`, txt)}
         onChange={val => console.log(`change`, val())}
         uploadImage={file => {

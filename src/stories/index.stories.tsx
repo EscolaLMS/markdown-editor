@@ -43,7 +43,7 @@ _italic_
 __underline__
 ==highlighted==
 \`inline code\`
-!!placeholder!!
+{{placeholder}}
 [a link](http://www.getoutline.com)
 
 ![](https://storage.googleapis.com/alley-d0944.appspot.com/zvFRdijVf0f8LezITU6D8H0X2Rr1/a63f62c5ed1c4d00a60b4ec9da9a3ec1-aa-1-Q.svg)
@@ -120,7 +120,7 @@ _italic_
 __underline__
 ==highlighted==
 \`inline code\`
-!!placeholder!!
+{{placeholder}}
 [a link](http://www.getoutline.com)
 `,
 };

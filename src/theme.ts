@@ -26,6 +26,7 @@ export const base = {
   linkExternal: colors.secondary,
   placeholder: "#B1BECC",
   templatePlaceholder: "#f03",
+  answerPlaceholder: "#FC5BFF",
   textSecondary: "#4E5C6E",
   textLight: colors.white,
   textHighlight: "#abff32",

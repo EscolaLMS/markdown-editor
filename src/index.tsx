@@ -123,6 +123,7 @@ export type Props = {
   upgradeCallback?: () => void;
   onClickLink: (href: string, event: MouseEvent) => void;
   enableTemplatePlaceholder?: boolean;
+  templatePlaceholderAsQuestion?: boolean;
   getPlaceHolderLink: (title: string) => string;
   newLinePlaceholder?: string;
   onHoverLink?: (event: MouseEvent) => boolean;
@@ -166,6 +167,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     },
     getPlaceHolderLink: title => `/cards/${title}`,
     enableTemplatePlaceholder: true,
+    templatePlaceholderAsQuestion: false,
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
@@ -687,6 +689,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
               }}
               readOnly={readOnly}
               readOnlyWriteCheckboxes={readOnlyWriteCheckboxes}
+              templatePlaceholderAsQuestion={this.props.templatePlaceholderAsQuestion}
+              enableTemplatePlaceholder={this.props.enableTemplatePlaceholder}
               ref={ref => (this.element = ref)}
             />
             {!readOnly && this.view && (
@@ -746,6 +750,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 const StyledEditor = styled("div")<{
   readOnly?: boolean;
   readOnlyWriteCheckboxes?: boolean;
+  enableTemplatePlaceholder?: boolean;
+  templatePlaceholderAsQuestion?: boolean;
 }>`
   background: ${props => props.theme.background};
   line-height: 1.7em;
@@ -995,13 +1001,15 @@ const StyledEditor = styled("div")<{
   }
 
   .template-placeholder {
-    color: ${props => props.theme.templatePlaceholder};
-    border-bottom: 1px dotted ${props => props.theme.templatePlaceholder};
-    border-radius: 2px;
+    color: ${props => props.templatePlaceholderAsQuestion ? props.theme.answerPlaceholder : props.theme.templatePlaceholder};
+    border-bottom: 1px dotted ${props => props.templatePlaceholderAsQuestion ? props.theme.answerPlaceholder : props.theme.templatePlaceholder};
+    background: ${props => props.templatePlaceholderAsQuestion ? props.theme.answerPlaceholder : "initial"};
+    border-radius: 5px;
     cursor: text;
 
     &:hover {
-      border-bottom: 1px dotted ${props => props.theme.textSecondary};
+      color: black;
+      border-bottom: 1px dotted ${props => props.templatePlaceholderAsQuestion ? props.theme.answerPlaceholder : props.theme.textSecondary};
     }
   }
 
