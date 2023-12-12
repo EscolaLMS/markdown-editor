@@ -37,7 +37,7 @@ export default function imageMenuItems(
       tooltip: dictionary.alignCenter,
       icon: AlignImageCenterIcon,
       visible: true,
-      active: state =>
+      active: (state) =>
         isNodeActive(schema.nodes.image)(state) && isCenterAligned(state),
     },
     {
