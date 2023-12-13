@@ -3,6 +3,10 @@ import {
   AlignImageLeftIcon,
   AlignImageRightIcon,
   AlignImageCenterIcon,
+  Heading1Icon,
+  Heading2Icon,
+  Heading3Icon,
+  InsertAboveIcon,
 } from "outline-icons";
 import isNodeActive from "../queries/isNodeActive";
 import { MenuItem } from "../types";
@@ -23,6 +27,15 @@ export default function imageMenuItems(
   const isCenterAligned = isNodeActive(schema.nodes.image, {
     layoutClass: "center-50",
   });
+  const isSmall = isNodeActive(schema.nodes.image, {
+    sizeClass: "small",
+  });
+  const isMedium = isNodeActive(schema.nodes.image, {
+    sizeClass: "medium",
+  });
+  const isLarge = isNodeActive(schema.nodes.image, {
+    sizeClass: "large",
+  });
 
   return [
     {
@@ -37,7 +50,7 @@ export default function imageMenuItems(
       tooltip: dictionary.alignCenter,
       icon: AlignImageCenterIcon,
       visible: true,
-      active: state =>
+      active: (state) =>
         isNodeActive(schema.nodes.image)(state) && isCenterAligned(state),
     },
     {
@@ -46,6 +59,31 @@ export default function imageMenuItems(
       icon: AlignImageRightIcon,
       visible: true,
       active: isRightAligned,
+    },
+    {
+      name: "separator",
+      visible: true,
+    },
+    {
+      name: "smallSize",
+      tooltip: dictionary.smallImage,
+      icon: Heading1Icon,
+      visible: true,
+      active: isSmall,
+    },
+    {
+      name: "mediumSize",
+      tooltip: dictionary.mediumImage,
+      icon: Heading2Icon,
+      visible: true,
+      active: isMedium,
+    },
+    {
+      name: "largeSize",
+      tooltip: dictionary.largeImage,
+      icon: Heading3Icon,
+      visible: true,
+      active: isLarge,
     },
     {
       name: "separator",
