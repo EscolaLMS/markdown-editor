@@ -27,6 +27,7 @@ export default class Heading extends Node {
   get schema() {
     return {
       attrs: {
+        layoutClass: { default: null },
         level: {
           default: 1,
         },
@@ -35,24 +36,13 @@ export default class Heading extends Node {
       group: "block",
       defining: true,
       draggable: false,
-      parseDOM: this.options.levels.map(level => ({
+      parseDOM: this.options.levels.map((level) => ({
         tag: `h${level}`,
         attrs: { level },
+        getAttrs: (dom) => this.extractLayoutClassFromDOM(dom),
         contentElement: "span",
       })),
-      toDOM: node => {
-        const button = document.createElement("button");
-        button.innerText = "#";
-        button.type = "button";
-        button.className = "heading-anchor";
-        button.addEventListener("click", this.handleCopyLink());
-
-        return [
-          `h${node.attrs.level + (this.options.offset || 0)}`,
-          // button,
-          ["span", 0],
-        ];
-      },
+      toDOM: (node) => this.createDOMAttributes(node),
     };
   }
 
@@ -78,7 +68,7 @@ export default class Heading extends Node {
   }
 
   handleCopyLink = () => {
-    return event => {
+    return (event) => {
       // this is unfortunate but appears to be the best way to grab the anchor
       // as it's added directly to the dom by a decoration.
       const anchor = event.currentTarget.parentNode.previousSibling;
@@ -119,7 +109,7 @@ export default class Heading extends Node {
   }
 
   get plugins() {
-    const getAnchors = doc => {
+    const getAnchors = (doc) => {
       const decorations: Decoration[] = [];
       const previouslySeen = {};
 
@@ -171,7 +161,7 @@ export default class Heading extends Node {
         },
       },
       props: {
-        decorations: state => plugin.getState(state),
+        decorations: (state) => plugin.getState(state),
       },
     });
 
@@ -179,10 +169,35 @@ export default class Heading extends Node {
   }
 
   inputRules({ type }: { type: NodeType }) {
-    return this.options.levels.map(level =>
+    return this.options.levels.map((level) =>
       textblockTypeInputRule(new RegExp(`^(#{1,${level}})\\s$`), type, () => ({
         level,
       }))
     );
+  }
+
+  extractLayoutClassFromDOM(dom) {
+    const className = dom.className;
+    const layoutClassMatched = className && className.match(/text-(.*)$/);
+    const layoutClass = layoutClassMatched ? layoutClassMatched[1] : null;
+    return { layoutClass };
+  }
+
+  createDOMAttributes(node) {
+    const className = node.attrs.layoutClass
+      ? `text-${node.attrs.layoutClass}`
+      : null;
+
+    const button = document.createElement("button");
+    button.innerText = "#";
+    button.type = "button";
+    button.className = "heading-anchor";
+    button.addEventListener("click", this.handleCopyLink());
+
+    return [
+      `h${node.attrs.level + (this.options.offset || 0)}`,
+      // button,
+      ["span", { class: className }, 0],
+    ];
   }
 }
