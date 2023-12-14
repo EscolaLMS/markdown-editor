@@ -19,7 +19,7 @@ import Node from "./Node";
  */
 const IMAGE_INPUT_REGEX = /!\[(?<alt>.*?)]\((?<filename>.*?)(?=\“|\))\“?(?<layoutclass>[^\”]+)?\”?\)/;
 
-const uploadPlugin = options =>
+const uploadPlugin = (options) =>
   new Plugin({
     props: {
       handleDOMEvents: {
@@ -36,8 +36,8 @@ const uploadPlugin = options =>
           // check if we actually pasted any files
           const files = Array.prototype.slice
             .call(event.clipboardData.items)
-            .map(dt => dt.getAsFile())
-            .filter(file => file);
+            .map((dt) => dt.getAsFile())
+            .filter((file) => file);
 
           if (files.length === 0) return false;
 
@@ -60,7 +60,7 @@ const uploadPlugin = options =>
           }
 
           // filter to only include image files
-          const files = getDataTransferFiles(event).filter(file => file);
+          const files = getDataTransferFiles(event).filter((file) => file);
           if (files.length === 0) {
             return false;
           }
@@ -84,8 +84,15 @@ const uploadPlugin = options =>
     },
   });
 
-const IMAGE_CLASSES = ["right-50", "left-50", "center-50"];
-const getLayoutAndTitle = tokenTitle => {
+const IMAGE_CLASSES = [
+  "right-50",
+  "left-50",
+  "center-50",
+  "small",
+  "medium",
+  "large",
+];
+const getLayoutAndTitle = (tokenTitle) => {
   if (!tokenTitle) return {};
   if (IMAGE_CLASSES.includes(tokenTitle)) {
     return {
@@ -114,6 +121,9 @@ export default class Image extends Node {
         layoutClass: {
           default: null,
         },
+        sizeClass: {
+          default: null,
+        },
         title: {
           default: null,
         },
@@ -134,19 +144,25 @@ export default class Image extends Node {
             const layoutClass = layoutClassMatched
               ? layoutClassMatched[1]
               : null;
+            const sizeClassMatched =
+              className && className.match(/image-(.*)$/);
+            const sizeClass = sizeClassMatched ? sizeClassMatched[1] : null;
             return {
               src: img.getAttribute("src"),
               alt: img.getAttribute("alt"),
               title: img.getAttribute("title"),
               layoutClass: layoutClass,
+              sizeClass: sizeClass,
             };
           },
         },
       ],
-      toDOM: node => {
-        const className = node.attrs.layoutClass
-          ? `image image-${node.attrs.layoutClass}`
-          : "image";
+      toDOM: (node) => {
+        const { layoutClass, sizeClass } = node.attrs;
+        const className = `${layoutClass ? `image-${layoutClass}` : "image"} ${
+          sizeClass ? `image-${sizeClass}` : ""
+        }`;
+
         return [
           "div",
           {
@@ -159,7 +175,7 @@ export default class Image extends Node {
     };
   }
 
-  handleKeyDown = ({ node, getPos }) => event => {
+  handleKeyDown = ({ node, getPos }) => (event) => {
     // Pressing Enter in the caption field should move the cursor/selection
     // below the image
     if (event.key === "Enter") {
@@ -184,9 +200,9 @@ export default class Image extends Node {
     }
   };
 
-  handleBlur = ({ node, getPos }) => event => {
+  handleBlur = ({ node, getPos }) => (event) => {
     const alt = event.target.innerText;
-    const { src, title, layoutClass } = node.attrs;
+    const { src, title, layoutClass, sizeClass } = node.attrs;
 
     if (alt === node.attrs.alt) return;
 
@@ -200,11 +216,12 @@ export default class Image extends Node {
       alt,
       title,
       layoutClass,
+      sizeClass,
     });
     view.dispatch(transaction);
   };
 
-  handleSelect = ({ getPos }) => event => {
+  handleSelect = ({ getPos }) => (event) => {
     event.preventDefault();
 
     const { view } = this.editor;
@@ -213,12 +230,13 @@ export default class Image extends Node {
     view.dispatch(transaction);
   };
 
-  component = props => {
+  component = (props) => {
     const { theme, isSelected } = props;
-    const { alt, src, title, layoutClass } = props.node.attrs;
-    const className = layoutClass ? `image image-${layoutClass}` : "image";
+    const { alt, src, title, layoutClass, sizeClass } = props.node.attrs;
+    const className = `${
+      layoutClass ? `image image-${layoutClass}` : "image"
+    } ${sizeClass ? `image-${sizeClass}` : ""}`;
     const readOnly = this.editor.props.readOnly;
-
     const isSvg = src.toLowerCase().endsWith(".svg");
 
     return (
@@ -291,7 +309,7 @@ export default class Image extends Node {
   parseMarkdown() {
     return {
       node: "image",
-      getAttrs: token => {
+      getAttrs: (token) => {
         return {
           src: token.attrGet("src"),
           alt: (token.children[0] && token.children[0].content) || null,
@@ -339,7 +357,37 @@ export default class Image extends Node {
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
         return true;
       },
-      createImage: attrs => (state, dispatch) => {
+      smallSize: () => (state, dispatch) => {
+        const attrs = {
+          ...state.selection.node.attrs,
+          title: null,
+          sizeClass: "small",
+        };
+        const { selection } = state;
+        dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
+        return true;
+      },
+      mediumSize: () => (state, dispatch) => {
+        const attrs = {
+          ...state.selection.node.attrs,
+          title: null,
+          sizeClass: "medium",
+        };
+        const { selection } = state;
+        dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
+        return true;
+      },
+      largeSize: () => (state, dispatch) => {
+        const attrs = {
+          ...state.selection.node.attrs,
+          sizeClass:
+            state.selection.node.attrs.sizeClass === "large" ? null : "large",
+        };
+        const { selection } = state;
+        dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
+        return true;
+      },
+      createImage: (attrs) => (state, dispatch) => {
         const { selection } = state;
         const position = selection.$cursor
           ? selection.$cursor.pos
@@ -389,7 +437,7 @@ const Caption = styled.p`
   display: block;
   font-size: 13px;
   font-style: italic;
-  color: ${props => props.theme.textSecondary};
+  color: ${(props) => props.theme.textSecondary};
   padding: 2px 0;
   line-height: 16px;
   text-align: center;
@@ -401,8 +449,8 @@ const Caption = styled.p`
   cursor: text;
 
   &:empty:before {
-    color: ${props => props.theme.placeholder};
-    content: "${props => (props.role ? "Write a caption" : "")}";
+    color: ${(props) => props.theme.placeholder};
+    content: "${(props) => (props.role ? "Write a caption" : "")}";
     pointer-events: none;
   }
 `;

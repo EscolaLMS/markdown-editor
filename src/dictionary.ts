@@ -59,6 +59,9 @@ export const base = {
   tipNotice: "Tip notice",
   warning: "Warning",
   warningNotice: "Warning notice",
+  smallImage: "Small image",
+  mediumImage: "Medium image",
+  largeImage: "Large image",
 };
 
 export default base;

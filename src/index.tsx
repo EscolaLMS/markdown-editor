@@ -826,6 +826,17 @@ const StyledEditor = styled("div")<{
     clear: initial;
   }
 
+  .image-small {
+    width: 200px;
+  }
+
+  .image-medium {
+    width: 400px;
+  }
+
+  .image-large {
+    width: 600px;
+  }
   .text-center {
     display: block;
     width: 100%;
