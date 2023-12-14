@@ -826,6 +826,7 @@ const StyledEditor = styled("div")<{
     clear: initial;
   }
 
+<<<<<<< HEAD
   .image-small {
     width: 200px;
   }
@@ -837,6 +838,26 @@ const StyledEditor = styled("div")<{
   .image-large {
     width: 600px;
   }
+=======
+  .text-center {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .text-right {
+    display: block;
+    width: 100%;
+    text-align: right;
+  }
+
+  .text-left {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+
+>>>>>>> 8b292b5ff939169cb5323a76fac5c922674656fc
   .ProseMirror-hideselection *::selection {
     background: transparent;
   }

@@ -1,14 +1,15 @@
 import {
   BoldIcon,
   CodeIcon,
-  Heading1Icon,
-  Heading2Icon,
   ItalicIcon,
   BlockQuoteIcon,
   LinkIcon,
   StrikethroughIcon,
   InputIcon,
   HighlightIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
+  AlignCenterIcon,
 } from "outline-icons";
 import { isInTable } from "prosemirror-tables";
 import { EditorState } from "prosemirror-state";
@@ -27,6 +28,16 @@ export default function formattingMenuItems(
   const isTable = isInTable(state);
   const isList = isInList(state);
   const allowBlocks = !isTable && !isList;
+
+  const isLeftAligned = isNodeActive(schema.nodes.paragraph, {
+    layoutClass: "left",
+  });
+  const isRightAligned = isNodeActive(schema.nodes.paragraph, {
+    layoutClass: "right",
+  });
+  const isCenterAligned = isNodeActive(schema.nodes.paragraph, {
+    layoutClass: "center",
+  });
 
   return [
     {
@@ -90,10 +101,31 @@ export default function formattingMenuItems(
       visible: allowBlocks,
     },
     {
+      name: "separator",
+    },
+    {
+      name: "alignTextLeft",
+      tooltip: dictionary.alignLeft,
+      icon: AlignLeftIcon,
+      active: isLeftAligned,
+    },
+    {
+      name: "alignTextCenter",
+      tooltip: dictionary.alignCenter,
+      icon: AlignCenterIcon,
+      active: isCenterAligned,
+    },
+    {
+      name: "alignTextRight",
+      tooltip: dictionary.alignRight,
+      icon: AlignRightIcon,
+      active: isRightAligned,
+    },
+    {
       name: "add_flashcard",
       tooltip: dictionary.quote,
       text: "+ Flashcard",
-      visible: true
+      visible: true,
     },
   ];
 }
