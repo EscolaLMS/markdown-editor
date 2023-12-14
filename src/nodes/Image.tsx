@@ -236,11 +236,9 @@ export default class Image extends Node {
     const className = `${
       layoutClass ? `image image-${layoutClass}` : "image"
     } ${sizeClass ? `image-${sizeClass}` : ""}`;
-
     const readOnly = this.editor.props.readOnly;
-
     const isSvg = src.toLowerCase().endsWith(".svg");
-    console.log(props.node.sttrs);
+
     return (
       <div
         contentEditable={false}
