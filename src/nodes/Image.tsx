@@ -227,10 +227,8 @@ export default class Image extends Node {
 
   component = (props) => {
     const { theme, isSelected } = props;
-    const { alt, src, title, layoutClass, sizeClass } = props.node.attrs;
-    const className = `${
-      layoutClass ? `image image-${layoutClass}` : "image"
-    } ${sizeClass ? `image-${sizeClass}` : ""}`;
+    const { alt, src, title, layoutClass } = props.node.attrs;
+    const className = `${layoutClass ? `image image-${layoutClass}` : "image"}`;
     const readOnly = this.editor.props.readOnly;
     const isSvg = src.toLowerCase().endsWith(".svg");
 
