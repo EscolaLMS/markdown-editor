@@ -56,6 +56,7 @@ export default class Paragraph extends Node {
   }
 
   toMarkdown(state, node) {
+    console.log(state, node);
     if (
       node.textContent.trim() === "" &&
       node.childCount === 0 &&
@@ -63,6 +64,8 @@ export default class Paragraph extends Node {
     ) {
       state.write("\\\n");
     } else {
+      const alignment = node.attrs.layoutClass;
+      alignment && state.write(`${alignment}> `);
       state.renderInline(node);
       state.closeBlock(node);
     }

@@ -17,7 +17,7 @@ import Node from "./Node";
  * ![](image.jpg "class") -> [, "", "image.jpg", "small"]
  * ![Lorem](image.jpg "class") -> [, "Lorem", "image.jpg", "small"]
  */
-const IMAGE_INPUT_REGEX = /!\[(?<alt>.*?)]\((?<filename>.*?)(?=\“|\))\“?(?<layoutclass>[^\”]+)?\”?\)/;
+const IMAGE_INPUT_REGEX = /!\[(?<alt>.*?)]\((?<filename>.*?)(?=\“|\))\“?(?<layoutclass>[^\”]+)?\”?\s?(?<sizeclass>[^\s]+)?\)/;
 
 const uploadPlugin = (options) =>
   new Plugin({
@@ -93,10 +93,12 @@ const IMAGE_CLASSES = [
   "large",
 ];
 const getLayoutAndTitle = (tokenTitle) => {
+  console.log({ tokenTitle });
   if (!tokenTitle) return {};
   if (IMAGE_CLASSES.includes(tokenTitle)) {
     return {
       layoutClass: tokenTitle,
+      sizeClass: tokenTitle,
     };
   } else {
     return {
@@ -301,6 +303,9 @@ export default class Image extends Node {
       markdown += ' "' + state.esc(node.attrs.layoutClass) + '"';
     } else if (node.attrs.title) {
       markdown += ' "' + state.esc(node.attrs.title) + '"';
+    }
+    if (node.attrs.sizeClass) {
+      markdown += ' "' + state.esc(node.attrs.sizeClass) + '"';
     }
     markdown += ")";
     state.write(markdown);

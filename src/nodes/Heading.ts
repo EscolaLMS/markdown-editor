@@ -47,6 +47,8 @@ export default class Heading extends Node {
   }
 
   toMarkdown(state: MarkdownSerializerState, node: ProsemirrorNode) {
+    const alignment = node.attrs.layoutClass;
+    alignment && state.write(`${alignment}> `);
     state.write(state.repeat("#", node.attrs.level) + " ");
     state.renderInline(node);
     state.closeBlock(node);
