@@ -6,7 +6,6 @@ import {
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
-  InsertAboveIcon,
 } from "outline-icons";
 import isNodeActive from "../queries/isNodeActive";
 import { MenuItem } from "../types";
@@ -19,13 +18,13 @@ export default function imageMenuItems(
 ): MenuItem[] {
   const { schema } = state;
   const isLeftAligned = isNodeActive(schema.nodes.image, {
-    layoutClass: "left-50",
+    layoutClass: "left",
   });
   const isRightAligned = isNodeActive(schema.nodes.image, {
-    layoutClass: "right-50",
+    layoutClass: "right",
   });
   const isCenterAligned = isNodeActive(schema.nodes.image, {
-    layoutClass: "center-50",
+    layoutClass: "center",
   });
   const isSmall = isNodeActive(schema.nodes.image, {
     sizeClass: "small",

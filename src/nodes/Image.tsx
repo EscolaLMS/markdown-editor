@@ -84,14 +84,7 @@ const uploadPlugin = (options) =>
     },
   });
 
-const IMAGE_CLASSES = [
-  "right-50",
-  "left-50",
-  "center-50",
-  "small",
-  "medium",
-  "large",
-];
+const IMAGE_CLASSES = ["right", "left", "center", "small", "medium", "large"];
 const getLayoutAndTitle = (tokenTitle) => {
   console.log({ tokenTitle });
   if (!tokenTitle) return {};
@@ -247,7 +240,12 @@ export default class Image extends Node {
         className={className}
         style={
           isSvg
-            ? { position: "absolute", width: "100%", top: "1.4em", zIndex: 1 }
+            ? {
+                position: "absolute",
+                width: "100%",
+                top: "1.4em",
+                zIndex: 1,
+              }
             : undefined
         }
       >
@@ -304,9 +302,6 @@ export default class Image extends Node {
     } else if (node.attrs.title) {
       markdown += ' "' + state.esc(node.attrs.title) + '"';
     }
-    if (node.attrs.sizeClass) {
-      markdown += ' "' + state.esc(node.attrs.sizeClass) + '"';
-    }
     markdown += ")";
     state.write(markdown);
   }
@@ -323,6 +318,20 @@ export default class Image extends Node {
       },
     };
   }
+  getCurrentLayoutClass = (state) => {
+    let currentLayoutClass = state.selection.node.attrs.layoutClass;
+    console.log({ currentLayoutClass });
+    if (currentLayoutClass) {
+      const firstIndex = currentLayoutClass.indexOf("-");
+
+      currentLayoutClass =
+        firstIndex !== -1
+          ? currentLayoutClass.substring(0, firstIndex)
+          : currentLayoutClass;
+    }
+
+    return currentLayoutClass;
+  };
 
   commands({ type }) {
     return {
@@ -331,41 +340,48 @@ export default class Image extends Node {
         return true;
       },
       alignRight: () => (state, dispatch) => {
+        const currentSizeClass = state.selection.node.attrs.sizeClass;
         const attrs = {
           ...state.selection.node.attrs,
           title: null,
-          layoutClass: "right-50",
+          layoutClass: currentSizeClass ? `right-${currentSizeClass}` : "right",
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
         return true;
       },
       alignLeft: () => (state, dispatch) => {
+        const currentSizeClass = state.selection.node.attrs.sizeClass;
         const attrs = {
           ...state.selection.node.attrs,
           title: null,
-          layoutClass: "left-50",
+          layoutClass: currentSizeClass ? `left-${currentSizeClass}` : "left",
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
         return true;
       },
       alignCenter: () => (state, dispatch) => {
+        const currentSizeClass = state.selection.node.attrs.sizeClass;
         const attrs = {
           ...state.selection.node.attrs,
-          layoutClass:
-            state.selection.node.attrs.layoutClass === "center-50"
-              ? null
-              : "center-50",
+          layoutClass: currentSizeClass
+            ? `center-${currentSizeClass}`
+            : "center",
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
         return true;
       },
       smallSize: () => (state, dispatch) => {
+        const currentLayoutClass = this.getCurrentLayoutClass(state);
+
         const attrs = {
           ...state.selection.node.attrs,
           title: null,
+          layoutClass: currentLayoutClass
+            ? `${currentLayoutClass}-small`
+            : "small",
           sizeClass: "small",
         };
         const { selection } = state;
@@ -373,9 +389,14 @@ export default class Image extends Node {
         return true;
       },
       mediumSize: () => (state, dispatch) => {
+        const currentLayoutClass = this.getCurrentLayoutClass(state);
+
         const attrs = {
           ...state.selection.node.attrs,
           title: null,
+          layoutClass: currentLayoutClass
+            ? `${currentLayoutClass}-medium`
+            : "medium",
           sizeClass: "medium",
         };
         const { selection } = state;
@@ -383,10 +404,14 @@ export default class Image extends Node {
         return true;
       },
       largeSize: () => (state, dispatch) => {
+        const currentLayoutClass = this.getCurrentLayoutClass(state);
+
         const attrs = {
           ...state.selection.node.attrs,
-          sizeClass:
-            state.selection.node.attrs.sizeClass === "large" ? null : "large",
+          layoutClass: currentLayoutClass
+            ? `${currentLayoutClass}-large`
+            : "large",
+          sizeClass: "large",
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
