@@ -56,7 +56,11 @@ export default class Paragraph extends Node {
   }
 
   toMarkdown(state, node) {
-    if (this.isEmptyParagraph(node, state)) {
+    if (
+      node.textContent.trim() === "" &&
+      node.childCount === 0 &&
+      !state.inTable
+    ) {
       state.write("\\\n");
     } else {
       state.renderInline(node);
@@ -81,11 +85,5 @@ export default class Paragraph extends Node {
       : null;
 
     return ["p", { class: className }, 0];
-  }
-
-  isEmptyParagraph(node, state) {
-    return (
-      node.textContent.trim() === "" && node.childCount === 0 && !state.inTable
-    );
   }
 }
