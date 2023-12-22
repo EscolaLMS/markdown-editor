@@ -86,7 +86,6 @@ const uploadPlugin = (options) =>
 
 const IMAGE_CLASSES = ["right", "left", "center", "small", "medium", "large"];
 const getLayoutAndTitle = (tokenTitle) => {
-  console.log({ tokenTitle });
   if (!tokenTitle) return {};
   if (IMAGE_CLASSES.includes(tokenTitle)) {
     return {
@@ -318,7 +317,8 @@ export default class Image extends Node {
   }
   getCurrentLayoutClass = (state) => {
     let currentLayoutClass = state.selection.node.attrs.layoutClass;
-    console.log({ currentLayoutClass });
+    const currentSizeClass = state.selection.node.attrs.sizeClass;
+
     if (currentLayoutClass) {
       const firstIndex = currentLayoutClass.indexOf("-");
 
@@ -328,7 +328,7 @@ export default class Image extends Node {
           : currentLayoutClass;
     }
 
-    return currentLayoutClass;
+    return currentLayoutClass === currentSizeClass ? "" : currentLayoutClass;
   };
 
   commands({ type }) {

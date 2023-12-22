@@ -806,6 +806,7 @@ const StyledEditor = styled("div")<{
   .image-center,
   .image-right,
   .image-left {
+    width: 50%;
     margin-bottom: 1em;
     clear: initial;
   }
@@ -814,7 +815,6 @@ const StyledEditor = styled("div")<{
   .image-center-small,
   .image-center-medium,
   .image-center-large {
-    width: 50%;
     margin: auto;
   }
 

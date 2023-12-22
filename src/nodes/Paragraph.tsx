@@ -56,7 +56,6 @@ export default class Paragraph extends Node {
   }
 
   toMarkdown(state, node) {
-    console.log(state, node);
     if (
       node.textContent.trim() === "" &&
       node.childCount === 0 &&
