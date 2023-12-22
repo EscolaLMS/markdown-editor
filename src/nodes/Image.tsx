@@ -17,7 +17,7 @@ import Node from "./Node";
  * ![](image.jpg "class") -> [, "", "image.jpg", "small"]
  * ![Lorem](image.jpg "class") -> [, "Lorem", "image.jpg", "small"]
  */
-const IMAGE_INPUT_REGEX = /!\[(?<alt>.*?)]\((?<filename>.*?)(?=\“|\))\“?(?<layoutclass>[^\”]+)?\”?\s?(?<sizeclass>[^\s]+)?\)/;
+const IMAGE_INPUT_REGEX = /!\[(?<alt>.*?)]\((?<filename>.*?)(?=\“|\))\“?(?<layoutclass>[^\”]+)?\”?\s?/;
 
 const uploadPlugin = (options) =>
   new Plugin({
@@ -138,24 +138,19 @@ export default class Image extends Node {
             const layoutClass = layoutClassMatched
               ? layoutClassMatched[1]
               : null;
-            const sizeClassMatched =
-              className && className.match(/image-(.*)$/);
-            const sizeClass = sizeClassMatched ? sizeClassMatched[1] : null;
+
             return {
               src: img.getAttribute("src"),
               alt: img.getAttribute("alt"),
               title: img.getAttribute("title"),
               layoutClass: layoutClass,
-              sizeClass: sizeClass,
             };
           },
         },
       ],
       toDOM: (node) => {
-        const { layoutClass, sizeClass } = node.attrs;
-        const className = `${layoutClass ? `image-${layoutClass}` : "image"} ${
-          sizeClass ? `image-${sizeClass}` : ""
-        }`;
+        const { layoutClass } = node.attrs;
+        const className = `${layoutClass ? `image-${layoutClass}` : "image"}`;
 
         return [
           "div",
@@ -196,7 +191,7 @@ export default class Image extends Node {
 
   handleBlur = ({ node, getPos }) => (event) => {
     const alt = event.target.innerText;
-    const { src, title, layoutClass, sizeClass } = node.attrs;
+    const { src, title, layoutClass } = node.attrs;
 
     if (alt === node.attrs.alt) return;
 
@@ -210,7 +205,6 @@ export default class Image extends Node {
       alt,
       title,
       layoutClass,
-      sizeClass,
     });
     view.dispatch(transaction);
   };

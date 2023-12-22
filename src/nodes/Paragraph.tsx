@@ -63,8 +63,6 @@ export default class Paragraph extends Node {
     ) {
       state.write("\\\n");
     } else {
-      const alignment = node.attrs.layoutClass;
-      alignment && state.write(`${alignment}> `);
       state.renderInline(node);
       state.closeBlock(node);
     }
