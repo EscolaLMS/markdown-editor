@@ -803,40 +803,56 @@ const StyledEditor = styled("div")<{
     }
   }
 
-  .image-center-50 {
+  .image-center,
+  .image-right,
+  .image-left {
     width: 50%;
+    margin-bottom: 1em;
+    clear: initial;
+  }
+
+  .image-center,
+  .image-center-small,
+  .image-center-medium,
+  .image-center-large {
     margin: auto;
-    margin-bottom: 1em;
-    clear: initial;
   }
 
-  .image-right-50 {
+  .image-right,
+  .image-right-small,
+  .image-right-medium,
+  .image-right-large {
     float: right;
-    width: 50%;
     margin-left: 2em;
-    margin-bottom: 1em;
-    clear: initial;
   }
 
-  .image-left-50 {
+  .image-left,
+  .image-left-small,
+  .image-left-medium,
+  .image-left-large {
     float: left;
-    width: 50%;
     margin-right: 2em;
-    margin-bottom: 1em;
-    clear: initial;
   }
 
-  .image-small {
+  .image-small,
+  .image-center-small,
+  .image-right-small,
+  .image-left-small {
     width: 200px;
   }
-
-  .image-medium {
+  .image-medium,
+  .image-center-medium,
+  .image-right-medium,
+  .image-left-medium {
     width: 400px;
   }
-
-  .image-large {
+  .image-large,
+  .image-center-large,
+  .image-right-large,
+  .image-left-large {
     width: 600px;
   }
+
   .text-center {
     display: block;
     width: 100%;
