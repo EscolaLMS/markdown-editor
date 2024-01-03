@@ -85,7 +85,22 @@ const uploadPlugin = (options) =>
     },
   });
 
-const IMAGE_CLASSES = ['right', 'left', 'center', 'small', 'medium', 'large'];
+const ALIGNMENT_CLASSES = ['left', 'center', 'right'];
+const SIZE_CLASSES = ['small', 'medium', 'large'];
+
+const COMBINED_CLASSES = ALIGNMENT_CLASSES.reduce(
+  (acc, alignment) => [
+    ...acc,
+    ...SIZE_CLASSES.map((size) => `${alignment}-${size}`),
+  ],
+  []
+);
+
+const IMAGE_CLASSES = [
+  ...ALIGNMENT_CLASSES,
+  ...SIZE_CLASSES,
+  ...COMBINED_CLASSES,
+];
 const getLayoutAndTitle = (tokenTitle) => {
   if (!tokenTitle) return {};
   if (IMAGE_CLASSES.includes(tokenTitle)) {
