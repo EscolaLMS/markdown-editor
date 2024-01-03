@@ -1,10 +1,10 @@
-import { wrappingInputRule } from "prosemirror-inputrules";
-import toggleList from "../commands/toggleList";
-import Node from "./Node";
+import { wrappingInputRule } from 'prosemirror-inputrules';
+import toggleList from '../commands/toggleList';
+import Node from './Node';
 
 export default class OrderedList extends Node {
   get name() {
-    return "ordered_list";
+    return 'ordered_list';
   }
 
   get schema() {
@@ -14,22 +14,22 @@ export default class OrderedList extends Node {
           default: 1,
         },
       },
-      content: "list_item+",
-      group: "block",
+      content: 'list_item+',
+      group: 'block',
       parseDOM: [
         {
-          tag: "ol",
+          tag: 'ol',
           getAttrs: (dom: HTMLOListElement) => ({
-            order: dom.hasAttribute("start")
-              ? parseInt(dom.getAttribute("start") || "1", 10)
+            order: dom.hasAttribute('start')
+              ? parseInt(dom.getAttribute('start') || '1', 10)
               : 1,
           }),
         },
       ],
-      toDOM: node =>
+      toDOM: (node) =>
         node.attrs.order === 1
-          ? ["ol", 0]
-          : ["ol", { start: node.attrs.order }, 0],
+          ? ['ol', 0]
+          : ['ol', { start: node.attrs.order }, 0],
     };
   }
 
@@ -39,7 +39,7 @@ export default class OrderedList extends Node {
 
   keys({ type, schema }) {
     return {
-      "Shift-Ctrl-9": toggleList(type, schema.nodes.list_item),
+      'Shift-Ctrl-9': toggleList(type, schema.nodes.list_item),
     };
   }
 
@@ -48,7 +48,7 @@ export default class OrderedList extends Node {
       wrappingInputRule(
         /^(\d+)\.\s$/,
         type,
-        match => ({ order: +match[1] }),
+        (match) => ({ order: +match[1] }),
         (match, node) => node.childCount + node.attrs.order === +match[1]
       ),
     ];
@@ -57,15 +57,15 @@ export default class OrderedList extends Node {
   toMarkdown(state, node) {
     const start = node.attrs.order || 1;
     const maxW = `${start + node.childCount - 1}`.length;
-    const space = state.repeat(" ", maxW + 2);
+    const space = state.repeat(' ', maxW + 2);
 
-    state.renderList(node, space, i => {
+    state.renderList(node, space, (i) => {
       const nStr = `${start + i}`;
-      return state.repeat(" ", maxW - nStr.length) + nStr + ". ";
+      return state.repeat(' ', maxW - nStr.length) + nStr + '. ';
     });
   }
 
   parseMarkdown() {
-    return { block: "ordered_list" };
+    return { block: 'ordered_list' };
   }
 }

@@ -1,16 +1,16 @@
-import { Plugin } from "prosemirror-state";
-import { Decoration, DecorationSet } from "prosemirror-view";
-import Extension from "../lib/Extension";
+import { Plugin } from 'prosemirror-state';
+import { Decoration, DecorationSet } from 'prosemirror-view';
+import Extension from '../lib/Extension';
 
 export default class Placeholder extends Extension {
   get name() {
-    return "empty-placeholder";
+    return 'empty-placeholder';
   }
 
   get defaultOptions() {
     return {
-      emptyNodeClass: "placeholder",
-      placeholder: "",
+      emptyNodeClass: 'placeholder',
+      placeholder: '',
     };
   }
 
@@ -18,11 +18,11 @@ export default class Placeholder extends Extension {
     return [
       new Plugin({
         props: {
-          decorations: state => {
+          decorations: (state) => {
             const { doc } = state;
             const decorations: Decoration[] = [];
             const completelyEmpty =
-              doc.textContent === "" &&
+              doc.textContent === '' &&
               doc.childCount <= 1 &&
               doc.content.size <= 2;
 
@@ -30,13 +30,13 @@ export default class Placeholder extends Extension {
               if (!completelyEmpty) {
                 return;
               }
-              if (pos !== 0 || node.type.name !== "paragraph") {
+              if (pos !== 0 || node.type.name !== 'paragraph') {
                 return;
               }
 
               const decoration = Decoration.node(pos, pos + node.nodeSize, {
                 class: this.options.emptyNodeClass,
-                "data-empty-text": this.options.placeholder,
+                'data-empty-text': this.options.placeholder,
               });
               decorations.push(decoration);
             });

@@ -1,17 +1,17 @@
-import { wrappingInputRule } from "prosemirror-inputrules";
-import toggleList from "../commands/toggleList";
-import Node from "./Node";
+import { wrappingInputRule } from 'prosemirror-inputrules';
+import toggleList from '../commands/toggleList';
+import Node from './Node';
 
 export default class CheckboxList extends Node {
   get name() {
-    return "checkbox_list";
+    return 'checkbox_list';
   }
 
   get schema() {
     return {
-      group: "block",
-      content: "checkbox_item+",
-      toDOM: () => ["ul", { class: this.name }, 0],
+      group: 'block',
+      content: 'checkbox_item+',
+      toDOM: () => ['ul', { class: this.name }, 0],
       parseDOM: [
         {
           tag: `[class="${this.name}"]`,
@@ -22,7 +22,7 @@ export default class CheckboxList extends Node {
 
   keys({ type, schema }) {
     return {
-      "Shift-Ctrl-7": toggleList(type, schema.nodes.checkbox_item),
+      'Shift-Ctrl-7': toggleList(type, schema.nodes.checkbox_item),
     };
   }
 
@@ -35,10 +35,10 @@ export default class CheckboxList extends Node {
   }
 
   toMarkdown(state, node) {
-    state.renderList(node, "  ", () => "- ");
+    state.renderList(node, '  ', () => '- ');
   }
 
   parseMarkdown() {
-    return { block: "checkbox_list" };
+    return { block: 'checkbox_list' };
   }
 }

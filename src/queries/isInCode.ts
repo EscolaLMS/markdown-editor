@@ -1,4 +1,4 @@
-import isMarkActive from "./isMarkActive";
+import isMarkActive from './isMarkActive';
 
 export default function isInCode(state) {
   const $head = state.selection.$head;

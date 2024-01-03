@@ -1,21 +1,21 @@
-import { Plugin } from "prosemirror-state";
-import copy from "copy-to-clipboard";
-import { Decoration, DecorationSet } from "prosemirror-view";
-import { Node as ProsemirrorNode, NodeType } from "prosemirror-model";
-import { textblockTypeInputRule } from "prosemirror-inputrules";
-import { setBlockType } from "prosemirror-commands";
-import { MarkdownSerializerState } from "prosemirror-markdown";
-import backspaceToParagraph from "../commands/backspaceToParagraph";
-import toggleBlockType from "../commands/toggleBlockType";
-import headingToSlug from "../lib/headingToSlug";
-import Node from "./Node";
-import { ToastType } from "../types";
+import { Plugin } from 'prosemirror-state';
+import copy from 'copy-to-clipboard';
+import { Decoration, DecorationSet } from 'prosemirror-view';
+import { Node as ProsemirrorNode, NodeType } from 'prosemirror-model';
+import { textblockTypeInputRule } from 'prosemirror-inputrules';
+import { setBlockType } from 'prosemirror-commands';
+import { MarkdownSerializerState } from 'prosemirror-markdown';
+import backspaceToParagraph from '../commands/backspaceToParagraph';
+import toggleBlockType from '../commands/toggleBlockType';
+import headingToSlug from '../lib/headingToSlug';
+import Node from './Node';
+import { ToastType } from '../types';
 
 export default class Heading extends Node {
-  className = "heading-name";
+  className = 'heading-name';
 
   get name() {
-    return "heading";
+    return 'heading';
   }
 
   get defaultOptions() {
@@ -32,15 +32,15 @@ export default class Heading extends Node {
           default: 1,
         },
       },
-      content: "inline*",
-      group: "block",
+      content: 'inline*',
+      group: 'block',
       defining: true,
       draggable: false,
       parseDOM: this.options.levels.map((level) => ({
         tag: `h${level}`,
         attrs: { level },
         getAttrs: (dom) => this.extractLayoutClassFromDOM(dom),
-        contentElement: "span",
+        contentElement: 'span',
       })),
       toDOM: (node) => this.createDOMAttributes(node),
     };
@@ -49,14 +49,14 @@ export default class Heading extends Node {
   toMarkdown(state: MarkdownSerializerState, node: ProsemirrorNode) {
     const alignment = node.attrs.layoutClass;
     alignment && state.write(`${alignment}> `);
-    state.write(state.repeat("#", node.attrs.level) + " ");
+    state.write(state.repeat('#', node.attrs.level) + ' ');
     state.renderInline(node);
     state.closeBlock(node);
   }
 
   parseMarkdown() {
     return {
-      block: "heading",
+      block: 'heading',
       getAttrs: (token: Record<string, any>) => ({
         level: +token.tag.slice(1),
       }),
@@ -75,13 +75,13 @@ export default class Heading extends Node {
       // as it's added directly to the dom by a decoration.
       const anchor = event.currentTarget.parentNode.previousSibling;
       if (!anchor.className.includes(this.className)) {
-        throw new Error("Did not find anchor as previous sibling of heading");
+        throw new Error('Did not find anchor as previous sibling of heading');
       }
       const hash = `#${anchor.id}`;
 
       // the existing url might contain a hash already, lets make sure to remove
       // that rather than appending another one.
-      const urlWithoutHash = window.location.href.split("#")[0];
+      const urlWithoutHash = window.location.href.split('#')[0];
       copy(urlWithoutHash + hash);
 
       if (this.options.onShowToast) {
@@ -137,7 +137,7 @@ export default class Heading extends Node {
           Decoration.widget(
             pos,
             () => {
-              const anchor = document.createElement("a");
+              const anchor = document.createElement('a');
               anchor.id = id;
               anchor.className = this.className;
               return anchor;
@@ -190,16 +190,16 @@ export default class Heading extends Node {
       ? `text-${node.attrs.layoutClass}`
       : null;
 
-    const button = document.createElement("button");
-    button.innerText = "#";
-    button.type = "button";
-    button.className = "heading-anchor";
-    button.addEventListener("click", this.handleCopyLink());
+    const button = document.createElement('button');
+    button.innerText = '#';
+    button.type = 'button';
+    button.className = 'heading-anchor';
+    button.addEventListener('click', this.handleCopyLink());
 
     return [
       `h${node.attrs.level + (this.options.offset || 0)}`,
       // button,
-      ["span", { class: className }, 0],
+      ['span', { class: className }, 0],
     ];
   }
 }

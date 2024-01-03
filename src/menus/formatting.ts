@@ -10,14 +10,14 @@ import {
   AlignLeftIcon,
   AlignRightIcon,
   AlignCenterIcon,
-} from "outline-icons";
-import { isInTable } from "prosemirror-tables";
-import { EditorState } from "prosemirror-state";
-import isInList from "../queries/isInList";
-import isMarkActive from "../queries/isMarkActive";
-import isNodeActive from "../queries/isNodeActive";
-import { MenuItem } from "../types";
-import baseDictionary from "../dictionary";
+} from 'outline-icons';
+import { isInTable } from 'prosemirror-tables';
+import { EditorState } from 'prosemirror-state';
+import isInList from '../queries/isInList';
+import isMarkActive from '../queries/isMarkActive';
+import isNodeActive from '../queries/isNodeActive';
+import { MenuItem } from '../types';
+import baseDictionary from '../dictionary';
 
 export default function formattingMenuItems(
   state: EditorState,
@@ -30,70 +30,70 @@ export default function formattingMenuItems(
   const allowBlocks = !isTable && !isList;
 
   const isLeftAligned = isNodeActive(schema.nodes.paragraph, {
-    layoutClass: "left",
+    layoutClass: 'left',
   });
   const isRightAligned = isNodeActive(schema.nodes.paragraph, {
-    layoutClass: "right",
+    layoutClass: 'right',
   });
   const isCenterAligned = isNodeActive(schema.nodes.paragraph, {
-    layoutClass: "center",
+    layoutClass: 'center',
   });
 
   return [
     {
-      name: "link",
+      name: 'link',
       tooltip: dictionary.createLink,
       icon: LinkIcon,
       active: isMarkActive(schema.marks.link),
-      attrs: { href: "" },
+      attrs: { href: '' },
     },
     {
-      name: "separator",
+      name: 'separator',
     },
     {
-      name: "placeholder",
+      name: 'placeholder',
       tooltip: dictionary.placeholder,
       icon: InputIcon,
       active: isMarkActive(schema.marks.placeholder),
       visible: isTemplate,
     },
     {
-      name: "separator",
+      name: 'separator',
       visible: isTemplate,
     },
     {
-      name: "strong",
+      name: 'strong',
       tooltip: dictionary.strong,
       icon: BoldIcon,
       active: isMarkActive(schema.marks.strong),
     },
     {
-      name: "em",
+      name: 'em',
       tooltip: dictionary.em,
       icon: ItalicIcon,
       active: isMarkActive(schema.marks.em),
     },
     {
-      name: "strikethrough",
+      name: 'strikethrough',
       tooltip: dictionary.strikethrough,
       icon: StrikethroughIcon,
       active: isMarkActive(schema.marks.strikethrough),
     },
     {
-      name: "mark",
+      name: 'mark',
       tooltip: dictionary.mark,
       icon: HighlightIcon,
       active: isMarkActive(schema.marks.mark),
       visible: !isTemplate,
     },
     {
-      name: "code_inline",
+      name: 'code_inline',
       tooltip: dictionary.codeInline,
       icon: CodeIcon,
       active: isMarkActive(schema.marks.code_inline),
     },
     {
-      name: "blockquote",
+      name: 'blockquote',
       tooltip: dictionary.quote,
       icon: BlockQuoteIcon,
       active: isNodeActive(schema.nodes.blockquote),
@@ -101,30 +101,30 @@ export default function formattingMenuItems(
       visible: allowBlocks,
     },
     {
-      name: "separator",
+      name: 'separator',
     },
     {
-      name: "alignTextLeft",
+      name: 'alignTextLeft',
       tooltip: dictionary.alignLeft,
       icon: AlignLeftIcon,
       active: isLeftAligned,
     },
     {
-      name: "alignTextCenter",
+      name: 'alignTextCenter',
       tooltip: dictionary.alignCenter,
       icon: AlignCenterIcon,
       active: isCenterAligned,
     },
     {
-      name: "alignTextRight",
+      name: 'alignTextRight',
       tooltip: dictionary.alignRight,
       icon: AlignRightIcon,
       active: isRightAligned,
     },
     {
-      name: "add_flashcard",
+      name: 'add_flashcard',
       tooltip: dictionary.quote,
-      text: "+ Flashcard",
+      text: '+ Flashcard',
       visible: true,
     },
   ];

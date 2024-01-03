@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   BlockQuoteIcon,
   BulletedListIcon,
@@ -19,26 +19,26 @@ import {
   InfoIcon,
   DocumentIcon,
   LinkIcon,
-} from "outline-icons";
-import { MenuItem } from "../types";
-import baseDictionary from "../dictionary";
+} from 'outline-icons';
+import { MenuItem } from '../types';
+import baseDictionary from '../dictionary';
 
 export default function blockMenuItems(
   dictionary: typeof baseDictionary
 ): MenuItem[] {
   return [
     {
-      name: "image",
-      title: "Upload image, audio, video, PDF",
+      name: 'image',
+      title: 'Upload image, audio, video, PDF',
       icon: ImageIcon,
-      keywords: "picture photo",
+      keywords: 'picture photo',
       memberOnly: false,
     },
     {
-      name: "sketch",
-      title: "Sketch",
+      name: 'sketch',
+      title: 'Sketch',
       icon: HighlightIcon,
-      keywords: "sketch drawing scratchpad",
+      keywords: 'sketch drawing scratchpad',
       memberOnly: true,
     },
     // {
@@ -49,85 +49,85 @@ export default function blockMenuItems(
     //   memberOnly: true,
     // },
     {
-      name: "link",
-      title: "Link note",
+      name: 'link',
+      title: 'Link note',
       icon: LinkIcon,
-      keywords: "link url uri href",
-      shortcut: "[[",
+      keywords: 'link url uri href',
+      shortcut: '[[',
     },
     {
-      name: "separator",
+      name: 'separator',
     },
     {
-      name: "checkbox_list",
+      name: 'checkbox_list',
       title: dictionary.checkboxList,
       icon: TodoListIcon,
-      keywords: "checklist checkbox task",
-      shortcut: "[ ]",
+      keywords: 'checklist checkbox task',
+      shortcut: '[ ]',
     },
     {
-      name: "bullet_list",
+      name: 'bullet_list',
       title: dictionary.bulletList,
       icon: BulletedListIcon,
-      shortcut: "-",
+      shortcut: '-',
     },
     {
-      name: "ordered_list",
+      name: 'ordered_list',
       title: dictionary.orderedList,
       icon: OrderedListIcon,
-      shortcut: "1.",
+      shortcut: '1.',
     },
     {
-      name: "table",
+      name: 'table',
       title: dictionary.table,
       icon: TableIcon,
       attrs: { rowsCount: 3, colsCount: 3 },
     },
     {
-      name: "blockquote",
+      name: 'blockquote',
       title: dictionary.quote,
       icon: BlockQuoteIcon,
-      shortcut: ">",
+      shortcut: '>',
     },
     {
-      name: "code_block",
+      name: 'code_block',
       title: dictionary.codeBlock,
       icon: CodeIcon,
-      shortcut: "```",
-      keywords: "script",
+      shortcut: '```',
+      keywords: 'script',
     },
     {
-      name: "math_inline",
+      name: 'math_inline',
       title: dictionary.math,
       icon: MathIcon,
-      shortcut: "$$",
-      keywords: "math latex equation",
+      shortcut: '$$',
+      keywords: 'math latex equation',
     },
     {
-      name: "separator",
+      name: 'separator',
     },
     {
-      name: "heading",
+      name: 'heading',
       title: dictionary.h1,
-      keywords: "h1 heading1 title",
+      keywords: 'h1 heading1 title',
       icon: Heading1Icon,
-      shortcut: "#",
+      shortcut: '#',
       attrs: { level: 1 },
     },
     {
-      name: "heading",
+      name: 'heading',
       title: dictionary.h2,
-      keywords: "h2 heading2",
+      keywords: 'h2 heading2',
       icon: Heading2Icon,
-      shortcut: "##",
+      shortcut: '##',
       attrs: { level: 2 },
     },
     {
-      name: "heading",
+      name: 'heading',
       title: dictionary.h3,
-      keywords: "h3 heading3",
+      keywords: 'h3 heading3',
       icon: Heading3Icon,
-      shortcut: "###",
+      shortcut: '###',
       attrs: { level: 3 },
     },
   ];

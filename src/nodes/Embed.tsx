@@ -1,17 +1,17 @@
-import * as React from "react";
-import Node from "./Node";
+import * as React from 'react';
+import Node from './Node';
 
 export default class Embed extends Node {
   get name() {
-    return "embed";
+    return 'embed';
   }
 
   get schema() {
     return {
       // doesn't work.. on reload will be empty
       // inline: true,
-      content: "inline*",
-      group: "block",
+      content: 'inline*',
+      group: 'block',
       // group: "inline",
       atom: true,
       // selectable: true,
@@ -22,10 +22,10 @@ export default class Embed extends Node {
       },
       parseDOM: [
         {
-          tag: "iframe",
+          tag: 'iframe',
           getAttrs: (dom: HTMLIFrameElement) => {
             const { embeds } = this.editor.props;
-            const href = dom.getAttribute("src") || "";
+            const href = dom.getAttribute('src') || '';
 
             if (embeds) {
               for (const embed of embeds) {
@@ -44,8 +44,8 @@ export default class Embed extends Node {
           },
         },
       ],
-      toDOM: node => [
-        "iframe",
+      toDOM: (node) => [
+        'iframe',
         { src: node.attrs.href, contentEditable: false },
         0,
       ],
@@ -66,7 +66,7 @@ export default class Embed extends Node {
   }
 
   commands({ type }) {
-    return attrs => (state, dispatch) => {
+    return (attrs) => (state, dispatch) => {
       dispatch(
         state.tr.replaceSelectionWith(type.create(attrs)).scrollIntoView()
       );
@@ -77,18 +77,18 @@ export default class Embed extends Node {
   toMarkdown(state, node) {
     state.ensureNewLine();
     state.write(
-      "[" + state.esc(node.attrs.href) + "](" + state.esc(node.attrs.href) + ")"
+      '[' + state.esc(node.attrs.href) + '](' + state.esc(node.attrs.href) + ')'
     );
-    state.write("\n\n");
+    state.write('\n\n');
   }
 
   parseMarkdown() {
     return {
-      node: "embed",
-      getAttrs: token => ({
-        href: token.attrGet("href"),
-        matches: token.attrGet("matches"),
-        component: token.attrGet("component"),
+      node: 'embed',
+      getAttrs: (token) => ({
+        href: token.attrGet('href'),
+        matches: token.attrGet('matches'),
+        component: token.attrGet('component'),
       }),
     };
   }

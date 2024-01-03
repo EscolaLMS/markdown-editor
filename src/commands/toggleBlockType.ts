@@ -1,5 +1,5 @@
-import { setBlockType } from "prosemirror-commands";
-import isNodeActive from "../queries/isNodeActive";
+import { setBlockType } from 'prosemirror-commands';
+import isNodeActive from '../queries/isNodeActive';
 
 export default function toggleBlockType(type, toggleType, attrs = {}) {
   return (state, dispatch) => {

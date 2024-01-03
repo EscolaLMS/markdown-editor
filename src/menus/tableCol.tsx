@@ -5,11 +5,11 @@ import {
   AlignCenterIcon,
   InsertLeftIcon,
   InsertRightIcon,
-} from "outline-icons";
-import { EditorState } from "prosemirror-state";
-import isNodeActive from "../queries/isNodeActive";
-import { MenuItem } from "../types";
-import baseDictionary from "../dictionary";
+} from 'outline-icons';
+import { EditorState } from 'prosemirror-state';
+import isNodeActive from '../queries/isNodeActive';
+import { MenuItem } from '../types';
+import baseDictionary from '../dictionary';
 
 export default function tableColMenuItems(
   state: EditorState,
@@ -20,58 +20,58 @@ export default function tableColMenuItems(
 
   return [
     {
-      name: "setColumnAttr",
+      name: 'setColumnAttr',
       tooltip: dictionary.alignLeft,
       icon: AlignLeftIcon,
-      attrs: { index, alignment: "left" },
+      attrs: { index, alignment: 'left' },
       active: isNodeActive(schema.nodes.th, {
         colspan: 1,
         rowspan: 1,
-        alignment: "left",
+        alignment: 'left',
       }),
     },
     {
-      name: "setColumnAttr",
+      name: 'setColumnAttr',
       tooltip: dictionary.alignCenter,
       icon: AlignCenterIcon,
-      attrs: { index, alignment: "center" },
+      attrs: { index, alignment: 'center' },
       active: isNodeActive(schema.nodes.th, {
         colspan: 1,
         rowspan: 1,
-        alignment: "center",
+        alignment: 'center',
       }),
     },
     {
-      name: "setColumnAttr",
+      name: 'setColumnAttr',
       tooltip: dictionary.alignRight,
       icon: AlignRightIcon,
-      attrs: { index, alignment: "right" },
+      attrs: { index, alignment: 'right' },
       active: isNodeActive(schema.nodes.th, {
         colspan: 1,
         rowspan: 1,
-        alignment: "right",
+        alignment: 'right',
       }),
     },
     {
-      name: "separator",
+      name: 'separator',
     },
     {
-      name: "addColumnBefore",
+      name: 'addColumnBefore',
       tooltip: dictionary.addColumnBefore,
       icon: InsertLeftIcon,
       active: () => false,
     },
     {
-      name: "addColumnAfter",
+      name: 'addColumnAfter',
       tooltip: dictionary.addColumnAfter,
       icon: InsertRightIcon,
       active: () => false,
     },
     {
-      name: "separator",
+      name: 'separator',
     },
     {
-      name: "deleteColumn",
+      name: 'deleteColumn',
       tooltip: dictionary.deleteColumn,
       icon: TrashIcon,
       active: () => false,

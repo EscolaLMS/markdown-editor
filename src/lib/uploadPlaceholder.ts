@@ -1,5 +1,5 @@
-import { Plugin } from "prosemirror-state";
-import { Decoration, DecorationSet } from "prosemirror-view";
+import { Plugin } from 'prosemirror-state';
+import { Decoration, DecorationSet } from 'prosemirror-view';
 
 // based on the example at: https://prosemirror.net/examples/upload/
 const uploadPlaceholder = new Plugin({
@@ -15,12 +15,12 @@ const uploadPlaceholder = new Plugin({
       const action = tr.getMeta(this);
 
       if (action && action.add) {
-        const element = document.createElement("div");
-        element.className = "image placeholder";
+        const element = document.createElement('div');
+        element.className = 'image placeholder';
 
-        const img = document.createElement("img");
+        const img = document.createElement('img');
         img.src =
-          "https://raw.githubusercontent.com/Codelessly/FlutterLoadingGIFs/master/packages/cupertino_activity_indicator.gif";
+          'https://raw.githubusercontent.com/Codelessly/FlutterLoadingGIFs/master/packages/cupertino_activity_indicator.gif';
 
         element.appendChild(img);
 
@@ -30,7 +30,7 @@ const uploadPlaceholder = new Plugin({
         set = set.add(tr.doc, [deco]);
       } else if (action && action.remove) {
         set = set.remove(
-          set.find(null, null, spec => spec.id === action.remove.id)
+          set.find(null, null, (spec) => spec.id === action.remove.id)
         );
       }
       return set;
@@ -47,6 +47,6 @@ export default uploadPlaceholder;
 
 export function findPlaceholder(state, id) {
   const decos = uploadPlaceholder.getState(state);
-  const found = decos.find(null, null, spec => spec.id === id);
+  const found = decos.find(null, null, (spec) => spec.id === id);
   return found.length ? found[0].from : null;
 }

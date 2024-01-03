@@ -1,26 +1,26 @@
-import refractor from "refractor/core";
-import flattenDeep from "lodash/flattenDeep";
-import { Plugin, PluginKey } from "prosemirror-state";
-import { Decoration, DecorationSet } from "prosemirror-view";
-import { findBlockNodes } from "prosemirror-utils";
+import refractor from 'refractor/core';
+import flattenDeep from 'lodash/flattenDeep';
+import { Plugin, PluginKey } from 'prosemirror-state';
+import { Decoration, DecorationSet } from 'prosemirror-view';
+import { findBlockNodes } from 'prosemirror-utils';
 
 export const LANGUAGES = {
-  none: "None", // additional entry to disable highlighting
-  bash: "Bash",
-  css: "CSS",
-  clike: "C",
-  csharp: "C#",
-  go: "Go",
-  markup: "HTML",
-  java: "Java",
-  javascript: "JavaScript",
-  json: "JSON",
-  php: "PHP",
-  powershell: "Powershell",
-  python: "Python",
-  ruby: "Ruby",
-  sql: "SQL",
-  typescript: "TypeScript",
+  none: 'None', // additional entry to disable highlighting
+  bash: 'Bash',
+  css: 'CSS',
+  clike: 'C',
+  csharp: 'C#',
+  go: 'Go',
+  markup: 'HTML',
+  java: 'Java',
+  javascript: 'JavaScript',
+  json: 'JSON',
+  php: 'PHP',
+  powershell: 'Powershell',
+  python: 'Python',
+  ruby: 'Ruby',
+  sql: 'SQL',
+  typescript: 'TypeScript',
 };
 
 type ParsedNode = {
@@ -31,15 +31,15 @@ type ParsedNode = {
 function getDecorations({ doc, name }) {
   const decorations: Decoration[] = [];
   const blocks = findBlockNodes(doc).filter(
-    item => item.node.type.name === name
+    (item) => item.node.type.name === name
   );
 
   function parseNodes(
     nodes: refractor.RefractorNode[],
     classNames: string[] = []
   ): any {
-    return nodes.map(node => {
-      if (node.type === "element") {
+    return nodes.map((node) => {
+      if (node.type === 'element') {
         const classes = [...classNames, ...(node.properties.className || [])];
         return parseNodes(node.children, classes);
       }
@@ -51,10 +51,10 @@ function getDecorations({ doc, name }) {
     });
   }
 
-  blocks.forEach(block => {
+  blocks.forEach((block) => {
     let startPos = block.pos + 1;
     const language = block.node.attrs.language;
-    if (!language || language === "none" || !refractor.registered(language)) {
+    if (!language || language === 'none' || !refractor.registered(language)) {
       return;
     }
 
@@ -73,9 +73,9 @@ function getDecorations({ doc, name }) {
           to,
         };
       })
-      .forEach(node => {
+      .forEach((node) => {
         const decoration = Decoration.inline(node.from, node.to, {
-          class: (node.classes || []).join(" "),
+          class: (node.classes || []).join(' '),
         });
         decorations.push(decoration);
       });
@@ -86,7 +86,7 @@ function getDecorations({ doc, name }) {
 
 export default function Prism({ name, deferred = true }) {
   return new Plugin({
-    key: new PluginKey("prism"),
+    key: new PluginKey('prism'),
     state: {
       init: (_, { doc }) => {
         if (deferred) return;

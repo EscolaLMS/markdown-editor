@@ -9,9 +9,9 @@ for rendering output.
 */
 
 /*jslint node: true */
-"use strict";
+'use strict';
 
-const katex = require("katex");
+const katex = require('katex');
 
 // Test if potential opening or closing delimieter
 // Assumes that there is a "$" at state.src[pos]
@@ -47,14 +47,14 @@ function isValidDelim(state, pos) {
 function math_inline(state, silent) {
   let start, match, token, res, pos, esc_count;
 
-  if (state.src[state.pos] !== "$") {
+  if (state.src[state.pos] !== '$') {
     return false;
   }
 
   res = isValidDelim(state, state.pos);
   if (!res.can_open) {
     if (!silent) {
-      state.pending += "$";
+      state.pending += '$';
     }
     state.pos += 1;
     return true;
@@ -66,11 +66,11 @@ function math_inline(state, silent) {
   // we have found an opening delimieter already.
   start = state.pos + 1;
   match = start;
-  while ((match = state.src.indexOf("$", match)) !== -1) {
+  while ((match = state.src.indexOf('$', match)) !== -1) {
     // Found potential $, look for escapes, pos will point to
     // first non escape when complete
     pos = match - 1;
-    while (state.src[pos] === "\\") {
+    while (state.src[pos] === '\\') {
       pos -= 1;
     }
 
@@ -84,7 +84,7 @@ function math_inline(state, silent) {
   // No closing delimter found.  Consume $ and continue.
   if (match === -1) {
     if (!silent) {
-      state.pending += "$";
+      state.pending += '$';
     }
     state.pos = start;
     return true;
@@ -93,7 +93,7 @@ function math_inline(state, silent) {
   // Check if we have empty content, ie: $$.  Do not parse.
   if (match - start === 0) {
     if (!silent) {
-      state.pending += "$$";
+      state.pending += '$$';
     }
     state.pos = start + 1;
     return true;
@@ -103,15 +103,15 @@ function math_inline(state, silent) {
   res = isValidDelim(state, match);
   if (!res.can_close) {
     if (!silent) {
-      state.pending += "$";
+      state.pending += '$';
     }
     state.pos = start;
     return true;
   }
 
   if (!silent) {
-    token = state.push("math_inline", "math", 0);
-    token.markup = "$";
+    token = state.push('math_inline', 'math', 0);
+    token.markup = '$';
     token.content = state.src.slice(start, match);
   }
 
@@ -132,7 +132,7 @@ function math_display(state, start, end, silent) {
   if (pos + 2 > max) {
     return false;
   }
-  if (state.src.slice(pos, pos + 2) !== "$$") {
+  if (state.src.slice(pos, pos + 2) !== '$$') {
     return false;
   }
 
@@ -142,7 +142,7 @@ function math_display(state, start, end, silent) {
   if (silent) {
     return true;
   }
-  if (firstLine.trim().slice(-2) === "$$") {
+  if (firstLine.trim().slice(-2) === '$$') {
     // Single line expression
     firstLine = firstLine.trim().slice(0, -2);
     found = true;
@@ -163,13 +163,8 @@ function math_display(state, start, end, silent) {
       break;
     }
 
-    if (
-      state.src
-        .slice(pos, max)
-        .trim()
-        .slice(-2) === "$$"
-    ) {
-      lastPos = state.src.slice(0, max).lastIndexOf("$$");
+    if (state.src.slice(pos, max).trim().slice(-2) === '$$') {
+      lastPos = state.src.slice(0, max).lastIndexOf('$$');
       lastLine = state.src.slice(pos, lastPos);
       found = true;
     }
@@ -177,14 +172,14 @@ function math_display(state, start, end, silent) {
 
   state.line = next + 1;
 
-  token = state.push("math_display", "math", 0);
+  token = state.push('math_display', 'math', 0);
   token.block = true;
   token.content =
-    (firstLine && firstLine.trim() ? firstLine + "\n" : "") +
+    (firstLine && firstLine.trim() ? firstLine + '\n' : '') +
     state.getLines(start + 1, next, state.tShift[start], true) +
-    (lastLine && lastLine.trim() ? lastLine : "");
+    (lastLine && lastLine.trim() ? lastLine : '');
   token.map = [start, state.line];
-  token.markup = "$$";
+  token.markup = '$$';
   return true;
 }
 
@@ -194,7 +189,7 @@ export default function math_plugin(md, options) {
   options = options || {};
 
   // set KaTeX as the renderer for markdown-it-simplemath
-  const katexInline = function(latex) {
+  const katexInline = function (latex) {
     options.displayMode = false;
     try {
       return katex.renderToString(latex, options);
@@ -206,14 +201,14 @@ export default function math_plugin(md, options) {
     }
   };
 
-  const inlineRenderer = function(tokens, idx) {
+  const inlineRenderer = function (tokens, idx) {
     return katexInline(tokens[idx].content);
   };
 
-  const katexBlock = function(latex) {
+  const katexBlock = function (latex) {
     options.displayMode = true;
     try {
-      return "<p>" + katex.renderToString(latex, options) + "</p>";
+      return '<p>' + katex.renderToString(latex, options) + '</p>';
     } catch (error) {
       if (options.throwOnError) {
         console.log(error);
@@ -222,13 +217,13 @@ export default function math_plugin(md, options) {
     }
   };
 
-  const blockRenderer = function(tokens, idx) {
-    return katexBlock(tokens[idx].content) + "\n";
+  const blockRenderer = function (tokens, idx) {
+    return katexBlock(tokens[idx].content) + '\n';
   };
 
-  md.inline.ruler.after("escape", "math_inline", math_inline);
-  md.block.ruler.after("blockquote", "math_display", math_display, {
-    alt: ["paragraph", "reference", "blockquote", "list"],
+  md.inline.ruler.after('escape', 'math_inline', math_inline);
+  md.block.ruler.after('blockquote', 'math_display', math_display, {
+    alt: ['paragraph', 'reference', 'blockquote', 'list'],
   });
   // md.renderer.rules.math_inline = inlineRenderer;
   // md.renderer.rules.math_display = blockRenderer;

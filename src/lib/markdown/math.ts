@@ -14,15 +14,15 @@ function math(state, silent) {
   }
   startMathPos += match[0].length;
   let type, endMarker, includeMarkers;
-  if (match[0] === "\\[") {
-    type = "math_display";
-    endMarker = "\\\\]";
-  } else if (match[0] === "\\(") {
-    type = "math_inline";
-    endMarker = "\\\\)";
+  if (match[0] === '\\[') {
+    type = 'math_display';
+    endMarker = '\\\\]';
+  } else if (match[0] === '\\(') {
+    type = 'math_inline';
+    endMarker = '\\\\)';
   } else if (match[1]) {
-    type = "math";
-    endMarker = "\\end{" + match[1] + "}";
+    type = 'math';
+    endMarker = '\\end{' + match[1] + '}';
     includeMarkers = true;
   }
   const endMarkerPos = state.src.indexOf(endMarker, startMathPos);
@@ -31,7 +31,7 @@ function math(state, silent) {
   }
   const nextPos = endMarkerPos + endMarker.length;
   if (!silent) {
-    const token = state.push(type, "", 0);
+    const token = state.push(type, '', 0);
     token.content = includeMarkers
       ? state.src.slice(state.pos, nextPos)
       : state.src.slice(startMathPos, endMarkerPos);
@@ -47,10 +47,10 @@ function texMath(state, silent) {
   }
 
   // Parse tex math according to http://pandoc.org/README.html#math
-  let endMarker = "$";
+  let endMarker = '$';
   const afterStartMarker = state.src.charCodeAt(++startMathPos);
   if (afterStartMarker === 0x24 /* $ */) {
-    endMarker = "$$";
+    endMarker = '$$';
     if (state.src.charCodeAt(++startMathPos) === 0x24 /* $ */) {
       // 3 markers are too much
       return false;
@@ -92,8 +92,8 @@ function texMath(state, silent) {
 
   if (!silent) {
     const token = state.push(
-      endMarker.length === 1 ? "math_inline" : "math_display",
-      "",
+      endMarker.length === 1 ? 'math_inline' : 'math_display',
+      '',
       0
     );
     token.content = state.src.slice(startMathPos, endMarkerPos);
@@ -104,34 +104,34 @@ function texMath(state, silent) {
 
 function escapeHtml(html) {
   return html
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/\u00a0/g, " ");
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/\u00a0/g, ' ');
 }
 
 const mapping = {
-  math: "Math",
-  math_inline: "InlineMath",
-  math_display: "DisplayMath",
+  math: 'Math',
+  math_inline: 'InlineMath',
+  math_display: 'DisplayMath',
 };
 
 const options = {
-  beforeMath: "",
-  afterMath: "",
-  beforeInlineMath: "\\(",
-  afterInlineMath: "\\)",
-  beforeDisplayMath: "\\[",
-  afterDisplayMath: "\\]",
+  beforeMath: '',
+  afterMath: '',
+  beforeInlineMath: '\\(',
+  afterInlineMath: '\\)',
+  beforeDisplayMath: '\\[',
+  afterDisplayMath: '\\]',
 };
 
-export default function(md) {
-  md.inline.ruler.before("escape", "math", math);
-  md.inline.ruler.push("texMath", texMath);
+export default function (md) {
+  md.inline.ruler.before('escape', 'math', math);
+  md.inline.ruler.push('texMath', texMath);
 
-  Object.keys(mapping).forEach(function(key) {
-    const before = options["before" + mapping[key]];
-    const after = options["after" + mapping[key]];
-    md.renderer.rules[key] = function(tokens, idx) {
+  Object.keys(mapping).forEach(function (key) {
+    const before = options['before' + mapping[key]];
+    const after = options['after' + mapping[key]];
+    md.renderer.rules[key] = function (tokens, idx) {
       return before + escapeHtml(tokens[idx].content) + after;
     };
   });

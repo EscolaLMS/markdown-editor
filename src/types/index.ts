@@ -1,9 +1,9 @@
-import * as React from "react";
-import { EditorState } from "prosemirror-state";
+import * as React from 'react';
+import { EditorState } from 'prosemirror-state';
 
 export enum ToastType {
-  Error = "error",
-  Info = "info",
+  Error = 'error',
+  Info = 'info',
 }
 
 export type MenuItem = {

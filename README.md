@@ -3,18 +3,15 @@ https://stefanbauer.me/articles/how-to-keep-your-git-fork-up-to-date
 
 [![npm version](https://badge.fury.io/js/rich-markdown-editor.svg)](https://badge.fury.io/js/rich-markdown-editor) [![CircleCI](https://img.shields.io/circleci/project/github/outline/rich-markdown-editor.svg)](https://circleci.com/gh/outline/rich-markdown-editor) [![Formatted with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier) [![TypeScript](https://camo.githubusercontent.com/21132e0838961fbecb75077042aa9b15bc0bf6f9/68747470733a2f2f62616467656e2e6e65742f62616467652f4275696c74253230576974682f547970655363726970742f626c7565)](https://www.typescriptlang.org/)
 
-
-
 # traverse-markdown-editor
 
 A React and [Prosemirror](https://prosemirror.net/) based editor that powers [Traverse](http://traverse.link) and can also be used for displaying content in a read-only fashion.
 Forked from <https://github.com/outline/rich-markdown-editor>.
 The editor is WYSIWYG and includes formatting tools whilst retaining the ability to write markdown shortcuts inline and output plain Markdown.
 
-> Important Note: This project is **not attempting to be an all-purpose Markdown editor**. It is built for the [Outline](http://getoutline.com) knowledge base, and whilst others are welcome to fork or use this package in your own products, development decisions are centered around the needs of Outline. 
+> Important Note: This project is **not attempting to be an all-purpose Markdown editor**. It is built for the [Outline](http://getoutline.com) knowledge base, and whilst others are welcome to fork or use this package in your own products, development decisions are centered around the needs of Outline.
 
 ## Usage
-
 
 ### Install
 
@@ -33,15 +30,12 @@ Note that `react`, `react-dom`, and `styled-components` are _required_ peer depe
 ### Import
 
 ```javascript
-import Editor from "traverse-markdown-editor";
+import Editor from 'traverse-markdown-editor';
 
-<Editor
-  defaultValue="Hello world!"
-/>
+<Editor defaultValue="Hello world!" />;
 ```
 
 See a working example in the [example directory](/example).
-
 
 ### Props
 
@@ -116,12 +110,12 @@ Optionally define embeds which will be inserted in place of links when the `matc
 <Editor
   embeds={[
     {
-      title: "Google Doc",
-      keywords: "google docs gdocs",
+      title: 'Google Doc',
+      keywords: 'google docs gdocs',
       icon: <GoogleDocIcon />,
-      matcher: href => href.matches(/docs.google.com/i),
-      component: GoogleDocEmbed
-    }
+      matcher: (href) => href.matches(/docs.google.com/i),
+      component: GoogleDocEmbed,
+    },
   ]}
 />
 ```
@@ -134,7 +128,7 @@ If you want the editor to support images then this callback must be provided. Th
 
 ```javascript
 <Editor
-  uploadImage={async file => {
+  uploadImage={async (file) => {
     const result = await s3.upload(file);
     return result.url;
   }}
@@ -187,9 +181,9 @@ The editor provides an ability to create links from the formatting toolbar for o
 
 ```javascript
 <Editor
-  onCreateLink={async title => {
+  onCreateLink={async (title) => {
     const url = await MyAPI.create({
-      title
+      title,
     });
 
     return url;
@@ -203,14 +197,12 @@ Triggered when the editor wishes to show a message to the user. Hook into your a
 notification system, or simplisticly use `window.alert(message)`. The second parameter
 is the type of toast: 'error' or 'info'.
 
-
 #### `onClickLink(href: string, event: MouseEvent): void`
 
 This callback allows overriding of link handling. It's often the case that you want to have external links open a new window and have internal links use something like `react-router` to navigate. If no callback is provided then default behavior of opening a new tab will apply to all links. eg:
 
-
 ```javascript
-import { history } from "react-router";
+import { history } from 'react-router';
 
 <Editor
   onClickLink={(href, event) => {
@@ -220,17 +212,16 @@ import { history } from "react-router";
       window.location.href = href;
     }
   }}
-/>
+/>;
 ```
 
 #### `onHoverLink(event: MouseEvent): boolean`
 
 This callback allows detecting when the user hovers over a link in the document.
 
-
 ```javascript
 <Editor
-  onHoverLink={event => {
+  onHoverLink={(event) => {
     console.log(`Hovered link ${event.target.href}`);
   }}
 />
@@ -241,13 +232,13 @@ This callback allows detecting when the user hovers over a link in the document.
 This callback allows handling of clicking on hashtags in the document text. If no callback is provided then hashtags will render as regular text, so you can choose if to support them or not by passing this prop.
 
 ```javascript
-import { history } from "react-router";
+import { history } from 'react-router';
 
 <Editor
-  onClickHashtag={tag => {
+  onClickHashtag={(tag) => {
     history.push(`/hashtags/${tag}`);
   }}
-/>
+/>;
 ```
 
 #### `handleDOMEvents: {[name: string]: (view: EditorView, event: Event) => boolean;}`
@@ -257,10 +248,10 @@ This object maps [event](https://developer.mozilla.org/en-US/docs/Web/Events) na
 ```javascript
 <Editor
   handleDOMEvents={{
-    focus: () => console.log("FOCUS"),
-    blur: () => console.log("BLUR"),
-    paste: () => console.log("PASTE"),
-    touchstart: () => console.log("TOUCH START"),
+    focus: () => console.log('FOCUS'),
+    blur: () => console.log('BLUR'),
+    paste: () => console.log('PASTE'),
+    touchstart: () => console.log('TOUCH START'),
   }}
 />
 ```
@@ -270,15 +261,17 @@ This object maps [event](https://developer.mozilla.org/en-US/docs/Web/Events) na
 The Editor component exposes a few methods for interacting with the mounted editor.
 
 #### `focusAtStart(): void`
+
 Place the cursor at the start of the document and focus it.
 
 #### `focusAtEnd(): void`
+
 Place the cursor at the end of the document and focus it.
 
 #### `getHeadings(): { title: string, level: number, id: string }[]`
+
 Returns an array of objects with the text content of all the headings in the document,
 their level in the hierarchy, and the anchor id. This is useful to construct your own table of contents since the `toc` option was removed in v10.
-
 
 ## Contributing
 

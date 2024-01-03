@@ -1,9 +1,9 @@
-import { InputRule } from "prosemirror-inputrules";
-import { Plugin } from "prosemirror-state";
-import { isInTable } from "prosemirror-tables";
-import { findParentNode } from "prosemirror-utils";
-import { Decoration, DecorationSet } from "prosemirror-view";
-import Extension from "../lib/Extension";
+import { InputRule } from 'prosemirror-inputrules';
+import { Plugin } from 'prosemirror-state';
+import { isInTable } from 'prosemirror-tables';
+import { findParentNode } from 'prosemirror-utils';
+import { Decoration, DecorationSet } from 'prosemirror-view';
+import Extension from '../lib/Extension';
 
 const MAX_MATCH = 500;
 const OPEN_REGEX = /^\/(\w+)?$/;
@@ -25,7 +25,7 @@ function run(view, from, to, regex, handler) {
     Math.max(0, $from.parentOffset - MAX_MATCH),
     $from.parentOffset,
     null,
-    "\ufffc"
+    '\ufffc'
   );
 
   const match = regex.exec(textBefore);
@@ -36,7 +36,7 @@ function run(view, from, to, regex, handler) {
 
 export default class BlockMenuTrigger extends Extension {
   get name() {
-    return "blockmenu";
+    return 'blockmenu';
   }
 
   get plugins() {
@@ -51,7 +51,7 @@ export default class BlockMenuTrigger extends Extension {
             // Prosemirror input rules are not triggered on backspace, however
             // we need them to be evaluted for the filter trigger to work
             // correctly. This additional handler adds inputrules-like handling.
-            if (event.key === "Backspace") {
+            if (event.key === 'Backspace') {
               // timeout ensures that the delete has been handled by prosemirror
               // and any characters removed, before we evaluate the rule.
               setTimeout(() => {
@@ -70,10 +70,10 @@ export default class BlockMenuTrigger extends Extension {
             // If the query is active and we're navigating the block menu then
             // just ignore the key events in the editor itself until we're done
             if (
-              event.key === "Enter" ||
-              event.key === "ArrowUp" ||
-              event.key === "ArrowDown" ||
-              event.key === "Tab"
+              event.key === 'Enter' ||
+              event.key === 'ArrowUp' ||
+              event.key === 'ArrowDown' ||
+              event.key === 'Tab'
             ) {
               const { pos } = view.state.selection.$from;
 
@@ -85,9 +85,9 @@ export default class BlockMenuTrigger extends Extension {
 
             return false;
           },
-          decorations: state => {
+          decorations: (state) => {
             const parent = findParentNode(
-              node => node.type.name === "paragraph"
+              (node) => node.type.name === 'paragraph'
             )(state.selection);
 
             if (!parent) {
@@ -96,19 +96,19 @@ export default class BlockMenuTrigger extends Extension {
 
             const decorations: Decoration[] = [];
             const isEmpty = parent && parent.node.content.size === 0;
-            const isSlash = parent && parent.node.textContent === "/";
+            const isSlash = parent && parent.node.textContent === '/';
             const isTopLevel = state.selection.$from.depth === 1;
 
             if (isTopLevel) {
               if (isEmpty) {
                 decorations.push(
                   Decoration.widget(parent.pos, () => {
-                    const icon = document.createElement("button");
-                    icon.type = "button";
-                    icon.className = "block-menu-trigger";
-                    icon.innerText = "+";
-                    icon.addEventListener("click", () => {
-                      this.options.onOpen("");
+                    const icon = document.createElement('button');
+                    icon.type = 'button';
+                    icon.className = 'block-menu-trigger';
+                    icon.innerText = '+';
+                    icon.addEventListener('click', () => {
+                      this.options.onOpen('');
                     });
                     return icon;
                   })
@@ -119,8 +119,8 @@ export default class BlockMenuTrigger extends Extension {
                     parent.pos,
                     parent.pos + parent.node.nodeSize,
                     {
-                      class: "placeholder",
-                      "data-empty-text":
+                      class: 'placeholder',
+                      'data-empty-text':
                         this.options.newLinePlaceholder ||
                         this.options.dictionary.newLineEmpty,
                     }
@@ -134,8 +134,8 @@ export default class BlockMenuTrigger extends Extension {
                     parent.pos,
                     parent.pos + parent.node.nodeSize,
                     {
-                      class: "placeholder",
-                      "data-empty-text": `  ${this.options.dictionary.newLineWithSlash}`,
+                      class: 'placeholder',
+                      'data-empty-text': `  ${this.options.dictionary.newLineWithSlash}`,
                     }
                   )
                 );
@@ -158,7 +158,7 @@ export default class BlockMenuTrigger extends Extension {
       new InputRule(OPEN_REGEX, (state, match) => {
         if (
           match &&
-          state.selection.$from.parent.type.name === "paragraph" &&
+          state.selection.$from.parent.type.name === 'paragraph' &&
           !isInTable(state)
         ) {
           this.options.onOpen(match[1]);

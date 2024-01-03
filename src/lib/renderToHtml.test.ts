@@ -1,18 +1,18 @@
-import renderToHtml from "./renderToHtml";
+import renderToHtml from './renderToHtml';
 
-test("renders an empty string", () => {
-  expect(renderToHtml("")).toBe("");
+test('renders an empty string', () => {
+  expect(renderToHtml('')).toBe('');
 });
 
-test("renders plain text as paragraph", () => {
-  expect(renderToHtml("plain text")).toMatchSnapshot();
+test('renders plain text as paragraph', () => {
+  expect(renderToHtml('plain text')).toMatchSnapshot();
 });
 
-test("renders blockquote", () => {
-  expect(renderToHtml("> blockquote")).toMatchSnapshot();
+test('renders blockquote', () => {
+  expect(renderToHtml('> blockquote')).toMatchSnapshot();
 });
 
-test("renders code block", () => {
+test('renders code block', () => {
   expect(
     renderToHtml(`
     this is indented code
@@ -20,7 +20,7 @@ test("renders code block", () => {
   ).toMatchSnapshot();
 });
 
-test("renders code fence", () => {
+test('renders code fence', () => {
   expect(
     renderToHtml(`\`\`\`javascript
 this is code
@@ -28,14 +28,14 @@ this is code
   ).toMatchSnapshot();
 });
 
-test("renders checkbox list", () => {
+test('renders checkbox list', () => {
   expect(
     renderToHtml(`- [ ] unchecked
 - [x] checked`)
   ).toMatchSnapshot();
 });
 
-test("renders bullet list", () => {
+test('renders bullet list', () => {
   expect(
     renderToHtml(`- item one
 - item two
@@ -43,7 +43,7 @@ test("renders bullet list", () => {
   ).toMatchSnapshot();
 });
 
-test("renders info notice", () => {
+test('renders info notice', () => {
   expect(
     renderToHtml(`:::info
 content of notice
@@ -51,7 +51,7 @@ content of notice
   ).toMatchSnapshot();
 });
 
-test("renders warning notice", () => {
+test('renders warning notice', () => {
   expect(
     renderToHtml(`:::warning
 content of notice
@@ -59,7 +59,7 @@ content of notice
   ).toMatchSnapshot();
 });
 
-test("renders tip notice", () => {
+test('renders tip notice', () => {
   expect(
     renderToHtml(`:::tip
 content of notice
@@ -67,7 +67,7 @@ content of notice
   ).toMatchSnapshot();
 });
 
-test("renders headings", () => {
+test('renders headings', () => {
   expect(
     renderToHtml(`# Heading 1
 
@@ -79,23 +79,23 @@ test("renders headings", () => {
   ).toMatchSnapshot();
 });
 
-test("renders horizontal rule", () => {
+test('renders horizontal rule', () => {
   expect(renderToHtml(`---`)).toMatchSnapshot();
 });
 
-test("renders image", () => {
+test('renders image', () => {
   expect(
     renderToHtml(`![caption](https://lorempixel.com/200/200)`)
   ).toMatchSnapshot();
 });
 
-test("renders image with alignment", () => {
+test('renders image with alignment', () => {
   expect(
     renderToHtml(`![caption](https://lorempixel.com/200/200 "left-40")`)
   ).toMatchSnapshot();
 });
 
-test("renders table", () => {
+test('renders table', () => {
   expect(
     renderToHtml(`
 | heading | centered | right aligned |
@@ -106,42 +106,42 @@ test("renders table", () => {
   ).toMatchSnapshot();
 });
 
-test("renders bold marks", () => {
+test('renders bold marks', () => {
   expect(renderToHtml(`this is **bold** text`)).toMatchSnapshot();
 });
 
-test("renders code marks", () => {
+test('renders code marks', () => {
   expect(renderToHtml(`this is \`inline code\` text`)).toMatchSnapshot();
 });
 
-test("renders highlight marks", () => {
+test('renders highlight marks', () => {
   expect(renderToHtml(`this is ==highlighted== text`)).toMatchSnapshot();
 });
 
-test("renders italic marks", () => {
+test('renders italic marks', () => {
   expect(renderToHtml(`this is *italic* text`)).toMatchSnapshot();
   expect(renderToHtml(`this is _also italic_ text`)).toMatchSnapshot();
 });
 
-test("renders template placeholder marks", () => {
+test('renders template placeholder marks', () => {
   expect(renderToHtml(`this is !!a placeholder!!`)).toMatchSnapshot();
 });
 
-test("renders underline marks", () => {
+test('renders underline marks', () => {
   expect(renderToHtml(`this is __underlined__ text`)).toMatchSnapshot();
 });
 
-test("renders link marks", () => {
+test('renders link marks', () => {
   expect(
     renderToHtml(`this is [linked](https://www.example.com) text`)
   ).toMatchSnapshot();
 });
 
-test("renders underline marks", () => {
+test('renders underline marks', () => {
   expect(renderToHtml(`this is ~~strikethrough~~ text`)).toMatchSnapshot();
 });
 
-test("renders ordered list", () => {
+test('renders ordered list', () => {
   expect(
     renderToHtml(`1. item one
 1. item two`)

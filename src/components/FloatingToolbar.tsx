@@ -1,10 +1,10 @@
-import ResizeObserver from "resize-observer-polyfill";
-import * as React from "react";
-import { Portal } from "react-portal";
-import { EditorView } from "prosemirror-view";
-import styled from "styled-components";
+import ResizeObserver from 'resize-observer-polyfill';
+import * as React from 'react';
+import { Portal } from 'react-portal';
+import { EditorView } from 'prosemirror-view';
+import styled from 'styled-components';
 
-const SSR = typeof window === "undefined";
+const SSR = typeof window === 'undefined';
 
 type Props = {
   active?: boolean;
@@ -20,7 +20,7 @@ const defaultPosition = {
   visible: false,
 };
 
-const useComponentSize = ref => {
+const useComponentSize = (ref) => {
   const [size, setSize] = React.useState({
     width: 0,
     height: 0,
@@ -29,7 +29,7 @@ const useComponentSize = ref => {
   React.useEffect(() => {
     let sizeObserver;
     try {
-      sizeObserver = new ResizeObserver(entries => {
+      sizeObserver = new ResizeObserver((entries) => {
         entries.forEach(({ target }) => {
           if (
             size.width !== target.clientWidth ||
@@ -88,14 +88,14 @@ function usePosition({ menuRef, isSelectingText, props }) {
   }
 
   const isImageSelection =
-    selection.node && selection.node.type.name === "image";
+    selection.node && selection.node.type.name === 'image';
   // Images need their own positioning to get the toolbar in the center
   if (isImageSelection) {
     const element = view.nodeDOM(selection.from);
 
     // Images are wrapped which impacts positioning - need to traverse through
     // p > span > div.image
-    const imageElement = element.getElementsByTagName("img")[0];
+    const imageElement = element.getElementsByTagName('img')[0];
     const { left, top, width } = imageElement.getBoundingClientRect();
 
     return {
@@ -156,12 +156,12 @@ function FloatingToolbar(props) {
       setSelectingText(false);
     };
 
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
     };
   }, [props.active]);
 
@@ -191,12 +191,13 @@ const Wrapper = styled.div<{
   will-change: opacity, transform;
   padding: 8px 16px;
   position: absolute;
-  z-index: ${props => props.theme.zIndex + 100};
+  z-index: ${(props) => props.theme.zIndex + 100};
   opacity: 0;
-  background-color: ${props => props.theme.toolbarBackground};
+  background-color: ${(props) => props.theme.toolbarBackground};
   border-radius: 4px;
   transform: scale(0.95);
-  transition: opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
+  transition:
+    opacity 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
     transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transition-delay: 150ms;
   line-height: 0;
@@ -206,17 +207,17 @@ const Wrapper = styled.div<{
   white-space: nowrap;
 
   &::before {
-    content: "";
+    content: '';
     display: block;
     width: 24px;
     height: 24px;
     transform: translateX(-50%) rotate(45deg);
-    background: ${props => props.theme.toolbarBackground};
+    background: ${(props) => props.theme.toolbarBackground};
     border-radius: 3px;
     z-index: -1;
     position: absolute;
     bottom: -2px;
-    left: calc(50% - ${props => props.offset || 0}px);
+    left: calc(50% - ${(props) => props.offset || 0}px);
   }
 
   * {

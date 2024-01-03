@@ -1,22 +1,22 @@
-import { DecorationSet, Decoration } from "prosemirror-view";
-import { Plugin } from "prosemirror-state";
-import { isColumnSelected, getCellsInRow } from "prosemirror-utils";
-import Node from "./Node";
+import { DecorationSet, Decoration } from 'prosemirror-view';
+import { Plugin } from 'prosemirror-state';
+import { isColumnSelected, getCellsInRow } from 'prosemirror-utils';
+import Node from './Node';
 
 export default class TableHeadCell extends Node {
   get name() {
-    return "th";
+    return 'th';
   }
 
   get schema() {
     return {
-      content: "paragraph+",
-      tableRole: "header_cell",
+      content: 'paragraph+',
+      tableRole: 'header_cell',
       isolating: true,
-      parseDOM: [{ tag: "th" }],
+      parseDOM: [{ tag: 'th' }],
       toDOM(node) {
         return [
-          "th",
+          'th',
           node.attrs.alignment
             ? { style: `text-align: ${node.attrs.alignment}` }
             : {},
@@ -37,8 +37,8 @@ export default class TableHeadCell extends Node {
 
   parseMarkdown() {
     return {
-      block: "th",
-      getAttrs: tok => ({ alignment: tok.info }),
+      block: 'th',
+      getAttrs: (tok) => ({ alignment: tok.info }),
     };
   }
 
@@ -46,7 +46,7 @@ export default class TableHeadCell extends Node {
     return [
       new Plugin({
         props: {
-          decorations: state => {
+          decorations: (state) => {
             const { doc, selection } = state;
             const decorations: Decoration[] = [];
             const cells = getCellsInRow(0)(selection);
@@ -56,18 +56,18 @@ export default class TableHeadCell extends Node {
                 decorations.push(
                   Decoration.widget(pos + 1, () => {
                     const colSelected = isColumnSelected(index)(selection);
-                    let className = "grip-column";
+                    let className = 'grip-column';
                     if (colSelected) {
-                      className += " selected";
+                      className += ' selected';
                     }
                     if (index === 0) {
-                      className += " first";
+                      className += ' first';
                     } else if (index === cells.length - 1) {
-                      className += " last";
+                      className += ' last';
                     }
-                    const grip = document.createElement("a");
+                    const grip = document.createElement('a');
                     grip.className = className;
-                    grip.addEventListener("mousedown", event => {
+                    grip.addEventListener('mousedown', (event) => {
                       event.preventDefault();
                       this.options.onSelectColumn(index, state);
                     });
