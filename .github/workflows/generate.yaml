@@ -18,7 +18,7 @@ jobs:
       - run: git config --global user.email "github@escolalms.com" && git config --global user.name "Github"
       - run: npm i --legacy-peer-deps
       - run: npm run build
-      - run: npm version ${{github.ref_name}} -f
+      - run: npm version ${{github.ref_name}}
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
