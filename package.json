@@ -12,8 +12,8 @@
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
     "start": "start-storybook -p 6006",
     "build": "tsc",
-    "prepublish": "yarn build",
-    "watch": "yarn tsc-watch",
+    "prepublish": "npm run build",
+    "watch": "tsc-watch",
     "build-storybook": "build-storybook"
   },
   "serve": {
