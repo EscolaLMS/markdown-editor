@@ -1,7 +1,8 @@
 {
-  "name": "traverse-markdown-editor",
+  "name": "@escolalms/markdown-editor",
   "description": "A rich text editor with Markdown shortcuts",
-  "version": "11.7.45",
+  "version": "12.0.6",
+  "private": false,
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "license": "BSD-3-Clause",
@@ -11,8 +12,8 @@
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet",
     "start": "start-storybook -p 6006",
     "build": "tsc",
-    "prepublish": "yarn build",
-    "watch": "yarn tsc-watch",
+    "prepublish": "npm run build",
+    "watch": "tsc-watch",
     "build-storybook": "build-storybook",
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check ."
@@ -113,7 +114,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dominiczy/traverse-markdown-editor.git"
+    "url": "git+https://github.com/EscolaLMS/markdown-editor.git"
   },
   "keywords": [
     "editor",
@@ -123,7 +124,7 @@
   ],
   "author": "Tom Moor <tom.moor@gmail.com>",
   "bugs": {
-    "url": "https://github.com/dominiczy/traverse-markdown-editor/issues"
+    "url": "https://github.com/EscolaLMS/markdown-editor/issues"
   },
-  "homepage": "https://github.com/dominiczy/traverse-markdown-editor#readme"
+  "homepage": "https://github.com/EscolaLMS/markdown-editor#readme"
 }
