@@ -1,25 +1,25 @@
-import Editor from "./index";
-import debounce from "lodash/debounce";
-import { Props } from "..";
-import React from "react";
-import { Story, Meta } from "@storybook/react/types-6-0";
+import Editor from './index';
+import debounce from 'lodash/debounce';
+import { Props } from '..';
+import React from 'react';
+import { Story, Meta } from '@storybook/react/types-6-0';
 
 export default {
-  title: "Editor",
+  title: 'Editor',
   component: Editor,
   argTypes: {
-    onSave: { action: "save" },
-    onCancel: { action: "cancel" },
-    onClickHashtag: { action: "hashtag clicked" },
-    onClickLink: { action: "link clicked" },
-    onHoverLink: { action: "link hovered" },
-    onShowToast: { action: "toast" },
-    onFocus: { action: "focused" },
-    onBlur: { action: "blurred" },
+    onSave: { action: 'save' },
+    onCancel: { action: 'cancel' },
+    onClickHashtag: { action: 'hashtag clicked' },
+    onClickLink: { action: 'link clicked' },
+    onHoverLink: { action: 'link hovered' },
+    onShowToast: { action: 'toast' },
+    onFocus: { action: 'focused' },
+    onBlur: { action: 'blurred' },
   },
 } as Meta;
 
-const Template: Story<Props> = args => <Editor {...args} />;
+const Template: Story<Props> = (args) => <Editor {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
@@ -193,26 +193,65 @@ ReadOnlyWriteCheckboxes.args = {
 export const Persisted = Template.bind({});
 Persisted.args = {
   defaultValue:
-    localStorage.getItem("saved") ||
+    localStorage.getItem('saved') ||
     `# Persisted
   
 The contents of this editor are persisted to local storage on change (edit and reload)`,
-  onChange: debounce(value => {
+  onChange: debounce((value) => {
     const text = value();
-    localStorage.setItem("saved", text);
+    localStorage.setItem('saved', text);
   }, 250),
 };
 
 export const Placeholder = Template.bind({});
 Placeholder.args = {
-  defaultValue: "",
-  placeholder: "This is a custom placeholder…",
+  defaultValue: '',
+  placeholder: 'This is a custom placeholder…',
 };
 
 export const Images = Template.bind({});
 Images.args = {
   defaultValue: `# Images
-![A caption](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg)`,
+![A caption](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg)
+
+## Images alignment
+![Left](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "left")
+![Center](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "center")
+![Right](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "right")
+
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+## Images sizes
+![Small](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "small")
+![Medium](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "medium")
+![Large](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "large")
+
+## Combined
+![Left small](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "left-small")
+![Left medium](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "left-medium")
+![Left large](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "left-large")
+
+![Center small](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "center-small")
+![Center medium](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "center-medium")
+![Center large](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "center-large")
+
+![Right small](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "right-small")
+![Right medium](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "right-medium")
+![Right large](https://upload.wikimedia.org/wikipedia/commons/0/06/Davide-ragusa-gcDwzUGuUoI-unsplash.jpg "right-large")
+`,
 };
 
 export const Focused = Template.bind({});

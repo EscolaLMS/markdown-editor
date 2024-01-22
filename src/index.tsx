@@ -1,80 +1,80 @@
 /* global window File Promise */
-import * as React from "react";
-import memoize from "lodash/memoize";
-import { EditorState, Selection, Plugin } from "prosemirror-state";
-import { dropCursor } from "prosemirror-dropcursor";
-import { gapCursor } from "prosemirror-gapcursor";
-import { MarkdownParser, MarkdownSerializer } from "prosemirror-markdown";
-import { EditorView } from "prosemirror-view";
-import { Schema, NodeSpec, MarkSpec, Slice } from "prosemirror-model";
-import { inputRules, InputRule } from "prosemirror-inputrules";
-import { keymap } from "prosemirror-keymap";
-import { baseKeymap } from "prosemirror-commands";
-import { selectColumn, selectRow, selectTable } from "prosemirror-utils";
-import styled, { ThemeProvider } from "styled-components";
-import { light as lightTheme, dark as darkTheme } from "./theme";
-import baseDictionary from "./dictionary";
-import Flex from "./components/Flex";
-import { EmbedDescriptor, ToastType } from "./types";
-import SelectionToolbar, { iOS, getText } from "./components/SelectionToolbar";
-import BlockMenu from "./components/BlockMenu";
-import LinkToolbar from "./components/LinkToolbar";
-import Tooltip from "./components/Tooltip";
-import Extension from "./lib/Extension";
-import ExtensionManager from "./lib/ExtensionManager";
-import ComponentView from "./lib/ComponentView";
-import headingToSlug from "./lib/headingToSlug";
-import { mathSerializer } from "@benrbray/prosemirror-math";
+import * as React from 'react';
+import memoize from 'lodash/memoize';
+import { EditorState, Selection, Plugin } from 'prosemirror-state';
+import { dropCursor } from 'prosemirror-dropcursor';
+import { gapCursor } from 'prosemirror-gapcursor';
+import { MarkdownParser, MarkdownSerializer } from 'prosemirror-markdown';
+import { EditorView } from 'prosemirror-view';
+import { Schema, NodeSpec, MarkSpec, Slice } from 'prosemirror-model';
+import { inputRules, InputRule } from 'prosemirror-inputrules';
+import { keymap } from 'prosemirror-keymap';
+import { baseKeymap } from 'prosemirror-commands';
+import { selectColumn, selectRow, selectTable } from 'prosemirror-utils';
+import styled, { ThemeProvider } from 'styled-components';
+import { light as lightTheme, dark as darkTheme } from './theme';
+import baseDictionary from './dictionary';
+import Flex from './components/Flex';
+import { EmbedDescriptor, ToastType } from './types';
+import SelectionToolbar, { iOS, getText } from './components/SelectionToolbar';
+import BlockMenu from './components/BlockMenu';
+import LinkToolbar from './components/LinkToolbar';
+import Tooltip from './components/Tooltip';
+import Extension from './lib/Extension';
+import ExtensionManager from './lib/ExtensionManager';
+import ComponentView from './lib/ComponentView';
+import headingToSlug from './lib/headingToSlug';
+import { mathSerializer } from '@benrbray/prosemirror-math';
 
 // nodes
-import ReactNode from "./nodes/ReactNode";
-import Doc from "./nodes/Doc";
-import Text from "./nodes/Text";
-import Blockquote from "./nodes/Blockquote";
-import BulletList from "./nodes/BulletList";
-import CodeBlock from "./nodes/CodeBlock";
-import CodeFence from "./nodes/CodeFence";
-import CheckboxList from "./nodes/CheckboxList";
-import CheckboxItem from "./nodes/CheckboxItem";
-import Embed from "./nodes/Embed";
-import HardBreak from "./nodes/HardBreak";
-import Heading from "./nodes/Heading";
-import HorizontalRule from "./nodes/HorizontalRule";
-import Image from "./nodes/Image";
-import ListItem from "./nodes/ListItem";
-import Math from "./nodes/Math";
-import MathDisplay from "./nodes/MathDisplay";
-import Notice from "./nodes/Notice";
-import OrderedList from "./nodes/OrderedList";
-import Paragraph from "./nodes/Paragraph";
-import Table from "./nodes/Table";
-import TableCell from "./nodes/TableCell";
-import TableHeadCell from "./nodes/TableHeadCell";
-import TableRow from "./nodes/TableRow";
+import ReactNode from './nodes/ReactNode';
+import Doc from './nodes/Doc';
+import Text from './nodes/Text';
+import Blockquote from './nodes/Blockquote';
+import BulletList from './nodes/BulletList';
+import CodeBlock from './nodes/CodeBlock';
+import CodeFence from './nodes/CodeFence';
+import CheckboxList from './nodes/CheckboxList';
+import CheckboxItem from './nodes/CheckboxItem';
+import Embed from './nodes/Embed';
+import HardBreak from './nodes/HardBreak';
+import Heading from './nodes/Heading';
+import HorizontalRule from './nodes/HorizontalRule';
+import Image from './nodes/Image';
+import ListItem from './nodes/ListItem';
+import Math from './nodes/Math';
+import MathDisplay from './nodes/MathDisplay';
+import Notice from './nodes/Notice';
+import OrderedList from './nodes/OrderedList';
+import Paragraph from './nodes/Paragraph';
+import Table from './nodes/Table';
+import TableCell from './nodes/TableCell';
+import TableHeadCell from './nodes/TableHeadCell';
+import TableRow from './nodes/TableRow';
 
 // marks
-import Bold from "./marks/Bold";
-import Code from "./marks/Code";
-import Highlight from "./marks/Highlight";
-import Italic from "./marks/Italic";
-import Link from "./marks/Link";
-import Strikethrough from "./marks/Strikethrough";
-import TemplatePlaceholder from "./marks/Placeholder";
-import Underline from "./marks/Underline";
+import Bold from './marks/Bold';
+import Code from './marks/Code';
+import Highlight from './marks/Highlight';
+import Italic from './marks/Italic';
+import Link from './marks/Link';
+import Strikethrough from './marks/Strikethrough';
+import TemplatePlaceholder from './marks/Placeholder';
+import Underline from './marks/Underline';
 
 // plugins
-import BlockMenuTrigger from "./plugins/BlockMenuTrigger";
-import SearchTrigger from "./plugins/SearchTrigger";
-import History from "./plugins/History";
-import Keys from "./plugins/Keys";
-import Placeholder from "./plugins/Placeholder";
-import SmartText from "./plugins/SmartText";
-import TrailingNode from "./plugins/TrailingNode";
-import MarkdownPaste from "./plugins/MarkdownPaste";
+import BlockMenuTrigger from './plugins/BlockMenuTrigger';
+import SearchTrigger from './plugins/SearchTrigger';
+import History from './plugins/History';
+import Keys from './plugins/Keys';
+import Placeholder from './plugins/Placeholder';
+import SmartText from './plugins/SmartText';
+import TrailingNode from './plugins/TrailingNode';
+import MarkdownPaste from './plugins/MarkdownPaste';
 
-export { schema, parser, serializer, renderToHtml } from "./server";
+export { schema, parser, serializer, renderToHtml } from './server';
 
-export { default as Extension } from "./lib/Extension";
+export { default as Extension } from './lib/Extension';
 
 export const theme = lightTheme;
 
@@ -154,8 +154,8 @@ type Step = {
 
 class RichMarkdownEditor extends React.PureComponent<Props, State> {
   static defaultProps = {
-    defaultValue: "",
-    placeholders: "Write note…",
+    defaultValue: '',
+    placeholders: 'Write note…',
     onImageUploadStart: () => {
       // no default behavior
     },
@@ -163,7 +163,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       // no default behavior
     },
     onClickLink: (href) => {
-      window.open(href, "_blank");
+      window.open(href, '_blank');
     },
     getPlaceHolderLink: (title) => `/cards/${title}`,
     enableTemplatePlaceholder: true,
@@ -171,17 +171,17 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     embeds: [],
     extensions: [],
     tooltip: Tooltip,
-    newLinePlaceholder: "",
+    newLinePlaceholder: '',
     onCreateFlashcard: null,
     onMakeAnswer: null,
-    excludeBlockMenuItems: ["Image occlusion"],
+    excludeBlockMenuItems: ['Image occlusion'],
   };
 
   state = {
     blockMenuOpen: false,
     linkMenuOpen: false,
     searchTriggerOpen: false,
-    blockMenuSearch: "",
+    blockMenuSearch: '',
     focused: false,
   };
 
@@ -436,7 +436,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       plugins: [
         ...this.plugins,
         ...this.keymaps,
-        dropCursor({ color: this.theme().cursor || "black" }),
+        dropCursor({ color: this.theme().cursor || 'black' }),
         gapCursor(),
         inputRules({
           rules: this.inputRules,
@@ -453,7 +453,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
   createView() {
     if (!this.element) {
-      throw new Error("createView called before ref available");
+      throw new Error('createView called before ref available');
     }
 
     const isEditingCheckbox = (tr) => {
@@ -471,9 +471,8 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
       handleDOMEvents: this.props.handleDOMEvents,
       clipboardTextSerializer: (slice) => mathSerializer.serializeSlice(slice),
       dispatchTransaction: (transaction) => {
-        const { state, transactions } = this.view.state.applyTransaction(
-          transaction
-        );
+        const { state, transactions } =
+          this.view.state.applyTransaction(transaction);
 
         this.view.updateState(state);
 
@@ -503,7 +502,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
 
     try {
       const element = document.querySelector(hash);
-      if (element) element.scrollIntoView({ behavior: "smooth" });
+      if (element) element.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
       // querySelector will throw an error if the hash begins with a number
       // or contains a period. This is protected against now by safeSlugify
@@ -588,7 +587,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     const previouslySeen = {};
 
     this.view.state.doc.forEach((node) => {
-      if (node.type.name === "heading") {
+      if (node.type.name === 'heading') {
         // calculate the optimal slug
         const slug = headingToSlug(node);
         let id = slug;
@@ -618,7 +617,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
     console.log(`selection`);
     const selection = this.view?.state?.selection;
     const selectionContent = selection?.content();
-    const selectedText = (selectionContent && getText(selectionContent)) || "";
+    const selectedText = (selectionContent && getText(selectionContent)) || '';
     // const parent = getParent(selection, this.view.state);
     // const surroundingText = parent ? getText(parent) : selectedText;
     return [selectedText, this.value()];
@@ -667,13 +666,13 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
             }
             if (
               !event.relatedTarget ||
-              (document.getElementById("block-menu-container") &&
-                !document.getElementById("block-menu-container") &&
-                (document.getElementById(
-                  "block-menu-container"
-                ) as any).contains(event.relatedTarget as any) &&
+              (document.getElementById('block-menu-container') &&
+                !document.getElementById('block-menu-container') &&
+                (
+                  document.getElementById('block-menu-container') as any
+                ).contains(event.relatedTarget as any) &&
                 !(event.relatedTarget as any).className.includes(
-                  "block-menu-trigger"
+                  'block-menu-trigger'
                 ))
             ) {
               this.handleCloseBlockMenu();
@@ -749,7 +748,7 @@ class RichMarkdownEditor extends React.PureComponent<Props, State> {
   };
 }
 
-const StyledEditor = styled("div")<{
+const StyledEditor = styled('div')<{
   readOnly?: boolean;
   readOnlyWriteCheckboxes?: boolean;
   enableTemplatePlaceholder?: boolean;
@@ -767,7 +766,7 @@ const StyledEditor = styled("div")<{
     white-space: break-spaces;
     -webkit-font-variant-ligatures: none;
     font-variant-ligatures: none;
-    font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
+    font-feature-settings: 'liga' 0; /* the above doesn't seem to work in Edge */
   }
 
   pre {
@@ -883,7 +882,7 @@ const StyledEditor = styled("div")<{
 
   .ProseMirror-selectednode {
     outline: 2px solid
-      ${(props) => (props.readOnly ? "transparent" : props.theme.selected)};
+      ${(props) => (props.readOnly ? 'transparent' : props.theme.selected)};
   }
 
   /* Make sure li selections wrap around markers */
@@ -893,7 +892,7 @@ const StyledEditor = styled("div")<{
   }
 
   li.ProseMirror-selectednode:after {
-    content: "";
+    content: '';
     position: absolute;
     left: -32px;
     right: -2px;
@@ -913,7 +912,7 @@ const StyledEditor = styled("div")<{
     font-weight: 500;
 
     &:not(.placeholder):before {
-      display: ${(props) => (props.readOnly ? "none" : "block")};
+      display: ${(props) => (props.readOnly ? 'none' : 'block')};
       position: absolute;
       font-family: ${(props) => props.theme.fontFamilyMono};
       color: ${(props) => props.theme.textSecondary};
@@ -951,7 +950,7 @@ const StyledEditor = styled("div")<{
 
   .heading-anchor {
     opacity: 0;
-    display: ${(props) => (props.readOnly ? "block" : "none")};
+    display: ${(props) => (props.readOnly ? 'block' : 'none')};
     color: ${(props) => props.theme.textSecondary};
     cursor: pointer;
     background: none;
@@ -976,8 +975,8 @@ const StyledEditor = styled("div")<{
       display: block;
       content: ${(props) =>
         props.readOnly && !props.readOnlyWriteCheckboxes
-          ? ""
-          : "attr(data-empty-text)"};
+          ? ''
+          : 'attr(data-empty-text)'};
       pointer-events: none;
       height: 0;
       color: ${(props) => props.theme.placeholder};
@@ -1060,7 +1059,7 @@ const StyledEditor = styled("div")<{
     background: ${(props) =>
       props.templatePlaceholderAsQuestion
         ? props.theme.answerPlaceholder
-        : "initial"};
+        : 'initial'};
     border-radius: 5px;
     cursor: text;
 
@@ -1085,7 +1084,7 @@ const StyledEditor = styled("div")<{
     text-decoration: none;
   }
 
-  a[href^="/"] {
+  a[href^='/'] {
     color: #2c2424;
     text-decoration: none;
     user-select: text;
@@ -1100,7 +1099,7 @@ const StyledEditor = styled("div")<{
     text-decoration: underline;
   }
 
-  a[href^="/"]:hover {
+  a[href^='/']:hover {
     background: #b5defc;
     text-decoration: none;
   }
@@ -1141,7 +1140,7 @@ const StyledEditor = styled("div")<{
 
   ul.checkbox_list li input {
     pointer-events: ${(props) =>
-      props.readOnly && !props.readOnlyWriteCheckboxes ? "none" : "initial"};
+      props.readOnly && !props.readOnlyWriteCheckboxes ? 'none' : 'initial'};
     opacity: ${(props) =>
       props.readOnly && !props.readOnlyWriteCheckboxes ? 0.75 : 1};
     margin: 0 0.5em 0 0;
@@ -1198,11 +1197,11 @@ const StyledEditor = styled("div")<{
 
     &:hover {
       select {
-        display: ${(props) => (props.readOnly ? "none" : "inline")};
+        display: ${(props) => (props.readOnly ? 'none' : 'inline')};
       }
 
       button {
-        display: ${(props) => (props.readOnly ? "inline" : "none")};
+        display: ${(props) => (props.readOnly ? 'inline' : 'none')};
       }
     }
 
@@ -1374,7 +1373,7 @@ const StyledEditor = styled("div")<{
 
     .selectedCell {
       background: ${(props) =>
-        props.readOnly ? "inherit" : props.theme.tableSelectedBackground};
+        props.readOnly ? 'inherit' : props.theme.tableSelectedBackground};
       /* fixes Firefox background color painting over border:
         * https://bugzilla.mozilla.org/show_bug.cgi?id=688556 */
       background-clip: padding-box;
@@ -1386,7 +1385,7 @@ const StyledEditor = styled("div")<{
       * in an empty table:
       * https://github.com/ProseMirror/prosemirror/issues/947 */
       &::after {
-        content: "";
+        content: '';
         cursor: pointer;
         position: absolute;
         top: -16px;
@@ -1395,7 +1394,7 @@ const StyledEditor = styled("div")<{
         height: 12px;
         background: ${(props) => props.theme.tableDivider};
         border-bottom: 3px solid ${(props) => props.theme.background};
-        display: ${(props) => (props.readOnly ? "none" : "block")};
+        display: ${(props) => (props.readOnly ? 'none' : 'block')};
       }
 
       &:hover::after {
@@ -1414,7 +1413,7 @@ const StyledEditor = styled("div")<{
 
     .grip-row {
       &::after {
-        content: "";
+        content: '';
         cursor: pointer;
         position: absolute;
         left: -16px;
@@ -1423,7 +1422,7 @@ const StyledEditor = styled("div")<{
         width: 12px;
         background: ${(props) => props.theme.tableDivider};
         border-right: 3px solid ${(props) => props.theme.background};
-        display: ${(props) => (props.readOnly ? "none" : "block")};
+        display: ${(props) => (props.readOnly ? 'none' : 'block')};
       }
 
       &:hover::after {
@@ -1442,7 +1441,7 @@ const StyledEditor = styled("div")<{
 
     .grip-table {
       &::after {
-        content: "";
+        content: '';
         cursor: pointer;
         background: ${(props) => props.theme.tableDivider};
         width: 13px;
@@ -1452,7 +1451,7 @@ const StyledEditor = styled("div")<{
         position: absolute;
         top: -18px;
         left: -18px;
-        display: ${(props) => (props.readOnly ? "none" : "block")};
+        display: ${(props) => (props.readOnly ? 'none' : 'block')};
       }
 
       &:hover::after {
@@ -1530,14 +1529,15 @@ const StyledEditor = styled("div")<{
   }
 
   .block-menu-trigger {
-    display: ${(props) => (props.readOnly ? "none" : "block")};
+    display: ${(props) => (props.readOnly ? 'none' : 'block')};
     height: 26px;
     color: ${(props) => props.theme.textSecondary};
     background: none;
     border-radius: 10%;
     font-size: 26px;
     position: absolute;
-    transition: color 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    transition:
+      color 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
       transform 150ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     outline: none;
     border: 0;
@@ -1564,7 +1564,7 @@ const StyledEditor = styled("div")<{
   }
 
   .ProseMirror-gapcursor:after {
-    content: "";
+    content: '';
     display: block;
     position: absolute;
     top: -2px;
@@ -1586,7 +1586,7 @@ const StyledEditor = styled("div")<{
   @media print {
     em,
     blockquote {
-      font-family: "SF Pro Text", ${(props) => props.theme.fontFamily};
+      font-family: 'SF Pro Text', ${(props) => props.theme.fontFamily};
     }
   }
 `;

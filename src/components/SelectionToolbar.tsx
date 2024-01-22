@@ -1,32 +1,32 @@
-import assert from "assert";
-import * as React from "react";
-import { Portal } from "react-portal";
-import { some } from "lodash";
-import { EditorView } from "prosemirror-view";
-import getTableColMenuItems from "../menus/tableCol";
-import getTableRowMenuItems from "../menus/tableRow";
-import getTableMenuItems from "../menus/table";
-import getFormattingMenuItems from "../menus/formatting";
-import getImageMenuItems from "../menus/image";
-import FloatingToolbar from "./FloatingToolbar";
-import LinkEditor from "./LinkEditor";
-import Menu from "./Menu";
-import isMarkActive from "../queries/isMarkActive";
-import getMarkRange from "../queries/getMarkRange";
-import isNodeActive from "../queries/isNodeActive";
-import getColumnIndex from "../queries/getColumnIndex";
-import getRowIndex from "../queries/getRowIndex";
-import { MenuItem } from "../types";
-import baseDictionary from "../dictionary";
+import assert from 'assert';
+import * as React from 'react';
+import { Portal } from 'react-portal';
+import { some } from 'lodash';
+import { EditorView } from 'prosemirror-view';
+import getTableColMenuItems from '../menus/tableCol';
+import getTableRowMenuItems from '../menus/tableRow';
+import getTableMenuItems from '../menus/table';
+import getFormattingMenuItems from '../menus/formatting';
+import getImageMenuItems from '../menus/image';
+import FloatingToolbar from './FloatingToolbar';
+import LinkEditor from './LinkEditor';
+import Menu from './Menu';
+import isMarkActive from '../queries/isMarkActive';
+import getMarkRange from '../queries/getMarkRange';
+import isNodeActive from '../queries/isNodeActive';
+import getColumnIndex from '../queries/getColumnIndex';
+import getRowIndex from '../queries/getRowIndex';
+import { MenuItem } from '../types';
+import baseDictionary from '../dictionary';
 
-export const getText = content => {
+export const getText = (content) => {
   if (!content) {
-    return "";
+    return '';
   } else if (content.text) {
     return content.text;
   } else if (Array.isArray(content)) {
-    return content.map(getText).join("");
-  } else if (typeof content === "object" && content !== null) {
+    return content.map(getText).join('');
+  } else if (typeof content === 'object' && content !== null) {
     return getText(content.content);
   }
 };
@@ -34,21 +34,21 @@ export const getText = content => {
 export const iOS = () => {
   return (
     [
-      "iPad Simulator",
-      "iPhone Simulator",
-      "iPod Simulator",
-      "iPad",
-      "iPhone",
-      "iPod",
+      'iPad Simulator',
+      'iPhone Simulator',
+      'iPod Simulator',
+      'iPad',
+      'iPhone',
+      'iPod',
     ].includes(navigator.platform) ||
     // iPad on iOS 13 detection
-    (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+    (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
   );
 };
 
 export const android = () => {
   const ua = navigator.userAgent.toLowerCase();
-  return ua.indexOf("android") > -1;
+  return ua.indexOf('android') > -1;
 };
 
 type Props = {
@@ -78,7 +78,7 @@ function isActive(props) {
 
   if (!selection) return false;
   if (selection.empty) return false;
-  if (selection.node && selection.node.type.name === "image") {
+  if (selection.node && selection.node.type.name === 'image') {
     return true;
   }
   if (selection.node) return false;
@@ -87,7 +87,7 @@ function isActive(props) {
   const fragment = slice.content;
   const nodes = fragment.content;
 
-  return some(nodes, n => n.content.size);
+  return some(nodes, (n) => n.content.size);
 }
 
 export default class SelectionToolbar extends React.Component<Props, State> {
@@ -145,7 +145,7 @@ export default class SelectionToolbar extends React.Component<Props, State> {
       state.selection.to
     ).textContent;
 
-    return selectionText.trim() || "";
+    return selectionText.trim() || '';
   }
 
   get href(): string {
@@ -154,7 +154,7 @@ export default class SelectionToolbar extends React.Component<Props, State> {
     const { selection }: { selection: any } = state;
     const range = getMarkRange(selection.$from, state.schema.marks.link);
     const mark = range && range.mark;
-    return mark ? mark.attrs.href : "";
+    return mark ? mark.attrs.href : '';
   }
 
   render() {
@@ -180,7 +180,7 @@ export default class SelectionToolbar extends React.Component<Props, State> {
     // }
     const range = getMarkRange(selection.$from, state.schema.marks.link);
     const isImageSelection =
-      selection.node && selection.node.type.name === "image";
+      selection.node && selection.node.type.name === 'image';
 
     const selectedText = getText(selection.content());
 
@@ -196,19 +196,19 @@ export default class SelectionToolbar extends React.Component<Props, State> {
     } else if (onMakeAnswer && this.state.formatHidden) {
       items = [
         {
-          name: "makeanswer",
-          text: "⬇️ Make Answer",
+          name: 'makeanswer',
+          text: '⬇️ Make Answer',
           // tooltip: "Blank out selected text and move to answer section",
           // icon: LinkIcon,
           // active: true,
           // attrs: { href: "" },
         },
         {
-          name: "separator",
+          name: 'separator',
         },
         {
-          name: "format",
-          text: "Format ...",
+          name: 'format',
+          text: 'Format ...',
           // tooltip: dictionary.placeholder,
           // icon: InputIcon,
           // active: false,
@@ -219,8 +219,8 @@ export default class SelectionToolbar extends React.Component<Props, State> {
       items = getFormattingMenuItems(state, isTemplate, dictionary);
       if (onMakeAnswer && !this.state.formatHidden) {
         items.unshift({
-          name: "back",
-          text: "<",
+          name: 'back',
+          text: '<',
         });
       }
     }

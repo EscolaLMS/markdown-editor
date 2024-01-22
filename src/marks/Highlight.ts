@@ -1,16 +1,16 @@
-import { toggleMark } from "prosemirror-commands";
-import markInputRule from "../lib/markInputRule";
-import Mark from "./Mark";
+import { toggleMark } from 'prosemirror-commands';
+import markInputRule from '../lib/markInputRule';
+import Mark from './Mark';
 
 export default class Highlight extends Mark {
   get name() {
-    return "mark";
+    return 'mark';
   }
 
   get schema() {
     return {
-      parseDOM: [{ tag: "mark" }],
-      toDOM: () => ["mark"],
+      parseDOM: [{ tag: 'mark' }],
+      toDOM: () => ['mark'],
     };
   }
 
@@ -20,20 +20,20 @@ export default class Highlight extends Mark {
 
   keys({ type }) {
     return {
-      "Mod-Ctrl-h": toggleMark(type),
+      'Mod-Ctrl-h': toggleMark(type),
     };
   }
 
   get toMarkdown() {
     return {
-      open: "==",
-      close: "==",
+      open: '==',
+      close: '==',
       mixable: true,
       expelEnclosingWhitespace: true,
     };
   }
 
   parseMarkdown() {
-    return { mark: "mark" };
+    return { mark: 'mark' };
   }
 }

@@ -1,7 +1,7 @@
-import { EditorState } from "prosemirror-state";
-import { TrashIcon, InsertAboveIcon, InsertBelowIcon } from "outline-icons";
-import { MenuItem } from "../types";
-import baseDictionary from "../dictionary";
+import { EditorState } from 'prosemirror-state';
+import { TrashIcon, InsertAboveIcon, InsertBelowIcon } from 'outline-icons';
+import { MenuItem } from '../types';
+import baseDictionary from '../dictionary';
 
 export default function tableRowMenuItems(
   state: EditorState,
@@ -10,7 +10,7 @@ export default function tableRowMenuItems(
 ): MenuItem[] {
   return [
     {
-      name: "addRowAfter",
+      name: 'addRowAfter',
       tooltip: dictionary.addRowBefore,
       icon: InsertAboveIcon,
       attrs: { index: index - 1 },
@@ -18,17 +18,17 @@ export default function tableRowMenuItems(
       visible: index !== 0,
     },
     {
-      name: "addRowAfter",
+      name: 'addRowAfter',
       tooltip: dictionary.addRowAfter,
       icon: InsertBelowIcon,
       attrs: { index },
       active: () => false,
     },
     {
-      name: "separator",
+      name: 'separator',
     },
     {
-      name: "deleteRow",
+      name: 'deleteRow',
       tooltip: dictionary.deleteRow,
       icon: TrashIcon,
       active: () => false,

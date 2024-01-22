@@ -14,7 +14,9 @@
     "build": "tsc",
     "prepublish": "npm run build",
     "watch": "tsc-watch",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "prettier:write": "prettier --write .",
+    "prettier:check": "prettier --check ."
   },
   "serve": {
     "open": true,
@@ -98,7 +100,7 @@
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.0.8",
     "jest": "^26.6.3",
-    "prettier": "^1.19.1",
+    "prettier": "^3.1.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "source-map-loader": "^0.2.4",

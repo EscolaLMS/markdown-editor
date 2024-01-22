@@ -1,11 +1,11 @@
-import * as React from "react";
-import ReactDOM from "react-dom";
-import { ThemeProvider } from "styled-components";
-import { EditorView, Decoration } from "prosemirror-view";
-import Extension from "../lib/Extension";
-import Node from "../nodes/Node";
-import { light as lightTheme, dark as darkTheme } from "../theme";
-import Editor from "../";
+import * as React from 'react';
+import ReactDOM from 'react-dom';
+import { ThemeProvider } from 'styled-components';
+import { EditorView, Decoration } from 'prosemirror-view';
+import Extension from '../lib/Extension';
+import Node from '../nodes/Node';
+import { light as lightTheme, dark as darkTheme } from '../theme';
+import Editor from '../';
 
 type Component = (options: {
   node: Node;
@@ -39,8 +39,8 @@ export default class ComponentView {
     this.node = node;
     this.view = view;
     this.dom = node.type.spec.inline
-      ? document.createElement("span")
-      : document.createElement("div");
+      ? document.createElement('span')
+      : document.createElement('div');
 
     this.renderElement();
   }

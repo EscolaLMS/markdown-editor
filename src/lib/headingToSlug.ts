@@ -1,6 +1,6 @@
-import { Node } from "prosemirror-model";
-import escape from "lodash/escape";
-import slugify from "slugify";
+import { Node } from 'prosemirror-model';
+import escape from 'lodash/escape';
+import slugify from 'slugify';
 
 // Slugify, escape, and remove periods from headings so that they are
 // compatible with both url hashes AND dom ID's (querySelector does not like

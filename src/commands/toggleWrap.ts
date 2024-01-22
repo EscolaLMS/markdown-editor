@@ -1,5 +1,5 @@
-import { wrapIn, lift } from "prosemirror-commands";
-import isNodeActive from "../queries/isNodeActive";
+import { wrapIn, lift } from 'prosemirror-commands';
+import isNodeActive from '../queries/isNodeActive';
 
 export default function toggleWrap(type, attrs?: Record<string, any>) {
   return (state, dispatch) => {

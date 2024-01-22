@@ -6,11 +6,11 @@ import {
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
-} from "outline-icons";
-import isNodeActive from "../queries/isNodeActive";
-import { MenuItem } from "../types";
-import baseDictionary from "../dictionary";
-import { EditorState } from "prosemirror-state";
+} from 'outline-icons';
+import isNodeActive from '../queries/isNodeActive';
+import { MenuItem } from '../types';
+import baseDictionary from '../dictionary';
+import { EditorState } from 'prosemirror-state';
 
 export default function imageMenuItems(
   state: EditorState,
@@ -18,34 +18,34 @@ export default function imageMenuItems(
 ): MenuItem[] {
   const { schema } = state;
   const isLeftAligned = isNodeActive(schema.nodes.image, {
-    layoutClass: "left",
+    layoutClass: 'left',
   });
   const isRightAligned = isNodeActive(schema.nodes.image, {
-    layoutClass: "right",
+    layoutClass: 'right',
   });
   const isCenterAligned = isNodeActive(schema.nodes.image, {
-    layoutClass: "center",
+    layoutClass: 'center',
   });
   const isSmall = isNodeActive(schema.nodes.image, {
-    sizeClass: "small",
+    sizeClass: 'small',
   });
   const isMedium = isNodeActive(schema.nodes.image, {
-    sizeClass: "medium",
+    sizeClass: 'medium',
   });
   const isLarge = isNodeActive(schema.nodes.image, {
-    sizeClass: "large",
+    sizeClass: 'large',
   });
 
   return [
     {
-      name: "alignLeft",
+      name: 'alignLeft',
       tooltip: dictionary.alignLeft,
       icon: AlignImageLeftIcon,
       visible: true,
       active: isLeftAligned,
     },
     {
-      name: "alignCenter",
+      name: 'alignCenter',
       tooltip: dictionary.alignCenter,
       icon: AlignImageCenterIcon,
       visible: true,
@@ -53,43 +53,43 @@ export default function imageMenuItems(
         isNodeActive(schema.nodes.image)(state) && isCenterAligned(state),
     },
     {
-      name: "alignRight",
+      name: 'alignRight',
       tooltip: dictionary.alignRight,
       icon: AlignImageRightIcon,
       visible: true,
       active: isRightAligned,
     },
     {
-      name: "separator",
+      name: 'separator',
       visible: true,
     },
     {
-      name: "smallSize",
+      name: 'smallSize',
       tooltip: dictionary.smallImage,
       icon: Heading1Icon,
       visible: true,
       active: isSmall,
     },
     {
-      name: "mediumSize",
+      name: 'mediumSize',
       tooltip: dictionary.mediumImage,
       icon: Heading2Icon,
       visible: true,
       active: isMedium,
     },
     {
-      name: "largeSize",
+      name: 'largeSize',
       tooltip: dictionary.largeImage,
       icon: Heading3Icon,
       visible: true,
       active: isLarge,
     },
     {
-      name: "separator",
+      name: 'separator',
       visible: true,
     },
     {
-      name: "deleteImage",
+      name: 'deleteImage',
       tooltip: dictionary.deleteImage,
       icon: TrashIcon,
       visible: true,

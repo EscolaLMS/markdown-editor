@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { InputRule } from "prosemirror-inputrules";
-import { Plugin } from "prosemirror-state";
-import Editor from "../";
+import { InputRule } from 'prosemirror-inputrules';
+import { Plugin } from 'prosemirror-state';
+import Editor from '../';
 
 type Command = (attrs) => (state, dispatch) => any;
 
@@ -21,11 +21,11 @@ export default class Extension {
   }
 
   get type() {
-    return "extension";
+    return 'extension';
   }
 
   get name() {
-    return "";
+    return '';
   }
 
   get plugins(): Plugin[] {
@@ -41,7 +41,7 @@ export default class Extension {
   }
 
   commands(options): Record<string, Command> | Command {
-    return attrs => () => false;
+    return (attrs) => () => false;
   }
 
   get defaultOptions() {

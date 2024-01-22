@@ -1,9 +1,9 @@
-import assert from "assert";
-import * as React from "react";
-import { EditorView } from "prosemirror-view";
-import LinkEditor, { SearchResult } from "./LinkEditor";
-import FloatingToolbar from "./FloatingToolbar";
-import baseDictionary from "../dictionary";
+import assert from 'assert';
+import * as React from 'react';
+import { EditorView } from 'prosemirror-view';
+import LinkEditor, { SearchResult } from './LinkEditor';
+import FloatingToolbar from './FloatingToolbar';
+import baseDictionary from '../dictionary';
 
 type Props = {
   isActive: boolean;
@@ -68,7 +68,7 @@ export default class LinkToolbar extends React.Component<Props> {
       state.selection.to
     ).textContent;
 
-    return selectionText.trim() || "";
+    return selectionText.trim() || '';
   }
 
   render() {

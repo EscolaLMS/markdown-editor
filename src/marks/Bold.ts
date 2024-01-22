@@ -1,20 +1,20 @@
-import { toggleMark } from "prosemirror-commands";
-import markInputRule from "../lib/markInputRule";
-import Mark from "./Mark";
+import { toggleMark } from 'prosemirror-commands';
+import markInputRule from '../lib/markInputRule';
+import Mark from './Mark';
 
 export default class Bold extends Mark {
   get name() {
-    return "strong";
+    return 'strong';
   }
 
   get schema() {
     return {
       parseDOM: [
-        { tag: "b" },
-        { tag: "strong" },
-        { style: "font-style", getAttrs: value => value === "bold" },
+        { tag: 'b' },
+        { tag: 'strong' },
+        { style: 'font-style', getAttrs: (value) => value === 'bold' },
       ],
-      toDOM: () => ["strong"],
+      toDOM: () => ['strong'],
     };
   }
 
@@ -24,21 +24,21 @@ export default class Bold extends Mark {
 
   keys({ type }) {
     return {
-      "Mod-b": toggleMark(type),
-      "Mod-B": toggleMark(type),
+      'Mod-b': toggleMark(type),
+      'Mod-B': toggleMark(type),
     };
   }
 
   get toMarkdown() {
     return {
-      open: "**",
-      close: "**",
+      open: '**',
+      close: '**',
       mixable: true,
       expelEnclosingWhitespace: true,
     };
   }
 
   parseMarkdown() {
-    return { mark: "strong" };
+    return { mark: 'strong' };
   }
 }

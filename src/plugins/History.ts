@@ -1,17 +1,17 @@
-import { undoInputRule } from "prosemirror-inputrules";
-import { history, undo, redo } from "prosemirror-history";
-import Extension from "../lib/Extension";
+import { undoInputRule } from 'prosemirror-inputrules';
+import { history, undo, redo } from 'prosemirror-history';
+import Extension from '../lib/Extension';
 
 export default class History extends Extension {
   get name() {
-    return "history";
+    return 'history';
   }
 
   keys() {
     return {
-      "Mod-z": undo,
-      "Mod-y": redo,
-      "Shift-Mod-z": redo,
+      'Mod-z': undo,
+      'Mod-y': redo,
+      'Shift-Mod-z': redo,
       Backspace: undoInputRule,
     };
   }

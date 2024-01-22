@@ -1,26 +1,26 @@
-import refractor from "refractor/core";
-import bash from "refractor/lang/bash";
-import css from "refractor/lang/css";
-import clike from "refractor/lang/clike";
-import csharp from "refractor/lang/csharp";
-import go from "refractor/lang/go";
-import java from "refractor/lang/java";
-import javascript from "refractor/lang/javascript";
-import json from "refractor/lang/json";
-import markup from "refractor/lang/markup";
-import php from "refractor/lang/php";
-import python from "refractor/lang/python";
-import powershell from "refractor/lang/powershell";
-import ruby from "refractor/lang/ruby";
-import sql from "refractor/lang/sql";
-import typescript from "refractor/lang/typescript";
+import refractor from 'refractor/core';
+import bash from 'refractor/lang/bash';
+import css from 'refractor/lang/css';
+import clike from 'refractor/lang/clike';
+import csharp from 'refractor/lang/csharp';
+import go from 'refractor/lang/go';
+import java from 'refractor/lang/java';
+import javascript from 'refractor/lang/javascript';
+import json from 'refractor/lang/json';
+import markup from 'refractor/lang/markup';
+import php from 'refractor/lang/php';
+import python from 'refractor/lang/python';
+import powershell from 'refractor/lang/powershell';
+import ruby from 'refractor/lang/ruby';
+import sql from 'refractor/lang/sql';
+import typescript from 'refractor/lang/typescript';
 
-import { setBlockType } from "prosemirror-commands";
-import { textblockTypeInputRule } from "prosemirror-inputrules";
-import copy from "copy-to-clipboard";
-import Prism, { LANGUAGES } from "../plugins/Prism";
-import Node from "./Node";
-import { ToastType } from "../types";
+import { setBlockType } from 'prosemirror-commands';
+import { textblockTypeInputRule } from 'prosemirror-inputrules';
+import copy from 'copy-to-clipboard';
+import Prism, { LANGUAGES } from '../plugins/Prism';
+import Node from './Node';
+import { ToastType } from '../types';
 
 [
   bash,
@@ -46,28 +46,28 @@ export default class CodeFence extends Node {
   }
 
   get name() {
-    return "code_fence";
+    return 'code_fence';
   }
 
   get schema() {
     return {
       attrs: {
         language: {
-          default: "javascript",
+          default: 'javascript',
         },
       },
-      content: "text*",
-      marks: "",
-      group: "block",
+      content: 'text*',
+      marks: '',
+      group: 'block',
       code: true,
       defining: true,
       draggable: false,
       parseDOM: [
-        { tag: "pre", preserveWhitespace: "full" },
+        { tag: 'pre', preserveWhitespace: 'full' },
         {
-          tag: ".code-block",
-          preserveWhitespace: "full",
-          contentElement: "code",
+          tag: '.code-block',
+          preserveWhitespace: 'full',
+          contentElement: 'code',
           getAttrs: (dom: HTMLDivElement) => {
             return {
               language: dom.dataset.language,
@@ -75,28 +75,28 @@ export default class CodeFence extends Node {
           },
         },
       ],
-      toDOM: node => {
-        const button = document.createElement("button");
-        button.innerText = "Copy";
-        button.type = "button";
-        button.addEventListener("click", this.handleCopyToClipboard(node));
+      toDOM: (node) => {
+        const button = document.createElement('button');
+        button.innerText = 'Copy';
+        button.type = 'button';
+        button.addEventListener('click', this.handleCopyToClipboard(node));
 
-        const select = document.createElement("select");
-        select.addEventListener("change", this.handleLanguageChange);
+        const select = document.createElement('select');
+        select.addEventListener('change', this.handleLanguageChange);
 
         this.languageOptions.forEach(([key, label]) => {
-          const option = document.createElement("option");
-          const value = key === "none" ? "" : key;
+          const option = document.createElement('option');
+          const value = key === 'none' ? '' : key;
           option.value = value;
           option.innerText = label;
           option.selected = node.attrs.language === value;
           select.appendChild(option);
         });
         return [
-          "div",
-          { class: "code-block", "data-language": node.attrs.language },
-          ["div", { contentEditable: false }, select, button],
-          ["pre", ["code", { spellCheck: false }, 0]],
+          'div',
+          { class: 'code-block', 'data-language': node.attrs.language },
+          ['div', { contentEditable: false }, select, button],
+          ['pre', ['code', { spellCheck: false }, 0]],
         ];
       },
     };
@@ -108,7 +108,7 @@ export default class CodeFence extends Node {
 
   keys({ type }) {
     return {
-      "Shift-Ctrl-\\": setBlockType(type),
+      'Shift-Ctrl-\\': setBlockType(type),
     };
   }
 
@@ -124,7 +124,7 @@ export default class CodeFence extends Node {
     };
   }
 
-  handleLanguageChange = event => {
+  handleLanguageChange = (event) => {
     const { view } = this.editor;
     const { tr } = view.state;
     const element = event.target;
@@ -153,21 +153,21 @@ export default class CodeFence extends Node {
   }
 
   toMarkdown(state, node) {
-    state.write("```" + (node.attrs.language || "") + "\n");
+    state.write('```' + (node.attrs.language || '') + '\n');
     state.text(node.textContent, false);
     state.ensureNewLine();
-    state.write("```");
+    state.write('```');
     state.closeBlock(node);
   }
 
   get markdownToken() {
-    return "fence";
+    return 'fence';
   }
 
   parseMarkdown() {
     return {
-      block: "code_block",
-      getAttrs: tok => {
+      block: 'code_block',
+      getAttrs: (tok) => {
         return { language: tok.info };
       },
     };

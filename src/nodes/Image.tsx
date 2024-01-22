@@ -1,13 +1,13 @@
-import { InputRule } from "prosemirror-inputrules";
-import { NodeSelection, Plugin } from "prosemirror-state";
-import { setTextSelection } from "prosemirror-utils";
-import * as React from "react";
-import ImageZoom from "react-medium-image-zoom";
-import styled from "styled-components";
-import insertFiles from "../commands/insertFiles";
-import getDataTransferFiles from "../lib/getDataTransferFiles";
-import uploadPlaceholderPlugin from "../lib/uploadPlaceholder";
-import Node from "./Node";
+import { InputRule } from 'prosemirror-inputrules';
+import { NodeSelection, Plugin } from 'prosemirror-state';
+import { setTextSelection } from 'prosemirror-utils';
+import * as React from 'react';
+import ImageZoom from 'react-medium-image-zoom';
+import styled from 'styled-components';
+import insertFiles from '../commands/insertFiles';
+import getDataTransferFiles from '../lib/getDataTransferFiles';
+import uploadPlaceholderPlugin from '../lib/uploadPlaceholder';
+import Node from './Node';
 
 /**
  * Matches following attributes in Markdown-typed image: [, alt, src, class]
@@ -17,7 +17,8 @@ import Node from "./Node";
  * ![](image.jpg "class") -> [, "", "image.jpg", "small"]
  * ![Lorem](image.jpg "class") -> [, "Lorem", "image.jpg", "small"]
  */
-const IMAGE_INPUT_REGEX = /!\[(?<alt>.*?)]\((?<filename>.*?)(?=\“|\))\“?(?<layoutclass>[^\”]+)?\”?\s?/;
+const IMAGE_INPUT_REGEX =
+  /!\[(?<alt>.*?)]\((?<filename>.*?)(?=\“|\))\“?(?<layoutclass>[^\”]+)?\”?\s?/;
 
 const uploadPlugin = (options) =>
   new Plugin({
@@ -46,8 +47,8 @@ const uploadPlugin = (options) =>
             tr.deleteSelection();
           }
           const pos = tr.selection.from;
-          options.isImage = files[0].type.startsWith("image");
-          options.isAudio = files[0].type.startsWith("audio");
+          options.isImage = files[0].type.startsWith('image');
+          options.isAudio = files[0].type.startsWith('audio');
           insertFiles(view, event, pos, files, options);
           return true;
         },
@@ -72,8 +73,8 @@ const uploadPlugin = (options) =>
           });
 
           if (result) {
-            options.isImage = files[0].type.startsWith("image");
-            options.isAudio = files[0].type.startsWith("audio");
+            options.isImage = files[0].type.startsWith('image');
+            options.isAudio = files[0].type.startsWith('audio');
             insertFiles(view, event, result.pos, files, options);
             return true;
           }
@@ -84,7 +85,22 @@ const uploadPlugin = (options) =>
     },
   });
 
-const IMAGE_CLASSES = ["right", "left", "center", "small", "medium", "large"];
+const ALIGNMENT_CLASSES = ['left', 'center', 'right'];
+const SIZE_CLASSES = ['small', 'medium', 'large'];
+
+const COMBINED_CLASSES = ALIGNMENT_CLASSES.reduce(
+  (acc, alignment) => [
+    ...acc,
+    ...SIZE_CLASSES.map((size) => `${alignment}-${size}`),
+  ],
+  []
+);
+
+const IMAGE_CLASSES = [
+  ...ALIGNMENT_CLASSES,
+  ...SIZE_CLASSES,
+  ...COMBINED_CLASSES,
+];
 const getLayoutAndTitle = (tokenTitle) => {
   if (!tokenTitle) return {};
   if (IMAGE_CLASSES.includes(tokenTitle)) {
@@ -101,7 +117,7 @@ const getLayoutAndTitle = (tokenTitle) => {
 
 export default class Image extends Node {
   get name() {
-    return "image";
+    return 'image';
   }
 
   get schema() {
@@ -122,16 +138,16 @@ export default class Image extends Node {
           default: null,
         },
       },
-      content: "text*",
-      marks: "",
-      group: "inline",
+      content: 'text*',
+      marks: '',
+      group: 'inline',
       selectable: true,
       draggable: true,
       parseDOM: [
         {
-          tag: "div[class~=image]",
+          tag: 'div[class~=image]',
           getAttrs: (dom: HTMLDivElement) => {
-            const img = dom.getElementsByTagName("img")[0];
+            const img = dom.getElementsByTagName('img')[0];
             const className = dom.className;
             const layoutClassMatched =
               className && className.match(/image-(.*)$/);
@@ -140,9 +156,9 @@ export default class Image extends Node {
               : null;
 
             return {
-              src: img.getAttribute("src"),
-              alt: img.getAttribute("alt"),
-              title: img.getAttribute("title"),
+              src: img.getAttribute('src'),
+              alt: img.getAttribute('alt'),
+              title: img.getAttribute('title'),
               layoutClass: layoutClass,
             };
           },
@@ -150,80 +166,86 @@ export default class Image extends Node {
       ],
       toDOM: (node) => {
         const { layoutClass } = node.attrs;
-        const className = `${layoutClass ? `image-${layoutClass}` : "image"}`;
+        const className = `${layoutClass ? `image-${layoutClass}` : 'image'}`;
 
         return [
-          "div",
+          'div',
           {
             class: className,
           },
-          ["img", { ...node.attrs, contentEditable: false }],
-          ["p", { class: "caption" }, 0],
+          ['img', { ...node.attrs, contentEditable: false }],
+          ['p', { class: 'caption' }, 0],
         ];
       },
     };
   }
 
-  handleKeyDown = ({ node, getPos }) => (event) => {
-    // Pressing Enter in the caption field should move the cursor/selection
-    // below the image
-    if (event.key === "Enter") {
+  handleKeyDown =
+    ({ node, getPos }) =>
+    (event) => {
+      // Pressing Enter in the caption field should move the cursor/selection
+      // below the image
+      if (event.key === 'Enter') {
+        event.preventDefault();
+
+        const { view } = this.editor;
+        const pos = getPos() + node.nodeSize;
+        view.focus();
+        view.dispatch(setTextSelection(pos)(view.state.tr));
+        return;
+      }
+
+      // Pressing Backspace in an an empty caption field should remove the entire
+      // image, leaving an empty paragraph
+      if (event.key === 'Backspace' && event.target.innerText === '') {
+        const { view } = this.editor;
+        const $pos = view.state.doc.resolve(getPos());
+        const tr = view.state.tr.setSelection(new NodeSelection($pos));
+        view.dispatch(tr.deleteSelection());
+        view.focus();
+        return;
+      }
+    };
+
+  handleBlur =
+    ({ node, getPos }) =>
+    (event) => {
+      const alt = event.target.innerText;
+      const { src, title, layoutClass } = node.attrs;
+
+      if (alt === node.attrs.alt) return;
+
+      const { view } = this.editor;
+      const { tr } = view.state;
+
+      // update meta on object
+      const pos = getPos();
+      const transaction = tr.setNodeMarkup(pos, undefined, {
+        src,
+        alt,
+        title,
+        layoutClass,
+      });
+      view.dispatch(transaction);
+    };
+
+  handleSelect =
+    ({ getPos }) =>
+    (event) => {
       event.preventDefault();
 
       const { view } = this.editor;
-      const pos = getPos() + node.nodeSize;
-      view.focus();
-      view.dispatch(setTextSelection(pos)(view.state.tr));
-      return;
-    }
-
-    // Pressing Backspace in an an empty caption field should remove the entire
-    // image, leaving an empty paragraph
-    if (event.key === "Backspace" && event.target.innerText === "") {
-      const { view } = this.editor;
       const $pos = view.state.doc.resolve(getPos());
-      const tr = view.state.tr.setSelection(new NodeSelection($pos));
-      view.dispatch(tr.deleteSelection());
-      view.focus();
-      return;
-    }
-  };
-
-  handleBlur = ({ node, getPos }) => (event) => {
-    const alt = event.target.innerText;
-    const { src, title, layoutClass } = node.attrs;
-
-    if (alt === node.attrs.alt) return;
-
-    const { view } = this.editor;
-    const { tr } = view.state;
-
-    // update meta on object
-    const pos = getPos();
-    const transaction = tr.setNodeMarkup(pos, undefined, {
-      src,
-      alt,
-      title,
-      layoutClass,
-    });
-    view.dispatch(transaction);
-  };
-
-  handleSelect = ({ getPos }) => (event) => {
-    event.preventDefault();
-
-    const { view } = this.editor;
-    const $pos = view.state.doc.resolve(getPos());
-    const transaction = view.state.tr.setSelection(new NodeSelection($pos));
-    view.dispatch(transaction);
-  };
+      const transaction = view.state.tr.setSelection(new NodeSelection($pos));
+      view.dispatch(transaction);
+    };
 
   component = (props) => {
     const { theme, isSelected } = props;
     const { alt, src, title, layoutClass } = props.node.attrs;
-    const className = `${layoutClass ? `image image-${layoutClass}` : "image"}`;
+    const className = `${layoutClass ? `image image-${layoutClass}` : 'image'}`;
     const readOnly = this.editor.props.readOnly;
-    const isSvg = src.toLowerCase().endsWith(".svg");
+    const isSvg = src.toLowerCase().endsWith('.svg');
 
     return (
       <div
@@ -232,21 +254,21 @@ export default class Image extends Node {
         style={
           isSvg
             ? {
-                position: "absolute",
-                width: "100%",
-                top: "1.4em",
+                position: 'absolute',
+                width: '100%',
+                top: '1.4em',
                 zIndex: 1,
               }
             : undefined
         }
       >
         <ImageWrapper
-          className={isSelected ? "ProseMirror-selectednode" : ""}
+          className={isSelected ? 'ProseMirror-selectednode' : ''}
           onClick={this.handleSelect(props)}
         >
           <div
             style={{
-              pointerEvents: readOnly || isSelected ? "initial" : "none",
+              pointerEvents: readOnly || isSelected ? 'initial' : 'none',
             }}
           >
             <ImageZoom
@@ -272,7 +294,7 @@ export default class Image extends Node {
           onBlur={this.handleBlur(props)}
           className="caption"
           tabIndex={-1}
-          role={readOnly ? "" : "textbox"}
+          role={readOnly ? '' : 'textbox'}
           contentEditable
           suppressContentEditableWarning
         >
@@ -284,27 +306,27 @@ export default class Image extends Node {
 
   toMarkdown(state, node) {
     let markdown =
-      " ![" +
-      state.esc((node.attrs.alt || "").replace("\n", "") || "") +
-      "](" +
+      ' ![' +
+      state.esc((node.attrs.alt || '').replace('\n', '') || '') +
+      '](' +
       state.esc(node.attrs.src);
     if (node.attrs.layoutClass) {
       markdown += ' "' + state.esc(node.attrs.layoutClass) + '"';
     } else if (node.attrs.title) {
       markdown += ' "' + state.esc(node.attrs.title) + '"';
     }
-    markdown += ")";
+    markdown += ')';
     state.write(markdown);
   }
 
   parseMarkdown() {
     return {
-      node: "image",
+      node: 'image',
       getAttrs: (token) => {
         return {
-          src: token.attrGet("src"),
+          src: token.attrGet('src'),
           alt: (token.children[0] && token.children[0].content) || null,
-          ...getLayoutAndTitle(token.attrGet("title")),
+          ...getLayoutAndTitle(token.attrGet('title')),
         };
       },
     };
@@ -314,7 +336,7 @@ export default class Image extends Node {
     const currentSizeClass = state.selection.node.attrs.sizeClass;
 
     if (currentLayoutClass) {
-      const firstIndex = currentLayoutClass.indexOf("-");
+      const firstIndex = currentLayoutClass.indexOf('-');
 
       currentLayoutClass =
         firstIndex !== -1
@@ -322,7 +344,7 @@ export default class Image extends Node {
           : currentLayoutClass;
     }
 
-    return currentLayoutClass === currentSizeClass ? "" : currentLayoutClass;
+    return currentLayoutClass === currentSizeClass ? '' : currentLayoutClass;
   };
 
   commands({ type }) {
@@ -336,7 +358,7 @@ export default class Image extends Node {
         const attrs = {
           ...state.selection.node.attrs,
           title: null,
-          layoutClass: currentSizeClass ? `right-${currentSizeClass}` : "right",
+          layoutClass: currentSizeClass ? `right-${currentSizeClass}` : 'right',
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
@@ -347,7 +369,7 @@ export default class Image extends Node {
         const attrs = {
           ...state.selection.node.attrs,
           title: null,
-          layoutClass: currentSizeClass ? `left-${currentSizeClass}` : "left",
+          layoutClass: currentSizeClass ? `left-${currentSizeClass}` : 'left',
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
@@ -359,7 +381,7 @@ export default class Image extends Node {
           ...state.selection.node.attrs,
           layoutClass: currentSizeClass
             ? `center-${currentSizeClass}`
-            : "center",
+            : 'center',
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
@@ -373,8 +395,8 @@ export default class Image extends Node {
           title: null,
           layoutClass: currentLayoutClass
             ? `${currentLayoutClass}-small`
-            : "small",
-          sizeClass: "small",
+            : 'small',
+          sizeClass: 'small',
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
@@ -388,8 +410,8 @@ export default class Image extends Node {
           title: null,
           layoutClass: currentLayoutClass
             ? `${currentLayoutClass}-medium`
-            : "medium",
-          sizeClass: "medium",
+            : 'medium',
+          sizeClass: 'medium',
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
@@ -402,8 +424,8 @@ export default class Image extends Node {
           ...state.selection.node.attrs,
           layoutClass: currentLayoutClass
             ? `${currentLayoutClass}-large`
-            : "large",
-          sizeClass: "large",
+            : 'large',
+          sizeClass: 'large',
         };
         const { selection } = state;
         dispatch(state.tr.setNodeMarkup(selection.$from.pos, undefined, attrs));
@@ -472,7 +494,7 @@ const Caption = styled.p`
 
   &:empty:before {
     color: ${(props) => props.theme.placeholder};
-    content: "${(props) => (props.role ? "Write a caption" : "")}";
+    content: '${(props) => (props.role ? 'Write a caption' : '')}';
     pointer-events: none;
   }
 `;

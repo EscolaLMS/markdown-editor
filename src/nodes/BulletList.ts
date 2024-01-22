@@ -1,18 +1,18 @@
-import { wrappingInputRule } from "prosemirror-inputrules";
-import toggleList from "../commands/toggleList";
-import Node from "./Node";
+import { wrappingInputRule } from 'prosemirror-inputrules';
+import toggleList from '../commands/toggleList';
+import Node from './Node';
 
 export default class BulletList extends Node {
   get name() {
-    return "bullet_list";
+    return 'bullet_list';
   }
 
   get schema() {
     return {
-      content: "list_item+",
-      group: "block",
-      parseDOM: [{ tag: "ul" }],
-      toDOM: () => ["ul", 0],
+      content: 'list_item+',
+      group: 'block',
+      parseDOM: [{ tag: 'ul' }],
+      toDOM: () => ['ul', 0],
     };
   }
 
@@ -22,7 +22,7 @@ export default class BulletList extends Node {
 
   keys({ type, schema }) {
     return {
-      "Shift-Ctrl-8": toggleList(type, schema.nodes.list_item),
+      'Shift-Ctrl-8': toggleList(type, schema.nodes.list_item),
     };
   }
 
@@ -31,10 +31,10 @@ export default class BulletList extends Node {
   }
 
   toMarkdown(state, node) {
-    state.renderList(node, "  ", () => (node.attrs.bullet || "*") + " ");
+    state.renderList(node, '  ', () => (node.attrs.bullet || '*') + ' ');
   }
 
   parseMarkdown() {
-    return { block: "bullet_list" };
+    return { block: 'bullet_list' };
   }
 }

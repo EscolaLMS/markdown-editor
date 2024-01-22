@@ -1,9 +1,9 @@
-import { setBlockType } from "prosemirror-commands";
-import Node from "./Node";
+import { setBlockType } from 'prosemirror-commands';
+import Node from './Node';
 
 export default class Paragraph extends Node {
   get name() {
-    return "paragraph";
+    return 'paragraph';
   }
 
   get schema() {
@@ -11,11 +11,11 @@ export default class Paragraph extends Node {
       attrs: {
         layoutClass: { default: null },
       },
-      content: "inline*",
-      group: "block",
+      content: 'inline*',
+      group: 'block',
       parseDOM: [
         {
-          tag: "p",
+          tag: 'p',
           getAttrs: (dom) => this.extractLayoutClassFromDOM(dom),
         },
       ],
@@ -25,7 +25,7 @@ export default class Paragraph extends Node {
 
   keys({ type }) {
     return {
-      "Shift-Ctrl-0": setBlockType(type),
+      'Shift-Ctrl-0': setBlockType(type),
     };
   }
 
@@ -47,21 +47,21 @@ export default class Paragraph extends Node {
     return {
       setBlockType: () => setBlockType(type),
       alignTextRight: () => (state, dispatch) =>
-        alignText(state, dispatch, "right"),
+        alignText(state, dispatch, 'right'),
       alignTextLeft: () => (state, dispatch) =>
-        alignText(state, dispatch, "left"),
+        alignText(state, dispatch, 'left'),
       alignTextCenter: () => (state, dispatch) =>
-        alignText(state, dispatch, "center"),
+        alignText(state, dispatch, 'center'),
     };
   }
 
   toMarkdown(state, node) {
     if (
-      node.textContent.trim() === "" &&
+      node.textContent.trim() === '' &&
       node.childCount === 0 &&
       !state.inTable
     ) {
-      state.write("\\\n");
+      state.write('\\\n');
     } else {
       state.renderInline(node);
       state.closeBlock(node);
@@ -69,7 +69,7 @@ export default class Paragraph extends Node {
   }
 
   parseMarkdown() {
-    return { block: "paragraph" };
+    return { block: 'paragraph' };
   }
 
   extractLayoutClassFromDOM(dom) {
@@ -84,6 +84,6 @@ export default class Paragraph extends Node {
       ? `text-${node.attrs.layoutClass}`
       : null;
 
-    return ["p", { class: className }, 0];
+    return ['p', { class: className }, 0];
   }
 }

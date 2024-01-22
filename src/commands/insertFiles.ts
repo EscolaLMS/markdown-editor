@@ -1,9 +1,9 @@
 import uploadPlaceholderPlugin, {
   findPlaceholder,
-} from "../lib/uploadPlaceholder";
-import { ToastType } from "../types";
+} from '../lib/uploadPlaceholder';
+import { ToastType } from '../types';
 
-const insertFiles = function(view, event, pos, files, options) {
+const insertFiles = function (view, event, pos, files, options) {
   // filter to only include image files
   const images = files; //.filter(file => /image/i.test(file.type));
   if (images.length === 0) return;
@@ -18,7 +18,7 @@ const insertFiles = function(view, event, pos, files, options) {
   } = options;
 
   if (!uploadImage && !uploadSketch) {
-    console.warn("upload callback must be defined to handle image uploads.");
+    console.warn('upload callback must be defined to handle image uploads.');
     return;
   }
 
@@ -51,21 +51,21 @@ const insertFiles = function(view, event, pos, files, options) {
     // to allow all placeholders to be entered at once with the uploads
     // happening in the background in parallel.
 
-    const isImage = file["type"].startsWith("image/");
-    const isAudio = file["type"].startsWith("audio/");
+    const isImage = file['type'].startsWith('image/');
+    const isAudio = file['type'].startsWith('audio/');
     const isSketch =
-      file.name.endsWith(".rsc") ||
-      file.name.includes(".rsc?alt=") ||
+      file.name.endsWith('.rsc') ||
+      file.name.includes('.rsc?alt=') ||
       (!uploadImage && uploadSketch);
     const uploadCallback = isSketch
       ? uploadSketch
       : uploadImage || uploadSketch;
     uploadCallback(
       file,
-      isImage ? "image" : isAudio ? "audio" : null,
+      isImage ? 'image' : isAudio ? 'audio' : null,
       isImage || isAudio
     )
-      .then(src => {
+      .then((src) => {
         const pos = findPlaceholder(view.state, id);
 
         // if the content around the placeholder has been deleted
@@ -101,7 +101,7 @@ const insertFiles = function(view, event, pos, files, options) {
         }
         view.dispatch(transaction);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
 
         // cleanup the placeholder if there is a failure

@@ -2,21 +2,21 @@ import {
   splitListItem,
   sinkListItem,
   liftListItem,
-} from "prosemirror-schema-list";
-import Node from "./Node";
+} from 'prosemirror-schema-list';
+import Node from './Node';
 
 export default class ListItem extends Node {
   get name() {
-    return "list_item";
+    return 'list_item';
   }
 
   get schema() {
     return {
-      content: "paragraph block*",
+      content: 'paragraph block*',
       defining: true,
       draggable: true,
-      parseDOM: [{ tag: "li" }],
-      toDOM: () => ["li", 0],
+      parseDOM: [{ tag: 'li' }],
+      toDOM: () => ['li', 0],
     };
   }
 
@@ -24,9 +24,9 @@ export default class ListItem extends Node {
     return {
       Enter: splitListItem(type),
       Tab: sinkListItem(type),
-      "Shift-Tab": liftListItem(type),
-      "Mod-]": sinkListItem(type),
-      "Mod-[": liftListItem(type),
+      'Shift-Tab': liftListItem(type),
+      'Mod-]': sinkListItem(type),
+      'Mod-[': liftListItem(type),
     };
   }
 
@@ -35,6 +35,6 @@ export default class ListItem extends Node {
   }
 
   parseMarkdown() {
-    return { block: "list_item" };
+    return { block: 'list_item' };
   }
 }

@@ -1,10 +1,10 @@
-import * as React from "react";
-import { EditorView } from "prosemirror-view";
-import { withTheme } from "styled-components";
-import ToolbarButton from "./ToolbarButton";
-import ToolbarSeparator from "./ToolbarSeparator";
-import theme from "../theme";
-import { MenuItem } from "../types";
+import * as React from 'react';
+import { EditorView } from 'prosemirror-view';
+import { withTheme } from 'styled-components';
+import ToolbarButton from './ToolbarButton';
+import ToolbarSeparator from './ToolbarSeparator';
+import theme from '../theme';
+import { MenuItem } from '../types';
 
 type Props = {
   tooltip: typeof React.Component | React.FC<any>;
@@ -26,24 +26,24 @@ class Menu extends React.Component<Props> {
     return (
       <div>
         {items.map((item, index) => {
-          if (item.name === "separator" && item.visible !== false) {
+          if (item.name === 'separator' && item.visible !== false) {
             return <ToolbarSeparator key={index} />;
           }
           if (
             item.text &&
-            item.name === "back" &&
+            item.name === 'back' &&
             this.props.onMakeAnswer &&
             getSelection
           ) {
             return (
               <button
                 style={{
-                  transform: "translate(0, -8px)",
-                  border: "none",
-                  backgroundColor: "#e5e7e9",
-                  borderRadius: "0.25rem",
-                  lineHeight: "26px",
-                  cursor: "pointer",
+                  transform: 'translate(0, -8px)',
+                  border: 'none',
+                  backgroundColor: '#e5e7e9',
+                  borderRadius: '0.25rem',
+                  lineHeight: '26px',
+                  cursor: 'pointer',
                 }}
                 onClick={() => {
                   this.props.onToggleFormat && this.props.onToggleFormat();
@@ -56,20 +56,20 @@ class Menu extends React.Component<Props> {
           }
           if (
             item.text &&
-            item.name === "format" &&
+            item.name === 'format' &&
             this.props.onMakeAnswer &&
             getSelection
           ) {
             return (
               <button
                 style={{
-                  transform: "translate(0, -8px)",
-                  border: "none",
-                  marginLeft: "10px",
-                  backgroundColor: "#e5e7e9",
-                  borderRadius: "0.25rem",
-                  lineHeight: "26px",
-                  cursor: "pointer",
+                  transform: 'translate(0, -8px)',
+                  border: 'none',
+                  marginLeft: '10px',
+                  backgroundColor: '#e5e7e9',
+                  borderRadius: '0.25rem',
+                  lineHeight: '26px',
+                  cursor: 'pointer',
                 }}
                 onClick={() => {
                   this.props.onToggleFormat && this.props.onToggleFormat();
@@ -82,20 +82,20 @@ class Menu extends React.Component<Props> {
           }
           if (
             item.text &&
-            item.name === "makeanswer" &&
+            item.name === 'makeanswer' &&
             this.props.onMakeAnswer &&
             getSelection
           ) {
             return (
               <button
                 style={{
-                  transform: "translate(0, -8px)",
-                  border: "none",
-                  backgroundColor: "#e5e7e9",
-                  borderRadius: "0.25rem",
-                  lineHeight: "26px",
-                  cursor: "pointer",
-                  fontWeight: "bolder",
+                  transform: 'translate(0, -8px)',
+                  border: 'none',
+                  backgroundColor: '#e5e7e9',
+                  borderRadius: '0.25rem',
+                  lineHeight: '26px',
+                  cursor: 'pointer',
+                  fontWeight: 'bolder',
                 }}
                 onClick={() => {
                   const [selectedText, surroundingText] = getSelection();
@@ -111,21 +111,21 @@ class Menu extends React.Component<Props> {
           }
           if (
             item.text &&
-            item.name === "add_flashcard" &&
+            item.name === 'add_flashcard' &&
             this.props.onCreateFlashcard &&
             getSelection
           ) {
             return (
               <button
                 style={{
-                  transform: "translate(0, -8px)",
-                  border: "none",
-                  marginLeft: "10px",
-                  backgroundColor: "#e5e7e9",
-                  borderRadius: "0.25rem",
-                  lineHeight: "26px",
-                  cursor: "pointer",
-                  fontWeight: "bolder",
+                  transform: 'translate(0, -8px)',
+                  border: 'none',
+                  marginLeft: '10px',
+                  backgroundColor: '#e5e7e9',
+                  borderRadius: '0.25rem',
+                  lineHeight: '26px',
+                  cursor: 'pointer',
+                  fontWeight: 'bolder',
                 }}
                 className="onboarding-flashcard"
                 onClick={() => {

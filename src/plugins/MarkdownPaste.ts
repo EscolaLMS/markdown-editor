@@ -1,14 +1,14 @@
-import { Plugin } from "prosemirror-state";
-import { toggleMark } from "prosemirror-commands";
-import Extension from "../lib/Extension";
-import isUrl from "../lib/isUrl";
-import isInCode from "../queries/isInCode";
+import { Plugin } from 'prosemirror-state';
+import { toggleMark } from 'prosemirror-commands';
+import Extension from '../lib/Extension';
+import isUrl from '../lib/isUrl';
+import isInCode from '../queries/isInCode';
 
 const LINK_INPUT_REGEX = /^\[(.+)]\((\S+)\)$/;
 
 export default class MarkdownPaste extends Extension {
   get name() {
-    return "markdown-paste";
+    return 'markdown-paste';
   }
 
   get plugins() {
@@ -21,8 +21,8 @@ export default class MarkdownPaste extends Extension {
             }
             if (!event.clipboardData) return false;
 
-            const text = event.clipboardData.getData("text/plain");
-            const html = event.clipboardData.getData("text/html");
+            const text = event.clipboardData.getData('text/plain');
+            const html = event.clipboardData.getData('text/html');
             const { state, dispatch } = view;
 
             this.options.onPaste(text);

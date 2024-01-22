@@ -1,7 +1,7 @@
-import * as React from "react";
-import scrollIntoView from "smooth-scroll-into-view-if-needed";
-import styled, { withTheme } from "styled-components";
-import theme from "../theme";
+import * as React from 'react';
+import scrollIntoView from 'smooth-scroll-into-view-if-needed';
+import styled, { withTheme } from 'styled-components';
+import theme from '../theme';
 
 type Props = {
   selected: boolean;
@@ -29,16 +29,16 @@ function BlockMenuItem({
   const Icon = icon;
 
   const ref = React.useCallback(
-    node => {
+    (node) => {
       if (selected && node) {
         scrollIntoView(node, {
-          scrollMode: "if-needed",
-          block: "center",
-          boundary: parent => {
+          scrollMode: 'if-needed',
+          block: 'center',
+          boundary: (parent) => {
             // All the parent elements of your target are checked until they
             // reach the #block-menu-container. Prevents body and other parent
             // elements from being scrolled
-            return parent.id !== "block-menu-container";
+            return parent.id !== 'block-menu-container';
           },
         });
       }
@@ -52,8 +52,8 @@ function BlockMenuItem({
         disabled
           ? undefined
           : memberOnly && upgradeCallback
-          ? upgradeCallback
-          : onClick
+            ? upgradeCallback
+            : onClick
       }
       ref={ref}
     >
@@ -77,18 +77,18 @@ const MenuItem = styled.button<{
   height: 36px;
   cursor: pointer;
   border: none;
-  opacity: ${props => (props.disabled ? ".5" : "1")};
-  color: ${props =>
+  opacity: ${(props) => (props.disabled ? '.5' : '1')};
+  color: ${(props) =>
     props.selected ? props.theme.black : props.theme.blockToolbarText};
-  background: ${props =>
-    props.selected ? props.theme.blockToolbarTrigger : "none"};
+  background: ${(props) =>
+    props.selected ? props.theme.blockToolbarTrigger : 'none'};
   padding: 0 16px;
   outline: none;
 
   &:hover,
   &:active {
-    color: ${props => props.theme.black};
-    background: ${props =>
+    color: ${(props) => props.theme.black};
+    background: ${(props) =>
       props.selected
         ? props.theme.blockToolbarTrigger
         : props.theme.blockToolbarHoverBackground};

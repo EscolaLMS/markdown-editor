@@ -1,19 +1,19 @@
-import Node from "./Node";
-import { isInTable } from "prosemirror-tables";
+import Node from './Node';
+import { isInTable } from 'prosemirror-tables';
 
 export default class HardBreak extends Node {
   get name() {
-    return "br";
+    return 'br';
   }
 
   get schema() {
     return {
       inline: true,
-      group: "inline",
+      group: 'inline',
       selectable: false,
-      parseDOM: [{ tag: "br" }],
+      parseDOM: [{ tag: 'br' }],
       toDOM() {
-        return ["br"];
+        return ['br'];
       },
     };
   }
@@ -27,7 +27,7 @@ export default class HardBreak extends Node {
 
   keys({ type }) {
     return {
-      "Shift-Enter": (state, dispatch) => {
+      'Shift-Enter': (state, dispatch) => {
         if (!isInTable(state)) return false;
         dispatch(state.tr.replaceSelectionWith(type.create()).scrollIntoView());
         return true;
@@ -36,10 +36,10 @@ export default class HardBreak extends Node {
   }
 
   toMarkdown(state) {
-    state.write(" \\n ");
+    state.write(' \\n ');
   }
 
   parseMarkdown() {
-    return { node: "br" };
+    return { node: 'br' };
   }
 }

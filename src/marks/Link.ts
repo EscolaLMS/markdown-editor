@@ -1,14 +1,14 @@
-import { toggleMark } from "prosemirror-commands";
-import { Plugin } from "prosemirror-state";
-import { InputRule } from "prosemirror-inputrules";
-import Mark from "./Mark";
-import { getText } from "../components/SelectionToolbar";
+import { toggleMark } from 'prosemirror-commands';
+import { Plugin } from 'prosemirror-state';
+import { InputRule } from 'prosemirror-inputrules';
+import Mark from './Mark';
+import { getText } from '../components/SelectionToolbar';
 
 function markApplies(doc, ranges, type) {
   for (let i = 0; i < ranges.length; i++) {
     const { $from, $to } = ranges[i];
     let can = $from.depth === 0 ? doc.type.allowsMarkType(type) : false;
-    doc.nodesBetween($from.pos, $to.pos, node => {
+    doc.nodesBetween($from.pos, $to.pos, (node) => {
       if (can) return false;
       can = node.inlineContent && node.type.allowsMarkType(type);
     });
@@ -43,30 +43,30 @@ function isPlainURL(link, parent, index, side) {
 
 export default class Link extends Mark {
   get name() {
-    return "link";
+    return 'link';
   }
 
   get schema() {
     return {
       attrs: {
         href: {
-          default: "",
+          default: '',
         },
       },
       inclusive: false,
       parseDOM: [
         {
-          tag: "a[href]",
+          tag: 'a[href]',
           getAttrs: (dom: HTMLElement) => ({
-            href: dom.getAttribute("href"),
+            href: dom.getAttribute('href'),
           }),
         },
       ],
-      toDOM: node => [
-        "a",
+      toDOM: (node) => [
+        'a',
         {
           ...node.attrs,
-          rel: "noopener noreferrer nofollow",
+          rel: 'noopener noreferrer nofollow',
         },
         0,
       ],
@@ -93,7 +93,7 @@ export default class Link extends Mark {
   }
 
   commands({ type }) {
-    return ({ href } = { href: "" }) => {
+    return ({ href } = { href: '' }) => {
       return (state, dispatch) => {
         // inlined toggleMark so can add link when nothing selected https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.js#L488
         const { empty, $cursor, ranges } = state.selection;
@@ -129,12 +129,12 @@ export default class Link extends Mark {
 
   keys({ type }) {
     return {
-      "Mod-k": (state, dispatch) => {
+      'Mod-k': (state, dispatch) => {
         if (state.selection.empty) {
           this.options.onKeyboardShortcut();
           return true;
         }
-        return toggleMark(type, { href: "" })(state, dispatch);
+        return toggleMark(type, { href: '' })(state, dispatch);
       },
     };
   }
@@ -169,7 +169,7 @@ export default class Link extends Mark {
         const selectionContent = view?.state?.selection?.content();
         const selectedText = selectionContent && getText(selectionContent);
         if (!selectedText) {
-          const isHashtag = href.startsWith("#");
+          const isHashtag = href.startsWith('#');
           if (isHashtag && this.options.onClickHashtag) {
             this.options.onClickHashtag(href, event);
             return true;
@@ -197,7 +197,7 @@ export default class Link extends Mark {
             mouseover: (view, event: MouseEvent) => {
               if (
                 event.target instanceof HTMLAnchorElement &&
-                !event.target.className.includes("ProseMirror-widget")
+                !event.target.className.includes('ProseMirror-widget')
               ) {
                 if (this.options.onHoverLink) {
                   return this.options.onHoverLink(event);
@@ -226,25 +226,25 @@ export default class Link extends Mark {
   get toMarkdown() {
     return {
       open(_state, mark, parent, index) {
-        return isPlainURL(mark, parent, index, 1) ? "<" : "[";
+        return isPlainURL(mark, parent, index, 1) ? '<' : '[';
       },
       close(state, mark, parent, index) {
         return isPlainURL(mark, parent, index, -1)
-          ? ">"
-          : "](" +
+          ? '>'
+          : '](' +
               state.esc(mark.attrs.href) +
-              (mark.attrs.title ? " " + state.quote(mark.attrs.title) : "") +
-              ")";
+              (mark.attrs.title ? ' ' + state.quote(mark.attrs.title) : '') +
+              ')';
       },
     };
   }
 
   parseMarkdown() {
     return {
-      mark: "link",
-      getAttrs: tok => ({
-        href: tok.attrGet("href"),
-        title: tok.attrGet("title") || null,
+      mark: 'link',
+      getAttrs: (tok) => ({
+        href: tok.attrGet('href'),
+        title: tok.attrGet('title') || null,
       }),
     };
   }

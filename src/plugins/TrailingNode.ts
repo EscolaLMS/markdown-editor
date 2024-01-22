@@ -1,15 +1,15 @@
-import { Plugin, PluginKey } from "prosemirror-state";
-import Extension from "../lib/Extension";
+import { Plugin, PluginKey } from 'prosemirror-state';
+import Extension from '../lib/Extension';
 
 export default class TrailingNode extends Extension {
   get name() {
-    return "trailing_node";
+    return 'trailing_node';
   }
 
   get defaultOptions() {
     return {
-      node: "paragraph",
-      notAfter: ["paragraph", "heading"],
+      node: 'paragraph',
+      notAfter: ['paragraph', 'heading'],
     };
   }
 
@@ -17,13 +17,13 @@ export default class TrailingNode extends Extension {
     const plugin = new PluginKey(this.name);
     const disabledNodes = Object.entries(this.editor.schema.nodes)
       .map(([, value]) => value)
-      .filter(node => this.options.notAfter.includes(node.name));
+      .filter((node) => this.options.notAfter.includes(node.name));
 
     return [
       new Plugin({
         key: plugin,
         view: () => ({
-          update: view => {
+          update: (view) => {
             const { state } = view;
             const insertNodeAtEnd = plugin.getState(state);
 

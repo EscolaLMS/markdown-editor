@@ -1,32 +1,32 @@
-import { toggleMark } from "prosemirror-commands";
-import markInputRule from "../lib/markInputRule";
-import Mark from "./Mark";
+import { toggleMark } from 'prosemirror-commands';
+import markInputRule from '../lib/markInputRule';
+import Mark from './Mark';
 
 export default class Strikethrough extends Mark {
   get name() {
-    return "strikethrough";
+    return 'strikethrough';
   }
 
   get schema() {
     return {
       parseDOM: [
         {
-          tag: "s",
+          tag: 's',
         },
         {
-          tag: "del",
+          tag: 'del',
         },
         {
-          tag: "strike",
+          tag: 'strike',
         },
       ],
-      toDOM: () => ["del", 0],
+      toDOM: () => ['del', 0],
     };
   }
 
   keys({ type }) {
     return {
-      "Mod-d": toggleMark(type),
+      'Mod-d': toggleMark(type),
     };
   }
 
@@ -36,18 +36,18 @@ export default class Strikethrough extends Mark {
 
   get toMarkdown() {
     return {
-      open: "~~",
-      close: "~~",
+      open: '~~',
+      close: '~~',
       mixable: true,
       expelEnclosingWhitespace: true,
     };
   }
 
   get markdownToken() {
-    return "s";
+    return 's';
   }
 
   parseMarkdown() {
-    return { mark: "strikethrough" };
+    return { mark: 'strikethrough' };
   }
 }

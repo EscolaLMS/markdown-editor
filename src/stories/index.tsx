@@ -1,42 +1,42 @@
-import * as React from "react";
-import Editor from "..";
-import { dark, light } from "../theme";
+import * as React from 'react';
+import Editor from '..';
+import { dark, light } from '../theme';
 
 const docSearchResults = [
   {
-    title: "Hiring",
-    subtitle: "Created by Jane",
-    url: "/doc/hiring",
+    title: 'Hiring',
+    subtitle: 'Created by Jane',
+    url: '/doc/hiring',
   },
   {
-    title: "Product Roadmap",
-    subtitle: "Created by Tom",
-    url: "/doc/product-roadmap",
+    title: 'Product Roadmap',
+    subtitle: 'Created by Tom',
+    url: '/doc/product-roadmap',
   },
   {
-    title: "Finances",
-    subtitle: "Created by Coley",
-    url: "/doc/finances",
+    title: 'Finances',
+    subtitle: 'Created by Coley',
+    url: '/doc/finances',
   },
   {
-    title: "Security",
-    subtitle: "Created by Coley",
-    url: "/doc/security",
+    title: 'Security',
+    subtitle: 'Created by Coley',
+    url: '/doc/security',
   },
   {
-    title: "Super secret stuff",
-    subtitle: "Created by Coley",
-    url: "/doc/secret-stuff",
+    title: 'Super secret stuff',
+    subtitle: 'Created by Coley',
+    url: '/doc/secret-stuff',
   },
   {
-    title: "Supero notes",
-    subtitle: "Created by Vanessa",
-    url: "/doc/supero-notes",
+    title: 'Supero notes',
+    subtitle: 'Created by Vanessa',
+    url: '/doc/supero-notes',
   },
   {
-    title: "Meeting notes",
-    subtitle: "Created by Rob",
-    url: "/doc/meeting-notes",
+    title: 'Meeting notes',
+    subtitle: 'Created by Rob',
+    url: '/doc/meeting-notes',
   },
 ];
 
@@ -50,7 +50,7 @@ class YoutubeEmbed extends React.Component<{
 
     return (
       <iframe
-        className={this.props.isSelected ? "ProseMirror-selectednode" : ""}
+        className={this.props.isSelected ? 'ProseMirror-selectednode' : ''}
         src={`https://www.youtube.com/embed/${videoId}?modestbranding=1`}
       />
     );
@@ -59,8 +59,8 @@ class YoutubeEmbed extends React.Component<{
 
 const embeds = [
   {
-    title: "YouTube",
-    keywords: "youtube video tube google",
+    title: 'YouTube',
+    keywords: 'youtube video tube google',
     defaultHidden: true,
     // eslint-disable-next-line react/display-name
     icon: () => (
@@ -70,7 +70,7 @@ const embeds = [
         height={24}
       />
     ),
-    matcher: url => {
+    matcher: (url) => {
       return !!url.match(
         /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([a-zA-Z0-9_-]{11})$/i
       );
@@ -78,8 +78,8 @@ const embeds = [
     component: YoutubeEmbed,
   },
   {
-    title: "Audio link",
-    keywords: "audio sound mp3 video movie film mp4",
+    title: 'Audio link',
+    keywords: 'audio sound mp3 video movie film mp4',
     // eslint-disable-next-line react/display-name
     icon: () => (
       <img
@@ -88,7 +88,7 @@ const embeds = [
         height={24}
       />
     ),
-    matcher: url => {
+    matcher: (url) => {
       // FIXME support audio commonly used in language learning, like google translate, baidu in general
       const isAudio = url.match(
         /(?:https?:\/\/)?.*.(?:wav|mp3|ogg|m4a|&spd=2|mp3)(\?alt.*|)$/i
@@ -98,17 +98,17 @@ const embeds = [
     component: () => <div>audio</div>,
   },
   {
-    title: "Sketch / Image Occlusion",
-    keywords: "sketch image occlusion scratchpad",
-    matcher: url => {
+    title: 'Sketch / Image Occlusion',
+    keywords: 'sketch image occlusion scratchpad',
+    matcher: (url) => {
       const isSketch = url.match(/(?:https?:\/\/)?.*.(?:rsc)(\?alt.*|)$/i);
       return isSketch;
     },
     component: () => <div>sketch</div>,
   },
   {
-    title: "Document link",
-    keywords: "pdf word ppt presentation doc docx excel file",
+    title: 'Document link',
+    keywords: 'pdf word ppt presentation doc docx excel file',
     // eslint-disable-next-line react/display-name
     icon: () => (
       <img
@@ -117,7 +117,7 @@ const embeds = [
         height={24}
       />
     ),
-    matcher: url => {
+    matcher: (url) => {
       const isDocument = url.match(
         /(?:https?:\/\/)?.*.(?:xlsx|xls|doc|docx|ppt|pptx|txt|pdf)(\?alt.*|)$/i
       );
@@ -137,11 +137,11 @@ const LinkFinder = ({ callback }) => {
     <div
       onClick={() =>
         callback({
-          href: "/dominiczijlstra/gfcek2fp7un0nzc079n78n59",
-          title: "hi",
+          href: '/dominiczijlstra/gfcek2fp7un0nzc079n78n59',
+          title: 'hi',
         })
       }
-      style={{ position: "absolute", top: 0, left: 0 }}
+      style={{ position: 'absolute', top: 0, left: 0 }}
     >
       HELLO
     </div>
@@ -156,32 +156,32 @@ export default function Example(props) {
       : light.background;
 
   return (
-    <div style={{ padding: "1em 2em" }}>
+    <div style={{ padding: '1em 2em' }}>
       <Editor
         onCreateFlashcard={onCreateFlashcard}
         enableTemplatePlaceholder={true}
         templatePlaceholderAsQuestion={true}
-        onMakeAnswer={txt => console.log(`make answer2`, txt)}
-        onChange={val => console.log(`change`, val())}
-        uploadImage={file => {
-          console.log("File upload triggered: ", file);
+        onMakeAnswer={(txt) => console.log(`make answer2`, txt)}
+        onChange={(val) => console.log(`change`, val())}
+        uploadImage={(file) => {
+          console.log('File upload triggered: ', file);
 
           // Delay to simulate time taken to upload
-          return new Promise(resolve => {
-            setTimeout(() => resolve("https://picsum.photos/600/600"), 1500);
+          return new Promise((resolve) => {
+            setTimeout(() => resolve('https://picsum.photos/600/600'), 1500);
           });
         }}
         LinkFinder={LinkFinder}
         excludeBlockMenuItems={[]}
-        uploadSketch={file => {
-          console.log("Sketch upload triggered: ", file);
+        uploadSketch={(file) => {
+          console.log('Sketch upload triggered: ', file);
 
           // Delay to simulate time taken to upload
-          return new Promise(resolve => {
+          return new Promise((resolve) => {
             setTimeout(
               () =>
                 resolve(
-                  "https://firebasestorage.googleapis.com/v0/b/alley-d0944.appspot.com/o/dominiczijlstra%2F1654057020.rsc?alt=media&token=6c75583e-8dd8-4a6b-83af-fe96a4861e1e"
+                  'https://firebasestorage.googleapis.com/v0/b/alley-d0944.appspot.com/o/dominiczijlstra%2F1654057020.rsc?alt=media&token=6c75583e-8dd8-4a6b-83af-fe96a4861e1e'
                 ),
               1500
             );

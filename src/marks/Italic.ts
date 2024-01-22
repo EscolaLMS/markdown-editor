@@ -1,20 +1,20 @@
-import { toggleMark } from "prosemirror-commands";
-import markInputRule from "../lib/markInputRule";
-import Mark from "./Mark";
+import { toggleMark } from 'prosemirror-commands';
+import markInputRule from '../lib/markInputRule';
+import Mark from './Mark';
 
 export default class Italic extends Mark {
   get name() {
-    return "em";
+    return 'em';
   }
 
   get schema() {
     return {
       parseDOM: [
-        { tag: "i" },
-        { tag: "em" },
-        { style: "font-style", getAttrs: value => value === "italic" },
+        { tag: 'i' },
+        { tag: 'em' },
+        { style: 'font-style', getAttrs: (value) => value === 'italic' },
       ],
-      toDOM: () => ["em"],
+      toDOM: () => ['em'],
     };
   }
 
@@ -27,21 +27,21 @@ export default class Italic extends Mark {
 
   keys({ type }) {
     return {
-      "Mod-i": toggleMark(type),
-      "Mod-I": toggleMark(type),
+      'Mod-i': toggleMark(type),
+      'Mod-I': toggleMark(type),
     };
   }
 
   get toMarkdown() {
     return {
-      open: "*",
-      close: "*",
+      open: '*',
+      close: '*',
       mixable: true,
       expelEnclosingWhitespace: true,
     };
   }
 
   parseMarkdown() {
-    return { mark: "em" };
+    return { mark: 'em' };
   }
 }
